@@ -1,20 +1,20 @@
 package main
 
 import (
-    //"fmt"
+    "fmt"
     "log"
     "net/http"
     //"net/url"
-    "os"
-    "os/exec"
+    //"os"
+    //"os/exec"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    cmd := exec.Command("/opt/maximapool/2017121800/maxima-optimised","-r",r.URL.Query().Get("input"))
-    cmd.Stdout = w
-    cmd.Stderr = os.Stderr
-    cmd.Run()
-    //fmt.Fprintf(w, r.URL.Query().Get("input") )
+    //cmd := exec.Command("/opt/maximapool/2017121800/maxima-optimised","-r",r.URL.Query().Get("input"))
+    //cmd.Stdout = w
+    //cmd.Stderr = os.Stderr
+    //cmd.Run()
+    fmt.Printf(r.URL.Query().Get("input"))
 }
 
 func main() {

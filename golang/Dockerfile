@@ -12,9 +12,9 @@ COPY ./src/web/web.go /go/src/web/web.go
 #RUN ls ./src/web
 
 RUN cd /go/src/web \
-    && go build
-#    && GOBIN=/go/bin go install
+    && go build \
+    && GOBIN=/go/bin go install
     #&& echo ${PATH}
 
-CMD ["sleep","infinity"]
-#CMD ["web"]
+#CMD ["sleep","infinity"]
+CMD ["web"]
