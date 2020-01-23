@@ -47,7 +47,7 @@ RUN cd ${MAXIMAPOOL} \
 # deinstallieren: wget, curl, python3, make, bzip2,
 
 COPY ${MAXIMA_LOCAL_PATH} ${STACK_MAXIMA}
-COPY stack_util_maximapool maximapool-docker/assets/process.conf.template maximapool-docker/assets/optimize.mac maximapool-docker/assets/maximalocal.mac.template ${MAXIMAPOOL}/
+COPY maximapool-docker/assets/process.conf.template maximapool-docker/assets/optimize.mac maximapool-docker/assets/maximalocal.mac.template ${MAXIMAPOOL}/
 
 RUN VER=$(grep stackmaximaversion ${STACK_MAXIMA}/stackmaxima.mac | grep -oP "\d+") \
     && mkdir -p ${MAXIMAPOOL}/${VER} \
