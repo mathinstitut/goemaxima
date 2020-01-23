@@ -1,0 +1,16 @@
+version: "3.6"
+services:
+  gowebserver:
+    build: .
+    restart: "no"
+    container_name: "gowebserver"
+    ports:
+      - "0.0.0.0:8765:8080"
+    networks:
+      - frontend
+    environment:
+      maximapassword: "pw123"
+
+networks:
+  frontend:
+      name: frontend
