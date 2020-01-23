@@ -1,0 +1,9 @@
+[submodule "assStackQuestion"]
+	path = assStackQuestion
+	url = /home/martin/Dokumente/gomaxima/gomaxima/assStackQuestion/
+[submodule "maximapool-docker"]
+	path = maximapool-docker
+	url = /home/martin/Dokumente/gomaxima/gomaxima/maximapool-docker/
+[submodule "stack_util_maximapool"]
+	path = stack_util_maximapool
+	url = /home/martin/Dokumente/gomaxima/gomaxima/stack_util_maximapool/
