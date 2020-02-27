@@ -27,9 +27,9 @@ build_maxima_base:
     - docker
   except:
     - master
-  only:
-    changes:
-      - maxima_base/**
+#  only:
+#    changes:
+#      - maxima_base/**
   script:
     - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - cd maxima_baseimage
@@ -42,9 +42,9 @@ build_go:
     - docker
   except:
     - master
-  only:
-    changes:
-      - golang/**
+#  only:
+#    changes:
+#      - golang/**
   script:
     - cd golang/src/web
     - go build && GOBIN=golang/bin && go install
@@ -56,9 +56,9 @@ build_maxima_go:
     - docker
   except:
     - master
-  only:
-    changes:
-      - maxima_go/**
+#  only:
+#    changes:
+#      - maxima_go/**
   script:
     - cd maxima_go
     - docker build -t maximago .
