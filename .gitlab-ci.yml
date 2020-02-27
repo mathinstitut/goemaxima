@@ -47,7 +47,7 @@ build_go:
 #      - golang/**
   script:
     - cd golang/src/web
-    - go build && GOBIN=golang/bin go install
+    - go build && GOBIN=${CI_PROJECT_DIR}/golang/bin go install
     - cp golang/bin/web maxima_go/bin/web
 
 build_maxima_go:
