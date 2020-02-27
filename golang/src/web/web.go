@@ -15,8 +15,9 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
     input := r.PostFormValue("input")
-    if input == nil {
-        fmt.Fprintf(w, "Hostname: %s\n", os.Hostname())
+    if input == "" {
+        hostname, _ := os.Hostname()
+        fmt.Fprintf(w, "Hostname: %s\n", hostname)
 	return
     }
     ploturl := r.PostFormValue("ploturlbase")
