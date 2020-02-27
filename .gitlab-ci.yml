@@ -10,15 +10,14 @@ variables:
   GIT_SUBMODULE_STRATEGY: normal
   BASEIMAGE: maxima:$STACK_VERSION
 
-job_naming:
+naming:
   stage: naming
   tags:
     - docker
   script:
    - STACK_VERSION="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
    
-
-job_build_maxima_base:
+build_maxima_base:
   stage: build_maxima_base
   tags:
     - docker
@@ -30,7 +29,7 @@ job_build_maxima_base:
     - cd maxima_baseimage
     - docker build -t $BASEIMAGE
 
-job_build_go:
+build_go:
   stage: build_go
   image: golang:stable
   tags:
@@ -43,7 +42,7 @@ job_build_go:
     - go build && GOBIN=/golang/bin && go install
     - cp /golang/bin/web /maxima_go/bin/web
 
-job_build_maxima_go:
+build_maxima_go:
   stage: build_maxima_go
   tags:
     - docker
