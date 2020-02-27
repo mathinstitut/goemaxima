@@ -10,6 +10,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: normal
   BASEIMAGE:  maxima_base
   REGISTRY: 1
+  name: ${CI_COMMIT_REF_NAME}
 
 naming:
   stage: naming
@@ -48,7 +49,7 @@ build_go:
   script:
     - cd golang/src/web
     - go build && GOBIN=${CI_PROJECT_DIR}/golang/bin go install
-    - cp golang/bin/web maxima_go/bin/web
+    - cp ${CI_PROJECT_DIR}/golang/bin/web ${CI_PROJECT_DIR}/maxima_go/bin/web
 
 build_maxima_go:
   stage: build_maxima_go
