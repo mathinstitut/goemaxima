@@ -9,6 +9,7 @@ stages:
 variables:
   GIT_SUBMODULE_STRATEGY: normal
   BASEIMAGE:  maxima_base
+  REGISTRY: 1
 
 naming:
   stage: naming
