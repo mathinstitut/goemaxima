@@ -33,7 +33,7 @@ build_maxima_base:
 
 build_go:
   stage: build_go
-  image: golang:stable
+  image: golang
   tags:
     - docker
   except:
