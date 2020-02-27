@@ -14,6 +14,11 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
+    input := r.PostFormValue("input")
+    if input == nil {
+        fmt.Fprintf(w, "Hostname: %s\n", os.Hostname())
+	return
+    }
     ploturl := r.PostFormValue("ploturlbase")
 
     tmp_dir, err := ioutil.TempDir("", "max-plot-")
