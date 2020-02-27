@@ -16,6 +16,7 @@ naming:
     - docker
   script:
    - STACK_VERSION="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
+   - echo $STACK_VERSION
    
 build_maxima_base:
   stage: build_maxima_base
@@ -27,7 +28,7 @@ build_maxima_base:
   script:
     - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - cd maxima_baseimage
-    - docker build -t $BASEIMAGE
+    - docker build -t $BASEIMAGE .
 
 build_go:
   stage: build_go
@@ -51,3 +52,6 @@ build_maxima_go:
       - maxima_baseimage/**
       - golang/**
       - maxima_go/**
+  script:
+    - cd maxima_go
+    - docker build -t maximago .
