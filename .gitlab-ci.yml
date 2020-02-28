@@ -10,7 +10,7 @@ variables:
   REGISTRY: ""
   BASE1: ${REGISTRY}maxima_base:0.1
   BASE2: ${REGISTRY}maxima_base:latest
-  name: ${CI_COMMIT_REF_NAME}
+  name: "$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
 
 build_maxima_base:
   stage: build_maxima_base
