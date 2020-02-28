@@ -1,65 +1,61 @@
 image: "docker:latest"
 
 stages:
-  - naming
   - build_maxima_base
-  - build_go
-  - build_maxima_go
+  - build_submodule
+  - build_maxima_webservice
 
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  BASEIMAGE:  maxima_base
-  REGISTRY: 1
+  REGISTRY: ""
+  BASE1: ${REGISTRY}maxima_base:0.1
+  BASE2: ${REGISTRY}maxima_base:latest
   name: ${CI_COMMIT_REF_NAME}
 
-naming:
-  stage: naming
-  tags:
-    - docker
-  except:
-    - master
-  script:
-    - STACK_VERSION="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
-    - echo $STACK_VERSION
-   
 build_maxima_base:
   stage: build_maxima_base
   tags:
     - docker
   except:
     - master
-#  only:
-#    changes:
-#      - maxima_base/**
+  only:
+    changes:
+      - maxima_base/**
   script:
-    - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - cd maxima_baseimage
-    - docker build -t $BASEIMAGE .
+    - docker build -t ${BASE1} -t ${BASE2} .
+#   - docker push ${BASE1} ${BASE2}
 
-build_go:
-  stage: build_go
+build_submodule
+  stage: build_submodule
   image: golang
   tags:
     - docker
-  except:
-    - master
-#  only:
-#    changes:
-#      - golang/**
+#  except:
+#    - master
+  only:
+    changes:
+      - go_web/**
+      - webservice/**
   script:
-    - cd golang/src/web
-    - go build && GOBIN=${CI_PROJECT_DIR}/golang/bin go install
-    - cp ${CI_PROJECT_DIR}/golang/bin/web ${CI_PROJECT_DIR}/maxima_go/bin/web
+    - cd goe_web/src/web
+    - go build && GOBIN=${CI_PROJECT_DIR}/goe_web/bin go install
 
-build_maxima_go:
-  stage: build_maxima_go
+build_maxima_webservice:
+  stage: build_maxima_webservice
   tags:
     - docker
   except:
     - master
-#  only:
-#    changes:
-#      - maxima_go/**
+  only:
+    changes:
+      - maxima_baseimage/**
+      - go_web/**
+      - maxima_webservice/**
   script:
-    - cd maxima_go
-    - docker build -t maximago .
+    - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
+    - echo ${a}
+    - echo ${name}
+    - cp go_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
+    - cd maxima_webservice
+    - docker build -t maximago --build-arg BASEIMAGE=${BASE2} .
