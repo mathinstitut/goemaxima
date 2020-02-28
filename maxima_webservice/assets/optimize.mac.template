@@ -1,0 +1,11 @@
+/* Lisp is able to save a snapshot of its current state to a file.
+   Credit goes to:
+   https://github.com/maths/moodle-qtype_stack/blob/master/doc/en/CAS/Optimising_Maxima.md */
+
+load("${ASSETS}/maximalocal.mac");
+load("${LIB}/stackmaxima.mac");
+load(stats);
+load(distrib);
+load(descriptive);
+:lisp (sb-ext:save-lisp-and-die "maxima-optimised" :toplevel #'run :executable t)
+

@@ -1,6 +1,39 @@
 ARG BASEIMAGE=maxima_base:latest
+
 FROM $BASEIMAGE
 
-COPY ./bin/web /goweb
+ENV LIB=/opt/maxima/lib \
+    LOG=/opt/maxima/log \
+    TMP=/opt/maxima/tmp \
+    PLOT=/opt/maxima/plot \
+    ASSETS=/opt/maxima/assets \
+    BIN=/opt/maxima/bin
 
-CMD ["/goweb"]
+RUN apt-get update \
+    && apt-get install -y \
+    gnuplot \
+    gettext-base 
+
+# specify here which stack or moodle to use:
+ARG LIB_PATH=assStackQuestion/classes/stack/maxima
+
+RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
+
+# Copy Libraries
+COPY ${LIB_PATH} ${LIB}
+
+# Copy optimization scripts
+COPY assets/optimize.mac.template assets/maximalocal.mac.template ${ASSETS}/
+
+RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxima/stackmaximaversion \
+    && sh -c 'envsubst < ${ASSETS}/maximalocal.mac.template > ${ASSETS}/maximalocal.mac \
+    && envsubst < ${ASSETS}/optimize.mac.template > ${ASSETS}/optimize.mac ' \
+    && cat ${ASSETS}/maximalocal.mac && cat ${ASSETS}/optimize.mac \
+    && cd ${ASSETS} \
+    && maxima -b optimize.mac \
+    && mv maxima-optimised ${BIN}/maxima-optimised \
+    && rm -r ${ASSETS} ${LIB}
+
+# Add go webserver
+COPY ./bin/web ${BIN}/goweb
+CMD ["/opt/maxima/bin/goweb"]
