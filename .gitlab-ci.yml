@@ -35,7 +35,7 @@ build_submodule:
 #    - master
 #  only:
 #    changes:
-#      - go_web/**
+#      - goe_web/**
 #      - webservice/**
   script:
     - cd goe_web/src/web
@@ -50,12 +50,12 @@ build_maxima_webservice:
 #  only:
 #    changes:
 #      - maxima_baseimage/**
-#      - go_web/**
+#      - goe_web/**
 #      - maxima_webservice/**
   script:
     - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - echo ${a}
     - echo ${name}
-    - cp go_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
+    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
     - cd maxima_webservice
     - docker build -t maximago --build-arg BASEIMAGE=${BASE2} .
