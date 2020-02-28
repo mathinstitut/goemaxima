@@ -52,8 +52,8 @@ build_maxima_webservice:
 #      - goe_web/**
 #      - maxima_webservice/**
   script:
-    - NAME=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
-    - echo ${NAME}
+    - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
+    - NAME2=${REGISTRY}maxima:latest
 #    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
     - cd maxima_webservice
-    - docker build -t ${NAME} --build-arg BASEIMAGE=${BASE2} .
+    - docker build -t ${NAME1} -t ${NAME2} --build-arg BASEIMAGE=${BASE2} .
