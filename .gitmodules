@@ -6,3 +6,6 @@
 	path = maxima_baseimage/maximapool-docker
 	url = https://github.com/uni-halle/maximapool-docker.git
 	branch = stack-2017121800
+[submodule "goe_web"]
+        path = goe_web
+        url = https://gitlab.gwdg.de/martin.heide/goe_web.git
