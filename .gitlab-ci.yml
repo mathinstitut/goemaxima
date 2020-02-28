@@ -26,7 +26,7 @@ build_maxima_base:
     - docker build -t ${BASE1} -t ${BASE2} .
 #   - docker push ${BASE1} ${BASE2}
 
-build_submodule
+build_submodule:
   stage: build_submodule
   image: golang
   tags:
