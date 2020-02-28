@@ -18,9 +18,9 @@ build_maxima_base:
     - docker
   except:
     - master
-  only:
-    changes:
-      - maxima_base/**
+#  only:
+#    changes:
+#      - maxima_base/**
   script:
     - cd maxima_baseimage
     - docker build -t ${BASE1} -t ${BASE2} .
@@ -33,10 +33,10 @@ build_submodule:
     - docker
 #  except:
 #    - master
-  only:
-    changes:
-      - go_web/**
-      - webservice/**
+#  only:
+#    changes:
+#      - go_web/**
+#      - webservice/**
   script:
     - cd goe_web/src/web
     - go build && GOBIN=${CI_PROJECT_DIR}/goe_web/bin go install
@@ -47,11 +47,11 @@ build_maxima_webservice:
     - docker
   except:
     - master
-  only:
-    changes:
-      - maxima_baseimage/**
-      - go_web/**
-      - maxima_webservice/**
+#  only:
+#    changes:
+#      - maxima_baseimage/**
+#      - go_web/**
+#      - maxima_webservice/**
   script:
     - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - echo ${a}
