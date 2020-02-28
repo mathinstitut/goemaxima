@@ -8,4 +8,4 @@
 	branch = stack-2017121800
 [submodule "goe_web"]
         path = goe_web
-        url = https://gitlab.gwdg.de/martin.heide/goe_web.git
+        url = git@gitlab.gwdg.de:martin.heide/goe_web.git
