@@ -6,7 +6,7 @@ stages:
   - build_maxima_webservice
 
 variables:
-  GIT_SUBMODULE_STRATEGY: normal
+  GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: ""
   BASE1: ${REGISTRY}maxima_base:0.1
   BASE2: ${REGISTRY}maxima_base:latest
