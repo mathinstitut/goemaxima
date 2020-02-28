@@ -8,9 +8,8 @@ stages:
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: ""
-  BASE1: ${REGISTRY}maxima_base:0.1
+  BASE1: ${REGISTRY}maxima_base:v01
   BASE2: ${REGISTRY}maxima_base:latest
-  name: "$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
 
 build_maxima_base:
   stage: build_maxima_base
@@ -53,9 +52,8 @@ build_maxima_webservice:
 #      - goe_web/**
 #      - maxima_webservice/**
   script:
-    - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
-    - echo ${a}
-    - echo ${name}
+    - NAME=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
+    - echo ${NAME}
 #    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
     - cd maxima_webservice
-    - docker build -t maximago --build-arg BASEIMAGE=${BASE2} .
+    - docker build -t ${NAME} --build-arg BASEIMAGE=${BASE2} .
