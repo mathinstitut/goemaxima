@@ -39,7 +39,7 @@ build_submodule:
 #      - webservice/**
   script:
     - cd goe_web/src/web
-    - go build && GOBIN=${CI_PROJECT_DIR}/goe_web/bin go install
+    - go build && GOBIN=${CI_PROJECT_DIR}/maxima_webservice/bin/ go install
 
 build_maxima_webservice:
   stage: build_maxima_webservice
@@ -56,6 +56,6 @@ build_maxima_webservice:
     - a="$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
     - echo ${a}
     - echo ${name}
-    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
+#    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
     - cd maxima_webservice
     - docker build -t maximago --build-arg BASEIMAGE=${BASE2} .
