@@ -40,8 +40,11 @@ build_maxima_webservice:
      stack_version: "stack-2017121800"
   script:
      - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
-     - ./build.sh ${REGISTRY}
-#     - for sbcl_version in $(cat sbcl_version); do \
+#     - docker pull ${IMAGENAME}
+#     - ./build.sh ${REGISTRY}
+     - for sbcl_version in $(cat sbcl_version); do
+     - echo ${sbcl_version}
+     - done
 #        for maxima_version in $(cat maxima_version); do \
 #         for stack_version in $(cat stack_version); do 
 #          IFS=",";
