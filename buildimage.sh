@@ -11,6 +11,12 @@ echo "maxima: "$2
 echo $3
 # tag the image
 IMAGENAME=$5"/sbcl"$1"_maxima"$2"_"$3
+# check if the image already exists on the server
+docker pull ${IMAGENAME}
+# build it
 docker build -t ${IMAGENAME} --build-arg MAXIMA_VERSION=$2 --build-arg SBCL_VERSION=$1 --build-arg LIB_PATH=$4 .
-# testing!?
 echo ${IMAGENAME}" wurde erfolgreich gebaut."
+# testing?
+# push it
+docker push ${IMAGENAME}
+

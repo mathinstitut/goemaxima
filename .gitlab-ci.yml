@@ -23,48 +23,11 @@ build_submodule:
     - cd goe_web/src/web
     - go build && GOBIN=${CI_PROJECT_DIR}/bin/ go install
 
-build_maxima_webservice:
+build_webservice:
   stage: build_webservice
   tags:
     - docker
   except:
     - master
-#  only:
-#    changes:
-#      - maxima_baseimage/**
-#      - goe_web/**
-#      - maxima_webservice/**
-  variables:
-     sbcl_version: "2.0.2"
-     maxima_version: "4.43.1"
-     stack_version: "stack-2017121800"
   script:
-#     - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
-#     - docker pull ${IMAGENAME}
-#     - ./build.sh ${REGISTRY}
-     - for sbcl_version in $(cat sbcl_version); do
-     - for maxima_version in $(cat maxima_version); do
-     - for stack_version in $(cat stack_version); do 
-       IFS=",";
-       set ${stack_version};
-       IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"$1
-       # get right version of stackMaxima
-#       cd assStackQuestion;
-#       git checkout $2
-#       cd ../
-     - echo ${IMAGENAME}
-     - echo ${stack_version}
-     - done
-     - done
-     - done
-
-
- #     - echo "12hallo"
-# ./buildimage.sh "2.0.2" "5.43.1" "stack-2017121800" "assStackQuestion/classes/stack/maxima" "172.30.190.249:5000"
-#     - 
-#    - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
-#    - NAME2=${REGISTRY}maxima:latest
-#    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
-# get library path
-#    - cd maxima_webservice
-#    - docker build -t ${NAME1} --build-arg BASEIMAGE=${BASE2} .
+    - ./build.sh ${REGISTRY}
