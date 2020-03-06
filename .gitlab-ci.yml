@@ -24,7 +24,7 @@ build_submodule:
     - go build && GOBIN=${CI_PROJECT_DIR}/bin/ go install
 
 build_maxima_webservice:
-  stage: build_maxima_webservice
+  stage: build_webservice
   tags:
     - docker
   except:
