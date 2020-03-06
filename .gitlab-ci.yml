@@ -39,10 +39,18 @@ build_maxima_webservice:
      maxima_version: "4.43.1"
      stack_version: "stack-2017121800"
   script:
-     - apt update && apt install -y cowsay
      - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
-#     - for
-     - cowsay ${IMAGENAME}
+     - .build.sh ${REGISTRY}
+#     - for sbcl_version in $(cat sbcl_version); do \
+#        for maxima_version in $(cat maxima_version); do \
+#         for stack_version in $(cat stack_version); do 
+#          IFS=",";
+#          set ${stack_version};
+#          # get right version of stackMaxima
+#          cd assStackQuestion;
+#          git checkout $2
+#          cd ../
+
  #     - echo "12hallo"
 # ./buildimage.sh "2.0.2" "5.43.1" "stack-2017121800" "assStackQuestion/classes/stack/maxima" "172.30.190.249:5000"
 #     - 

@@ -13,5 +13,4 @@ echo $3
 IMAGENAME=$5"/sbcl"$1"_maxima"$2"_"$3
 docker build -t ${IMAGENAME} --build-arg MAXIMA_VERSION=$2 --build-arg SBCL_VERSION=$1 --build-arg LIB_PATH=$4 .
 # testing!?
-cowsay ${IMAGENAME}" wurde erfolgreich gebaut."
-return ${IMAGENAME}
+echo ${IMAGENAME}" wurde erfolgreich gebaut."
