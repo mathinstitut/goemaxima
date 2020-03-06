@@ -53,6 +53,7 @@ build_maxima_webservice:
 #       git checkout $2
 #       cd ../
      - echo ${IMAGENAME}
+     - echo ${stack_version}
      - done
      - done
      - done
