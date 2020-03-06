@@ -1,0 +1,11 @@
+# Files to be ignored for versioning with git
+# Shell wildcards are possible
+# / is the project root
+# add * to commit directories with .gitkeep
+.idea
+/nbproject
+
+# Don't ignore .gitkeep and .htaccess files
+# these are used to commit empty directories
+!.gitkeep
+!.htaccess

@@ -1,0 +1,267 @@
+.healthcheck_main_section {
+    align-content: center;
+    width: 100%;
+    border: 1px solid #E0E1E8;
+}
+
+.hc_expanded_shown {
+}
+
+.hc_expanded_hidden {
+    display: none;
+}
+
+.hc_color_passed {
+    background-color: #eefbeb;
+}
+.hc_color_failed {
+    background-color: #ffcccc;
+}
+
+#hc_section_title {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    background-color: #9BC5ED;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+#hc_section_explanation {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    background-color: rgba(152, 137, 135, 0.06);
+    text-align: center;
+    font-size: 0.9em;
+}
+
+div.healthcheck_connection_explanation {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    background-color: rgba(152, 137, 135, 0.20);
+    text-align: center;
+}
+
+/*MAXIMA INSTALLED TEST*/
+
+#maxima_installed_title {
+    background-color: rgba(152, 137, 135, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maxima_installed_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#maxima_installed {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maxima_installed_title_status{
+    background-color: rgba(38, 37, 41, 0.77);
+    color: white;
+}
+
+/*MAXIMALOCAL.MAC CREATION AND CONTENTS*/
+
+#maximalocal_title {
+    background-color: rgba(152, 137, 135, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maximalocal_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#maximalocal_location {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maximalocal_content_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#maximalocal_content{
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+}
+
+#maximalocal_content > textarea {
+    align-content: center;
+    width: 50%;
+    height: 10em;
+    resize: none;
+    font-size: 0.75em;
+}
+
+#maximalocal_title_status{
+    background-color: rgba(38, 37, 41, 0.77);
+    color: white;
+}
+
+#maximalocal_content_blank{
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+/*CONNECTION STATUS*/
+
+#connection_status_title {
+    background-color: rgba(152, 137, 135, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#connection_status_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#connection_status_content > h3 {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+
+#connection_status_content {
+    background-color: rgba(152, 137, 135, 0.20);
+    font-size: 0.8em;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    margin-bottom: 1em;
+    text-align: left;
+    border: 1px solid #E0E1E8;
+
+    width: 80em;
+    height: 20em;
+    overflow: scroll;
+}
+
+#connection_status_title_status{
+    background-color: rgba(38, 37, 41, 0.77);
+    color: white;
+}
+
+/*SAMPLE COMMAND*/
+
+#sample_command_title {
+    background-color: rgba(152, 137, 135, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#sample_command_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#sample_command_1 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#sample_command_2 {
+    background-color: rgba(221, 199, 196, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#sample_command_title_status{
+    background-color: rgba(38, 37, 41, 0.77);
+    color: white;
+}
+
+/*MAXIMA VERSION*/
+
+#maxima_version_title {
+    background-color: rgba(152, 137, 135, 0.20);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maxima_version_message {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+#maxima_version {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#maxima_version_title_status{
+    background-color: rgba(38, 37, 41, 0.77);
+    color: white;
+}

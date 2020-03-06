@@ -1,0 +1,77 @@
+.dsm_container_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    width: 100%;
+    border: 1px solid #E0E0E0;
+}
+
+#dsm_title {
+    color: #404040;
+    background-color: #DEDEDE;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+
+#dsm_subtitle {
+    color: #404040;
+    font-size: 75%;
+    background-color: #CCCCCC;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+}
+
+.deployed_seeds_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+#dsm_dsp_ds{
+    background-color: #F3F3F3;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+    font-size: 95%;
+}
+
+td.deployed_seed_column{
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+#dsm_dsp_qn{
+    background-color: #CCCCCC;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+    font-size: 95%;
+}
+
+td.question_note_column{
+    background-color: #CCCCCC;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+#dsm_dsp_vf{
+    background-color: #F3F3F3;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+    font-size: 95%;
+}
+
+td.view_form_column{
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+#new_deployed_seeds_table{
+    background-color: #EAEAEA;
+    width: 100%;
+    align-content: center;
+}

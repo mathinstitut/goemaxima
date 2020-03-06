@@ -1,0 +1,454 @@
+//
+// Copyright (c) 2013 Institut für Lern-Innovation, Friedrich-Alexander-Universität Erlangen-Nürnberg
+// GPLv2, see LICENSE 
+// 
+// English Language File for assStackQuestion Plugin
+//
+
+<!-- language file start -->
+assStackQuestion#:#STACK Question
+question_imported_successfully#:#Question was imported successfully
+error_importing_question#:#Error importing question
+import_xml#:#Import from MoodleXML file
+import_xml_file#:#Moodle XML file
+qpl_qst_xqcas_import_questions_into_qpl#:#Import question into questionpool 
+qpl_qst_xqcas_import_xml_file#:#Import XML file
+qpl_qst_xqcas_input_type_algebraic#:#algebraic
+qpl_qst_xqcas_input_type_textarea#:#textarea
+qpl_qst_xqcas_input_type_boolean#:#boolean
+qpl_qst_xqcas_input_type_matrix#:#matrix
+qpl_qst_xqcas_input_type_not_supported#:#Not supported type
+validation_feedback_message#:#Your last answer was interpreted as follows:
+create_questions_into_qpl#:#Create question from MoodleXML
+edit_cas_question#:#Edit STACK Question
+evaluate_question#:#Evaluate Answer
+evaluation_mode#:#Evaluation mode: 
+preview_points_message_p1#:#Your mark for this question is: 
+preview_points_message_p2#:#Point(s) of a maximum of 
+preview_points_message_p3#:#Point(s)
+preview_feedback_message#:#Feedback: 
+message_general_feedback#:#General feedback for this question:
+message_no_how_to_solve_in_this_question#:#There are no general feedback for this question.
+message_user_solution_part#:#Your answer was: 
+message_feedback_solution_part#:#CAS feedback for your answer is: 
+message_points#:#Points reached:
+message_feedback_status_part#:#Status of this response:
+message_total_points#:#Points reached:
+not_answered_part_feedback#:#Not answered part.
+randomisation_info#:#Attention: This question contains random variables, during this session this version will be shown. To change random variables restart the session.
+<!-- plugin configuration variables -->
+show_connection_settings#:#Connection to Maxima
+show_display_settings#:#Maths display options
+show_default_options_settings#:#Default values for options
+show_default_inputs_settings#:#Default values for inputs
+save#:#Save
+cancel#:#Cancel
+default_settings#:#Use default settings
+platform_type#:#Platform type
+platform_type_info#:#STACK needs to know what sort of operating system it is running on. Choose 'Server' for the connection to a maxima pool, see:<br />https://github.com/maths/stack_util_maximapool
+windows#:#Windows
+unix#:#Linux
+maxima_version#:#Maxima version
+maxima_version_info#:#The version of Maxima being used.
+cas_connection_timeout#:#CAS connection timeout
+cas_connection_timeout_info#:#The timeout to use when trying to connect to Maxima.
+cas_result_caching#:#CAS result caching
+cache_in_the_database#:#Cache in the database
+do_not_cache#:#Do not cache
+cas_result_caching_info#:#This setting determines whether calls the to CAS are cached. This setting should be turned on unless you are doing development that involves changing the Maxima code. The current state of the cache is shown on the healthcheck page. If you change your settings, e.g. the gnuplot command, you will need to clear the cache before you can see the effects of these changes.
+maxima_command#:#Maxima command
+maxima_command_info#:#STACK needs to know the shell command to start Maxima. For the platform type 'Server' please enter the URL of the maxima pool, e.g.<br />http://localhost:8080/MaximaPool/MaximaPool
+plot_command#:#Plot command
+plot_command_info#:#STACK needs to know the gnuplot command.
+cas_debugging#:#CAS debugging
+cas_debugging_info#:#Whether to store debugging information about the CAS connection.
+connection_settings#:#Connection to Maxima settings
+instant_validation#:#Instant validation
+instant_validation_info#:#With this setting turned on, the students current input will be validated whenever they pause in their typing. This gives a better user experience, but is likely to increase the server load. Therefore this setting can only be activated if a maxima pool is used (see 'Connection to Maxima').
+maths_filter#:#Maths filter
+maths_filter_info#:#The method used to display maths. If you select MathJax, then you will need to follow the instrucions on the Healthcheck page to set it up. If you select a filter, then you must ensure that filter is enabled on the Manage filters configuration page.
+replace_dollars#:#Replace $ and $$
+replace_dollars_info#:#Replace $...$ and $$...$$ delimiters in question text, in addition to \[...\] and \(...\).
+display_settings#:#Maths display settings
+options_question_simplify#:#Question-level simplify
+options_question_simplify_info#:#Sets the variable "simp" within Maxima for this question. E.g. question variables, question text etc. The value set in each potential response tree will over ride this for any expressions subsequently defined within the tree.
+options_assume_positive#:#Assume positive
+options_assume_positive_info#:#This option sets the value of Maxima's assume_pos variable.
+options_prt_correct#:#Feedback for correct answers
+options_prt_partially_correct#:#Feedback for partially correct answers
+options_prt_incorrect#:#Feedback for incorrect answers
+options_multiplication_sign#:#Multiplication sign
+options_multiplication_sign_info#:#Controls how multiplication signs are displayed.
+options_mult_sign_dot#:#Dot
+options_mult_sign_cross#:#Cross
+options_mult_sign_none#:#None
+options_sqrt_sign#:#Surd for square root
+options_sqrt_sign_info#:#Controls how surds are displayed.
+options_complex_numbers#:#Meaning and display of sqrt(-1)
+options_complex_numbers_info#:#Controls the meaning and display of the symbol i and sqrt(-1)
+options_complex_numbers_i#:#i
+options_complex_numbers_j#:#j
+options_complex_numbers_symi#:#symi
+options_complex_numbers_symj#:#symj
+options_inverse_trigonometric#:#Inverse trigonometric functions
+options_inverse_trigonometric_info#:#Controls how inverse trigonometric functions are displayed in CAS output.
+options_inverse_trigonometric_cos#:#cos^(-1)(x)
+options_inverse_trigonometric_acos#:#acos(x)
+options_inverse_trigonometric_arccos#:#arccos(x)
+default_options_settings#:#Default options settings
+input_type#:#Input type#:#
+input_type_info#:#This determines the type of the input element, e.g. form field, true/false, text area.
+input_type_algebraic#:#Algebraic input
+input_type_boolean#:#True/False
+input_type_matrix#:#Matrix
+input_type_singlechar#:#Single character
+input_type_textarea#:#Text area
+input_box_size#:#Input box size
+input_box_size_info#:#Width of the html formfield.
+input_strict_syntax#:#Strict syntax
+input_strict_syntax_info#:#Does the input have to be done using strict Maxima syntax? If not, this increases the range of patterns which indicate missing *s on input, including any function application and scientific notation.
+input_insert_stars#:#Insert stars
+input_insert_stars_info#:#If set to yes then the system will automatically insert *s into any patterns identified by Strict Syntax. Otherwise, it shows an error.
+input_forbidden_words#:#Forbidden words
+input_forbidden_words_info#:#This is a comma separated list of text strings which are forbidden in a student's answer.
+input_forbid_float#:#Forbid float
+input_forbid_float_info#:#If set to yes, then any answer of the student which has a floating point number will be rejected as invalid.
+input_require_lowest_terms#:#Require lowest terms
+input_require_lowest_terms_info#:#When this option is set to yes, any coefficients or other rational numbers in an expression, must be written in lowest terms. Otherwise the answer is rejected as invalid.
+input_check_answer_type#:#Check the type of the response
+input_check_answer_type_info#:#If yes, answers which are of a different "type" (e.g. expression, equation, matrix, list, set) are rejected as invalid.
+input_must_verify#:#Student must verify
+input_must_verify_info#:#Specifies whether the student's input is presented back to them before scoring.
+input_show_validation#:#Show the validation
+input_show_validation_info#:#Setting this option displays any validation feedback from this input, including echoing back their expression in traditional two dimensional notation.
+default_input_settings#:#Default input settings
+config_connection_changed_message#:#The connection to Maxima settings have been changed successfully.
+config_display_changed_message#:#The Maths display settings have been changed successfully.
+config_options_changed_message#:#The default settings for Options have been changed successfully.
+config_inputs_changed_message#:#The default settings for Inputs have been changed successfully.
+config_default_connection_message#:#The settings for connection to Maxima have been set to default.
+config_default_display_message#:#The settings for maths display have been set to default.
+config_default_options_message#:#The default settings for Options have been set to default.
+config_default_inputs_message#:#The default settings for Inputs have been set to default.
+default_prt_correct_message#:#Correct answer, well done.
+default_prt_partially_correct_message#:#Your answer is partially correct.
+default_prt_incorrect_message#:#Incorrect answer.
+error_importing_question_malformed#:#One or more questions could not be correctly imported because they were not well formed. Please check the XML file.
+validation_feedback_error_message#:#This answer is invalid.
+error_importing_question_to_test#:#Error when importing questions. STACK Questions cannot be directly imported to a Test, Try to import the question to a question pool, and from there to a Test.
+message_best_solution#:#Proposed solution:
+show_other_settings#:#General settings
+show_healthcheck#:#Health Check
+healthcheck_expanded#:#Show Debugging Data
+healthcheck_reduced#:#Do Health Check
+hc_passed#:#PASSED
+hc_failed#:#FAILED
+hc_connection_expanded_title#:#Maxima connection Healthcheck (expanded version)
+hc_connection_expanded_explanation#:#Different tests have been done and here you have the results with a detailed explanation. Notice that if background of a test is green, the test has been passed, if red, there was an error and a suggestion to a solution could be presented.
+hc_bat_location_title#:#Is Maxima installed and recognised by the question plugin?
+hc_bat_location#:#Maxima is installed and recognised by the question plugin. We looked for the maxima.bat file and we found it at:
+hc_bat_location_error#:#Maxima is not installed or cannot be recognised by the question plugin. maxima.bat should be installed in one of the following directories:
+hc_maximalocal_title#:#Is maximalocal.mac properly created?
+hc_maximalocal#:#The maximalocal.mac file has been rewritten succesfully and can be found at:
+hc_maximalocal_content#:#The content of the current maximalocal.mac file is:
+hc_maximalocal_error#:#The maximalocal.mac file couldn't be rewritten or couldn't be found at:
+hc_connection_status_title#:#Connection to Maxima
+hc_connection_status_display#:#This section always sends a genuine call to Maxima, regardless of the currect cache settings. This is needed to ensure the connection to the CAS is really currently working.
+hc_sample_command#:#We are trying to evaluate the following CAS text:
+hc_sample_command_title#:#Trying to connect to Maxima
+hc_connection_reduced_title#:#Maxima connection Healthcheck
+hc_connection_reduced_explanation#:#Different tests have been done and here you have the results. Notice that if background of a test is green, the test has been passed, if red, there was an error and a suggestion to a solution could be presented.
+info_old_version_question#:#WARNING: This question was imported before version 1.6 was released and can not work properly, please delete it and re-import it.
+info_functionality_not_developed#:#This functionality has been not developed yet.
+error_import_question_in_test#:#ERROR: Questions cannot be directly imported to a Test, please import them into a question pool in order to use it in a Test.
+hc_connection_status_display_error#:#The plugin cannot connect to Maxima, please check that you have maxima installed in the right place.
+error_evaluation_determining_status#:#Cannot determine the status of the question.
+error_evaluation_determining_status_message#:#Cannot determine the status of the question.
+cache_successfully_deleted#:#the Cache was successfully deleted.
+clear_cache#:#Clear Cache
+error_import_no_title#:#There was an error importing one question, There was no title in the XML file for that question, so that question couldn't be created. Please check your XML file
+error_import_no_question_text#:#The question with the following title couldn't be created because it had no question text:
+error_import_no_points#:#The question with the following title couldn't be created because it had no points assigned:
+error_import_no_inputs#:#The question with the following title couldn't be created because it had no inputs assigned:
+error_import_no_prt#:#The question with the following title couldn't be created because it had no Potential response trees assigned:
+import_number_of_questions_created#:#questions were created.
+import_number_of_questions_created_1#:#question was created.
+randomisation_info_2#:#Attention: This question contains random variables, To change the version shown, go to the Deployed seeds page in edit question.
+message_question_text#:#Question text
+message_teacher_solution_part#:#The solution is:
+message_error_part#:#The following error(s) were found:
+message_user_response_container#:#The following answers were evaluated:
+dsm_deployed_seeds#:#Deployed seeds
+dsm_question_doesnt_use_randomisation#:#This question doesn't use randomisation so it's not possible create seeds.
+dsm_deployed_seeds_header#:#Deployed seed
+dsm_question_notes_header#:#Question note for the deployed seed
+dsm_view_form_header#:#Actions
+dsm_new_deployed_seed_form#:#Create new deployed seeds
+dsm_new_deployed_seed_form_input#:#Deployed seed
+dsm_new_deployed_seed_form_button#:#Create new seed
+dsm_delete_deployed_seed_form_button#:#Delete
+dsm_deployed_seed_deleted#:#The chosen seed has been properly deleted.
+dsm_subtitle#:#The following seeds have been deployed for this question.
+dsm_no_deployed_seeds#:#There isn't already deployed seeds for this question.
+dsm_not_allowed_seed#:#The value you entered as seed is not allowed.
+import_from_moodle#:#Import question from MoodleXML
+scoring_management#:#Scoring
+edit_question#:#Edit question
+sco_scoring#:#Scoring
+sco_subtitle#:#In this page you can see the evaluation structure of the current question in order to modify the points or check if the question has the points structure you want.
+sco_scoring_form#:#Scoring status
+sco_current_scoring_form_input#:#Current points
+sco_new_scoring_form_input#:#New points
+sco_show_new_scoring_form_button#:#Show comparison
+sco_set_new_scoring_form_button#:#Save points
+sco_invalid_value#:#The value you entered as new points for this question is not valid.
+sco_prt_name#:# Potential response tree name:
+sco_prt_value#:#Maximum points for this Potential response tree:
+sco_node_name#:#Node name:
+message_answernote_part#:#Answer note
+exp_question_note#:#Question note
+exp_general_feedback#:#General feedback
+exp_student_answer#:#Student answer
+sco_current_scoring_info#:#This are the current maximum points of the question.
+sco_new_scoring_info#:#In this field you can insert a new value for the maximum points of the question in order to compare it with the current points or set as maximun points for this question.
+bs_your_solution_was#:#Your solution was:
+bs_best_solution#:#Best solution:
+ut_title#:#Unit tests
+ut_subtitle#:#Using question tests, teachers can ensure their question will follows the desired behaviour.
+ut_testcase_name_header#:#Testcase name
+ut_testcase_name#:#Testcase
+ut_input_name#:#Input name
+ut_student_response#:#Student response
+ut_expected_mark#:#Expected score
+ut_received_mark#:#Received mark
+ut_expected_penalty#:#Expected penalty
+ut_received_penalty#:#Received penalty
+ut_cas_errors#:#CAS errors
+ut_cas_feedback#:#CAS feedback
+ut_expected_answer_note#:#Expected answer note
+ut_received_answer_note#:#Received answer note
+ut_run_testcase#:#Run testcase
+ut_edit_testcase#:#Edit testcase
+ut_delete_testcase#:#Delete testcase
+ut_run_all_tests#:#Run all test of this question
+ut_expected_score_for#:#Expected score for
+ut_expected_penalty_for#:#Expected penalty for
+ut_expected_answernote_for#:#Expected answer note for
+ut_test_passed#:#PASSED
+ut_test_failed#:#FAILED
+options_matrix_parens#:#Matrix parentheses
+options_matrix_parens_info#:#Controls the default shape of matrix parentheses when displayed in CAS output
+options_question_variables#:#Question variables
+prt#:#Potential response tree
+prts#:#Potential response trees
+prt_value#:#Question value
+prt_value_info#:#Value for this Potential response tree in the current question.
+prt_simplify#:#Autosimplify
+prt_simplify_info#:#Sets the variable "simp" within Maxima for the feedback variables defined in this potential response tree, and while evaluating this PRT. This will over ride any value set in the question for any expressions defined within the tree..
+prt_feedback_variables#:#Feedback variables
+prt_feedback_variables_info#:#The feedback variables enable you to manipulate any of the inputs, together with the question variables, prior to traversing the tree. Variables defined here may be used anywhere else in this tree.
+node_positive_part#:#When true...
+node_negative_part#:#When false...
+prt_node_pos_mod#:#Mode when True
+prt_node_pos_mod_info#:#How the score is adjusted. = means set the score to a particular values, +/- means add or subtract the given score from the current total.
+prt_node_pos_score#:#Positive score
+prt_node_pos_score_info#:#Score when answer test is true
+prt_node_pos_penalty#:#Penalty
+prt_node_pos_penalty_info#:#Accumulate that much penalty.
+prt_node_pos_next#:#Next node
+prt_node_pos_next_info#:#Whether to go to another node, and if so which, or stop.
+prt_node_pos_answernote#:#Answernote
+prt_node_pos_answernote_info#:#This is a tag which is key for reporting purposes.  It is designed to record the unique path through the tree, and the outcome of each answer test.  This is automatically generated, but can be changed to something meaningful.
+prt_node_pos_specific_feedback#:#Specific feedback
+prt_node_pos_specific_feedback_info#:#This is CASText which may depend on any of the question variables, input elements or the feedback variables. This is evaluated and displayed to the student if they pass down this branch.
+prt_node_neg_mod#:#Mode when False
+prt_node_neg_mod_info#:#How the score is adjusted. = means set the score to a particular values, +/- means add or subtract the given score from the current total.
+prt_node_neg_score#:#Negative Score
+prt_node_neg_score_info#:#Score when answer test is false
+prt_node_neg_penalty#:#Penalty
+prt_node_neg_penalty_info#:#Accumulate that much penalty.
+prt_node_neg_next#:#Next node
+prt_node_neg_next_info#:#Whether to go to another node, and if so which, or stop.
+prt_node_neg_answernote#:#Answernote
+prt_node_neg_answernote_info#:#This is a tag which is key for reporting purposes.  It is designed to record the unique path through the tree, and the outcome of each answer test.  This is automatically generated, but can be changed to something meaningful.
+prt_node_neg_specific_feedback#:#Specific feedback
+prt_node_neg_specific_feedback_info#:#This is CASText which may depend on any of the question variables, input elements or the feedback variables. This is evaluated and displayed to the student if they pass down this branch.
+inputs#:#Inputs
+options#:#Options
+show_options#:#Show question options
+show_input#:#Show input
+prt_name#:#Potential response Tree Name
+prt_name_info#:#Usually potential response trees are named prt1, prt2...
+prt_settings#:#Show
+prt_graph#:#Graphical view
+prt_settings_and_nodes#:#Settings
+prt_nodes#:#Nodes
+enable_disable_info#:#Enable/Disable Info messages
+end#:#End
+input_syntax_hint#:#Syntax hint
+input_allow_words#:#Allow words
+input_options#:#Extra options
+input_syntax_hint_info#:#The syntax hint will appear in the answer box whenever this is left blank by the student.
+input_allow_words_info#:#By default, arbitrary function or variable names of more than two characters in length are not permitted. This is a comma separated list of function or variable names which are permitted in a student's answer.
+input_options_info#:#Some input types require extra options in order to work. You can enter them here. This value is a CAS expression.
+auth_title#:#Edit question
+auth_subtitle#:#Creation and edition of STACK questions
+prt_node_answer_test#:#Answer test
+prt_node_student_answer#:#Student answer
+prt_node_teacher_answer#:#Teacher answer
+prt_node_options#:#Test options
+prt_node_quiet#:#Quiet
+prt_node_answer_test_info#:#An answer test is used to compare two expressions to establish whether they satisfy some mathematical criteria
+prt_node_student_answer_info#:#This is the first argument to the answer test function. In asymmetrical tests this is considered to be the "student's answer" although it may be any valid CAS expression, and may depend on the question variables or the feedback variables.
+prt_node_teacher_answer_info#:#This is the second argument to the answer test function. In asymmetrical tests this is considered to be the "teacher's answer" although it may be any valid CAS expression, and may depend on the question variables or the feedback variables.
+prt_node_options_info#:#This field enables answer tests to accept an option, e.g. a variable or a numerical precision.
+prt_node_quiet_info#:#When set to yes any feedback automatically generated by the answer tests is suppressed, and not displayed to the student. The feedback fields in the branches are unaffected by this option.
+add_new_prt#:#New Potential response Tree
+add_new_node#:#New Node
+delete_node#:#Delete node
+delete_prt#:#Delete Potential response Tree
+authoring_points_info#:#To set the total points of the question, go to label Scoring.
+authoring_input_creation_info#:#To create new inputs just type on the question text the placeholder: "[[input:your_input_name]]" and "[[validation:your_input_name]]", to delete an input just delete the input placeholder from question text.
+input_hint#:#Hint
+options_question_variables_info#:#This field allows you to define and manipulate CAS variables, e.g. to create random versions. These are available to all other parts of the question.
+options_how_to_solve#:#How to solve
+options_how_to_solve_info#:#How to solve is CASText. How to solve, also known as a "worked solution", is shown to the student after they have attempted the question. Unlike feedback, which depends on what response the student gave, the same general feedback text is shown to all students. It may depend on the question variables used in the version of the question.
+node_creation_hint#:#Node creation hint
+node_creation_hint_text#:#To create a new node the following field must be filled in: Student answer, teacher answer and on of the score and penalty field below. You can connect the node to the potential response tree after saving the new node.
+input_model_answer#:#Model answer
+input_model_answer_info#:#The teacher must specify a model answer for each input.  This must be a valid Maxima string, and may be formed from the question variables.
+options_question_note#:#Question note
+options_question_note_info#:#The question note is CASText.  The purpose of a question note is to distinguish between random versions of a question. Two question versions are equal if and only if the question notes are equal.  In later analysis it is very helpful to leave a meaningful question note
+server#:#Server
+error_fields_missing#:#Some mandatory fields are missing.
+dsm_fix_deployed_seed_form_button_text#:#Fix this seed for preview mode.
+dsm_fix_deployed_seed_form_button#:#See preview
+prt_first_node#:#First Node
+export_to_moodle#:#Export to MoodleXML
+export_to_moodlexml#:#Export to MoodleXML
+all_from_pool#:#Mode
+export_only_this#:#Export only this question
+export_all_from_test#:#Export all questiosn from current test
+export_all_from_pool#:#Export all questions from current question pool
+export_only_this_info#:#If you choose this options, a MoodleXML file with this question will be created
+export_all_from_test_info#:#If you choose this option, a MoodleXML file with all the STACK questions within the current test will be created
+export_all_from_pool_info#:#If you choose this option, a MoodleXML file with all the STACK questions within the current question pool will be created
+error_exporting_to_moodle_mode#:#ERROR: The export mode you try to use doesn't exist.
+error_exporting_to_moodle_question_id#:#ERROR: question_id not found, probably the question(s) you try to export are corrupt.
+moodlexml_no_questions_selected#:#ERROR: You didn't choose any question.
+error_not_valid_prt_name#:#The potential response tree name given is not valid.
+exception_no_raw_given_in_keyval_creation#:#There was an error creating the maxima command.
+error_no_question_note#:#Question with random variables must have a Question note.
+error_prt_without_first_node#:#Warning, you created a question without Potential response tree structure, be sure there is at least one PRT with al least one node, the PRT should have a node set as first node.
+warning_use_evaluation_button_instead#:#Please, use the evaluate answer button above instead.
+error_in_question_text#:#In question text or question variables occurs the following error
+error_in_specific_feedback#:#The specific feedback has the following error
+error_in_question_note#:#Error in question note
+error_in_prt_correct#:#The feedback for correct solution text has the following error
+error_in_prt_partially_correct#:#The feedback for partially correct solution text has the following error
+error_in_prt_incorrect#:#The feedback for incorrect solution text has the following error
+error_in_how_to_solve#:#The how to solve text has the following error
+error_in_node_creation#:#The node could not be properly created, remember a node must have a valid student answer, teacher answer and give some score or penalty
+deletion_error_not_enought_prts#:#You cannot delete that PRT because there is only one PRT in the question
+deletion_error_not_enought_prt_nodes#:#You cannot delete that Node because there is only one Node in that PRT
+deletion_error_first_node#:#You cannot delete the first node of a PRT
+no_model_solution_for_this_input#:#This input has no solution model
+options_specific_feedback#:#Specific feedback
+options_specific_feedback_info#:#By default, feedback for each potential response tree will be shown in this block. It can be moved to the question text. Note, this block is not CASText
+questions_updated_new_feedback_system#:#Number of questions updated to the new feedback system
+questions_updated_new_feedback_system2#:#Feedback placeholders have been included into the specific feedback options, you can move into the question text in those questions you want
+error_lack_of_following_feedback_placeholders#:#The following Potential response trees have no feedback placeholder (like this: [[feedback:{PRT name}]]) in Question text or specific feedback:
+untitled_question#:#Untitled STACK question
+auth_tip1#:#Click here to read the STACK Question quick authoring guide in English
+auth_tip2#:#Click here to read the STACK Question quick authoring guide in German
+auth_tip3#:#
+interpreted_by_maxima_as#:#Interpreted by Maxima as:
+interpreted_by_maxima_as_2#:#Your answer was interpreted as follows:
+sco_info#:#On this page, scoring is shown directly in question points. Per each node of each potential response tree, points obtained if node's Answertest is true is shown in green and points obtained if node's Answertest is false is shown in red. In addition per each potential response tree you can check their weight into the question in "Maximum points for this Potential response tree"
+castext_info#:#In this field you can use CAS Text. CASText is CAS-enabled text. CASText is simply HTML into which LaTeX mathematics and CAS commands can be embedded. These CAS commands are executed before the question is displayed to the user. Use only simple LaTeX mathematics structures. Only a small part of core LaTeX is supported
+html_info#:#In this field, only HTML elements are allowed, CASText won't be rendered
+casexpression_info#:#In this field you can insert only CAS expressions, not HTML code can be placed here.
+casexpression_name#:#CAS Expression
+error_model_answer_missing#:#The model answer of the following input is missing:
+error_student_answer_missing#:#The student answer of the following PRT / Node is missing:
+error_teacher_answer_missing#:#The teacher answer of the following PRT / Node is missing:
+inputs_star#:#Inputs *
+error_in_question_variables#:#The following error occurs in question variables:
+auth_inputs#:#Settings of input
+info_allowed#:#Allowed elements:
+castext_name#:#CAS Text
+html_name#:#HTML
+auth_guide_name#:#STACK Authoring guide
+unix_optimised#:#Linux (Optimized)
+preview_no_answer#:#You must answer the question to get feedback.
+update_to_version_3#:#This update to the plugin version 3 with the STACK core 4 included changes in all existing STACK questions of the platform to the new CASText syntax. Although those changes are made automatically, please, check the STACK questions already available on the platform in order to ensure they work properly.
+update_to_version_3_2#:#Check the questions you imported because some changes were made in order to keep the questions in line to the new CASText syntax of this STACK question plugin version.
+input_type_checkbox#:#Checkbox
+input_type_dropdown#:#Drop down list
+input_type_equiv#:#Equivalence reasoning
+input_type_notes#:#Notes
+input_type_radio#:#Radio
+input_type_units#:#Units
+maxima_libraries#:#Maxima libraries
+cas_maxima_libraries_info#:#This is a comma separated list of Maxima library names which will be automatically loaded into Maxima. Only supported library names can be used: see the documentation for supported library names. These libraries will not be loaded if you have saved a maxima image to optimise performance.
+input_type_string#:#String
+input_type_numerical#:#Numerical
+show_validation_no#:#No
+show_validation_yes_with_vars#:#Yes, with variable list
+show_validation_yes_without_vars#:#Yes, without variable list
+notes_best_solution_message#:#Notes inputs have no best solution
+show_default_prts_settings#:#Default values for Potential response Trees and First nodes
+default_prts_settings#:#Default values for Potential response Trees
+config_default_prts_message#:#The default settings for PRT have been changed successfully.
+prt_node_pos_feedback_class#:#Feedback Style if True
+prt_node_pos_feedback_class_info#:#Choose the feedback style if this node's answertest is true, feedback style can be managed in plugin configuration.
+prt_node_neg_feedback_class#:#Feedback Style if False
+prt_node_neg_feedback_class_info#:#Choose the feedback style if this node's answertest is false, feedback style can be managed in plugin configuration.
+feedback_styles_settings#:#Feedback Styles Settings
+feedback_node_right#:#Right Answer
+feedback_node_right_info#:#Feedback style for right answers
+feedback_node_wrong#:#Wrong Answer
+feedback_node_wrong_info#:#Feedback style for wrong answers
+feedback_solution_hint#:#Solution Hint
+feedback_solution_hint_info#:#Feedback style for solution hints
+feedback_extra_info#:#Extra Information
+feedback_extra_info_info#:#Feedback style used for extra information
+feedback_plot_feedback#:#Plot
+feedback_plot_feedback_info#:#Feedback style used for plots
+config_feedback_styles_changed_message#:#The default settings for Feedback Styles have been changed successfully.
+feedback_extra_1#:#Partially correct
+feedback_extra_1_info#:#Feedback style for partially correct answers
+options_stepwise_feedback#:#Stepwise Feedback
+options_stepwise_feedback_info#:#Allow students to evaluate each PRT separately without reload the page
+copy_node#:#Copy Node
+paste_node#:#Paste Node
+copy_prt#:#Copy Potential Response Tree
+paste_prt#:#Paste Potential Response Tree
+prt_copied_to_clipboard#:#Potential Response Tree copied to Clipboard
+node_copied_to_clipboard#:#Node copied to Clipboard
+node_paste#:#A Node has been pasted in this question
+prt_paste#:#A PRT has been pasted in this question
+srv_purpose#:#Purpose
+srv_purpose_info#:#Choose 'Test Run' to exclusivly reserve a maxima server for the time time-critical calls during a test, e.g. to support online exams. Then provide a second server for all other calls ('Authoring/Scoring').
+srv_purpose_run#:#Test Run
+srv_purpose_edit#:#Authoring/Scoring
+srv_purpose_any#:#Any
+srv_address#:#Server Address
+srv_address_info#:#Provide the full URL of the maximapool server, including the port, e.g. 'http://localhost:8080/MaximaPool/MaximaPool'
+srv_active_info#:#The server can be used for maxima calls.
+basic_connection_settings#:#Basic Settings
+server_configuration#:#Server Configuration
+add_server#:#Add Server
+edit_server#:#Edit Server
+delete_server#:#Delete Server
+maxima_command_server#:#Server Call
+maxima_command_server_info#:#Configure the available MaximaPool servers on the sub tab <a href="%s">Server Configuration</a>
+server_saved#:#The server settings are saved.
+server_activated#:#The server is activated.
+servers_activated#:#The servers are activated.
+server_deactivated#:#The server is deactivated.
+servers_deactivated#:#The servers are deactivated.
+no_server_selected#:#Please select a server.
+confirm_delete_servers#:#Delete the following server(s)?
+server_deleted#:#The server is deleted.
+servers_deleted#:#The servers are deleted.

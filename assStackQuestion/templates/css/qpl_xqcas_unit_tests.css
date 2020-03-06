@@ -1,0 +1,104 @@
+#unit_tests_container_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    width: 100%;
+    border: 1px solid #E0E0E0;
+}
+
+#ut_title {
+    color: #404040;
+    background-color: #DEDEDE;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+
+#ut_subtitle {
+    color: #404040;
+    font-size: 75%;
+    background-color: #cccccc;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+}
+
+#unit_tests_header {
+    border: 0.1em solid #BBCCDD;
+    background-color: #EEEEEE;
+    padding: 1em;
+}
+
+#unit_tests_panel {
+    border: 0.1em solid #BBCCDD;
+    background-color: #EEEEEE;
+    padding: 1em;
+}
+
+tr.ut_overview_testcases {
+    width: 100%;
+}
+
+/*
+* PANEL
+*/
+#ut_testcases {
+    background-color: #E0E0E0;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+tr.ut_testcase_input, tr.ut_testcase_prt {
+    background-color: #E0E0E0;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+/*INPUTS*/
+#ut_inputs_view_container_table {
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+tr.ut_inputs_view_row {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+td.ut_inputs_view_header {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 10%;
+}
+
+td.ut_inputs_view {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 5%;
+}
+
+/*PRT*/
+
+#ut_prt_view_container_table {
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+#ut_prt_view_header > td{
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+#ut_prt_view_header > td:nth-child(1){
+    width: 20%;
+}
+
+#ut_prt_view_row > td {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 10%;
+}

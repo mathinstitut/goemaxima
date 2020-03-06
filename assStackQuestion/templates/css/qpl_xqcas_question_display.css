@@ -1,0 +1,79 @@
+table.xqcas_validation {
+    background-color: white;
+}
+
+th.xqcas_validation, td.xqcas_validation {
+    padding: 1em;
+    vertical-align: middle;
+    horiz-align: left;
+}
+
+table.xqcas_validation_status {
+    background-color: white;
+}
+
+th.xqcas_validation_status, td.xqcas_validation_status {
+    padding: 0.1em;
+    vertical-align: middle;
+}
+
+table.xqcas_validation_errors {
+    background-color: white;
+}
+
+th.xqcas_validation_errors, td.xqcas_validation_errors {
+    padding: 0.1em;
+    vertical-align: middle;
+}
+
+table.xqcas_validation_variables {
+    background-color: white;
+}
+
+th.xqcas_validation_variables, td.xqcas_validation_variables {
+    padding: 0.1em;
+    vertical-align: middle;
+}
+
+table.xqcas_matrix_validation, td.xqcas_matrix_validation {
+    background-color: #f9f2f4;
+    border: 3px solid white;
+}
+
+td.stack_textarea {
+    padding: 1em;
+}
+
+#xqcas_question_table .input-group {
+    /*The whole group*/
+    display: inline-flex;
+    float: none;
+}
+
+#xqcas_question_table .form-control {
+    /*Input*/
+    float: inherit;
+}
+
+#xqcas_question_table .input-group-addon {
+    /*Button*/
+    float: none;
+    display: inline;
+    padding-right: 1.4em;
+}
+#xqcas_question_table .glyphicon-ok{
+    /*Icon*/
+    top:0.25em;
+}
+
+/*Workaround for hidden button but validation shown*/
+span.val-button-below > span.input-group {
+    display: inline-block!important;
+    vertical-align: top;
+}
+span.val-button-below input {
+    display: block!important;
+}
+span.val-button-hidden span.input-group-addon {
+    display: none!important;
+}

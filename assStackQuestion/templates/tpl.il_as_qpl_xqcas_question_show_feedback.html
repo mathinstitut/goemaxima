@@ -1,0 +1,86 @@
+<table class="feedback_container">
+    <!-- BEGIN question -->
+    <tr class="question_text_container">
+        <td>
+            <table class="question_text_table">
+                <tr>
+                    <td class="question_text_message">
+                        {QUESTION_TEXT_MESSAGE}
+                    </td>
+                    <td class="question_text">
+                        {QUESTION_TEXT}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="total_points_container">
+        <td>
+            <table class="total_points_table">
+                <tr>
+                    <td class="total_points_message">
+                        {TOTAL_POINTS_MESSAGE}
+                    </td>
+                    <td class="total_points">
+                        {TOTAL_POINTS}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="question_feedback_container">
+        <td class="prt_border">
+            <!-- BEGIN question_part -->
+            <table class="question_feedback_table">
+                <!-- BEGIN user_response_part -->
+                <tr class="user_response_container_row">
+                    <td class="user_response_container_message">
+                        {USER_RESPONSE_CONTAINER_MESSAGE}&nbsp;
+                    </td>
+                    <td class="user_response_container">
+                        <table class="user_response_table">
+                            <tr class="response_messages_row">
+                                <td class="user_response_message">
+                                    {USER_RESPONSE_MESSAGE}
+                                </td>
+                            </tr>
+                            <tr class="responses">
+                                <td class="user_response">
+                                    {USER_RESPONSE}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- END user_response_part -->
+                <tr id="error_message_row">
+                    <td class="error_message" colspan="2">
+                        {ERROR_MESSAGE}{ERROR}
+                    </td>
+                </tr>
+                <tr id="feedback_message_row">
+                    <td class="feedback_message" colspan="2">
+                        {FEEDBACK_MESSAGE}{PART_FEEDBACK}
+                    </td>
+                </tr>
+                <tr id="feedback_status_row" bgcolor="{FEEDBACK_STATUS_COLOUR}">
+                    <td class="feedback_status_message" colspan="2">
+                        {FEEDBACK_STATUS_MESSAGE}{FEEDBACK_STATUS}
+                    </td>
+                </tr>
+                <tr class="points_row">
+                    <td class="points_message" colspan="2">
+                        {POINTS_MESSAGE}&nbsp;{POINTS}
+                    </td>
+                </tr>
+                <tr id="answernote_message_row">
+                    <td class="answenote_message" colspan="2">
+                        {ANSWERNOTE_MESSAGE}{ANSWERNOTE}
+                    </td>
+                </tr>
+            </table>
+            <!-- END question_part -->
+        </td>
+    </tr>
+    <!-- END question -->
+</table>

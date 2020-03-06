@@ -1,5 +1,5 @@
 [submodule "assStackQuestion"]
-	path = maxima_webservice/assStackQuestion
+	path = assStackQuestion
 	url = https://github.com/ilifau/assStackQuestion.git
 	branch = master-ilias53
 [submodule "goe_web"]

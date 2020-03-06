@@ -1,0 +1,59 @@
+.sco_container_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    width: 100%;
+    border: 1px solid #E0E0E0;
+}
+#sco_title {
+    color: #404040;
+    background-color: #DEDEDE;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+#sco_names, #sco_points{
+    color: #404040;
+    background-color: #DEDEDE;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+#sco_subtitle {
+    color: #404040;
+    font-size: 75%;
+    background-color: #cccccc;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+}
+
+.scoring_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+td.prt_name{
+    background-color: #CCCCCC;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+td.prt_points{
+    background-color: #CCCCCC;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+td.node_name{
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+td.true_scoring{
+    background-color: #b5eeac;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+td.false_scoring{
+    background-color: #FFCCCC;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}

@@ -1,0 +1,161 @@
+#authoring_container_table {
+    background-color: #F3F3F3;
+    padding: 1em;
+    width: 100%;
+    border: 1px solid #E0E0E0;
+}
+
+#auth_title {
+    color: #404040;
+    background-color: #DEDEDE;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+    font-weight: bold;
+}
+
+#auth_subtitle {
+    color: #404040;
+    font-size: 75%;
+    background-color: #cccccc;
+    padding: 1em;
+    border: 1px solid #E0E0E0;
+}
+
+#authoring_header {
+    border: 0.1em solid #BBCCDD;
+    background-color: #EEEEEE;
+    padding: 1em;
+}
+
+/*
+* PANEL
+*/
+#ut_testcases {
+    background-color: #E0E0E0;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+tr.ut_testcase_input, tr.ut_testcase_prt {
+    background-color: #E0E0E0;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+/*OPTIONS*/
+#auth_options {
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+tr.ut_inputs_view_row {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+td.ut_inputs_view_header {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 10%;
+}
+
+td.ut_inputs_view {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 5%;
+}
+
+/*PRT*/
+
+#ut_prt_view_container_table {
+    background-color: #F3F3F3;
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 100%;
+}
+
+#ut_prt_view_header > td{
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+}
+
+#ut_prt_view_header > td:nth-child(1){
+    width: 20%;
+}
+
+#ut_prt_view_row > td {
+    padding: 0.5em;
+    border: 1px solid #E0E0E0;
+    width: 10%;
+}
+
+
+body.ie .stack_abstract_graph {
+    /* Once IE can cope, we can delete this rule. */
+    display: none;
+}
+.stack_abstract_graph {
+    background: #FFFFFF;
+    margin: 5px;
+    width: 100%;
+    height: 100%;
+}
+.stack_abstract_graph path {
+    stroke-width: 3px;
+    fill: none;
+}
+.stack_abstract_graph path.left {
+    stroke: #b5eeac;
+}
+.stack_abstract_graph circle.left {
+    fill: #b5eeac;
+}
+.stack_abstract_graph path.right {
+    stroke: #FFCCCC;
+}
+.stack_abstract_graph circle.right {
+    fill: #FFCCCC;
+}
+.stack_abstract_graph path.cross {
+    stroke: #f00;
+    stroke-linecap: round;
+}
+.stack_abstract_graph text {
+    font-family: Verdana;
+}
+.stack_abstract_graph text.nodelabel {
+    font-size: 1.2em;
+    fill: #fff;
+    alignment-baseline: middle;
+    text-anchor: middle;
+}
+.stack_abstract_graph text.edgelabel {
+    font-size: 0.75em;
+    fill: #000;
+    alignment-baseline: middle;
+}
+.stack_abstract_graph text.edgelabel.left {
+    text-anchor: end;
+}
+.stack_abstract_graph text.edgelabel.right {
+    text-anchor: start;
+}
+.stack_abstract_graph circle.node {
+    fill: #BBCCDD;
+}
+#mpcolp_type_positive_column{
+    background-color: rgba(198, 255, 188, 0.43);
+    padding: 0.75em;
+}
+#mpcolp_type_negative_column{
+    background-color: rgba(255, 204, 204, 0.44);
+    padding: 0.75em;
+}
+#mpcolp_type_common_node{
+    background-color: rgba(203, 209, 207, 0.34);
+    padding: 0.75em;
+}

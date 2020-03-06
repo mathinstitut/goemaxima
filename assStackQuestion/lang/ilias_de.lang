@@ -1,0 +1,434 @@
+//
+// Copyright (c) 2013 Institut für Lern-Innovation, Friedrich-Alexander-Universität Erlangen-Nürnberg
+// GPLv2, see LICENSE 
+// 
+// German Language File for assStackQuestion Plugin
+//
+
+<!-- language file start -->
+assStackQuestion#:#STACK Frage
+question_imported_successfully#:#Die Frage(n) wurde(n) erfolgreich importiert.
+error_importing_question#:#Beim Import trat ein Fehler auf.
+import_xml#:#Import aus einer Moodle XML-Datei
+import_xml_file#:#Moodle XML-Datei
+qpl_qst_xqcas_import_questions_into_qpl#:#Frage in den Fragenpool importieren
+qpl_qst_xqcas_import_xml_file#:#XML-Datei importieren
+qpl_qst_xqcas_input_type_algebraic#:#Algebraisch
+qpl_qst_xqcas_input_type_textarea#:#Textfeld
+qpl_qst_xqcas_input_type_boolean#:#Boolsch
+qpl_qst_xqcas_input_type_matrix#:#Matrix
+qpl_qst_xqcas_input_type_not_supported#:#Nicht unterstützter Typ
+validation_feedback_message#:#Ihre letzte Antwort wurde wie folgt interpretiert:
+create_questions_into_qpl#:#Frage aus MoodleXML importieren
+edit_cas_question#:#Frage bearbeiten
+evaluate_question#:#Antwort auswerten
+evaluation_mode#:#Auswertungs-Modus:
+preview_points_message_p1#:#Ihre Bewertung der Frage ist:
+preview_points_message_p2#:#Punkt(e) von maximal
+preview_points_message_p3#:#Punkt(e)
+preview_feedback_message#:#Rückmeldung:
+message_general_feedback#:#Generelle Rückmeldung für diese Frage:
+message_no_how_to_solve_in_this_question#:#Für diese Frage gibt es keine generelle Rückmeldung.
+message_user_solution_part#:#Ihre Antwort war:
+message_feedback_solution_part#:#CAS-Rückmeldung zu Ihrer Antwort:
+message_points#:#Erhaltene Punkte für diese Antwort:
+message_feedback_status_part#:#Status dieser Antwort:
+message_total_points#:#Erhaltene Punkte für diese Frage:
+not_answered_part_feedback#:#Nicht beantworteter Teil
+randomisation_info#:#Achtung: Die Frage enthält Zufallsvariablen, deren Wert für diese Sitzung festgelegt ist. Um sie zu ändern, starten Sie bitte eine neue Sitzung.
+<!-- plugin configuration variables -->
+show_connection_settings#:#Verbindung zu Maxima
+show_display_settings#:#Mathematische Anzeigeoptionen
+show_default_options_settings#:#Vorgabewerte für Fragenoptionen
+show_default_inputs_settings#:#Vorgabewerte für Eingabe-Einstellungen
+save#:#Speichern
+cancel#:#Abbruch
+default_settings#:#Standardeinstellungen benutzen
+platform_type#:#Plattform-Typ
+platform_type_info#:#Betriebssystem, auf dem ILIAS und Maxima läuft. Wählen Sie "Server" zur Anbindung eines Maxima-Pools, siehe<br />https://github.com/maths/stack_util_maximapool
+windows#:#Windows
+unix#:#Linux
+maxima_version#:#Maxima-Version
+maxima_version_info#:#Die benutzte Programmversion von Maxima.
+cas_connection_timeout#:#Verbindungs-Timeout
+cas_connection_timeout_info#:#Zeit, nach der ein Verbindungsversuch mit Maxima abgebrochen wird.
+cas_result_caching#:#CAS Ergebnis-Caching
+cache_in_the_database#:#Datenbank-Cache
+do_not_cache#:#Kein Cache
+cas_result_caching_info#:#Die Speicherung der Anfragen an das CAS-System sollte außer zur Entwicklung eingeschalten sein. Siehe Status-Seite zur Überprüfung. Wenn Sie Einstellungen ändern, z.B. das gnuplot-Kommando, löschen Sie den Cache.
+maxima_command#:#Maxima-Befehl
+maxima_command_info#:#Kommandozeilen-Befehl, um Maxima zu starten. Für den Plattform-Typ "Server" geben Sie die URL des Maxima-Pools ein, z.B.<br />http://localhost:8080/MaximaPool/MaximaPool
+plot_command#:#Plot-Befehl
+plot_command_info#:#Kommandozeilen-Befehl für gnuplot.
+cas_debugging#:#CAS Debugging
+cas_debugging_info#:#Speichern von Debbugging-Informationen zur CAS-Verbindung
+connection_settings#:#Einstellungen zur CAS-Verbindung
+instant_validation#:#Automatische Validierung
+instant_validation_info#:#Die Eingaben werden beim Eintippen kontinuierlich validiert. Das erhöht den Komfort, aber auch die Server-Belastung. Daher kann diese Einstellung nur bei der Verwendung eines Maxima-Pools gesetzt werden (Siehe "Verbindung zu Maxima").
+maths_filter#:#Formelanzeige
+maths_filter_info#:#Methode zur Formelanzeige. MathJax ist Standard. Überprüfen Sie die Einstellung auf der Status-Seite.
+replace_dollars#:#$ und $$ ersetzen
+replace_dollars_info#:#Im Fragentext sollen die Begrenzer $...$ und $$...$$ zusätzlich zu \[...\] und \(...\) ersetzt werden.
+display_settings#:#Mathematische Anzeigeoptionen
+options_question_simplify#:#Aufgabenweite-Vereinfachung
+options_question_simplify_info#:#Setzt innerhalb MAXIMA die globale Variable "simp" für die gesamte Aufgabe.
+options_assume_positive#:#Positiv annehmen
+options_assume_positive_info#:#Setzt die Maxima-Variable "assume_pos".
+options_prt_correct#:#Rückmeldung für korrekte Antworten
+options_prt_partially_correct#:#Rückmeldung für teilweise korrekte Antworten
+options_prt_incorrect#:#Rückmeldung für falsche Antworten
+options_multiplication_sign#:#Multiplikations-Zeichen
+options_multiplication_sign_info#:#Darstellung des Multiplikations-Zeichens
+options_mult_sign_dot#:#Punkt
+options_mult_sign_cross#:#Kreuz
+options_mult_sign_none#:#Kein Zeichen
+options_sqrt_sign#:#Wurzelzeichen
+options_sqrt_sign_info#:#Darstellung von Wurzeln
+options_complex_numbers#:#Anzeige von sqrt(-1)
+options_complex_numbers_info#:#Bedeutung und Darstellung des Symbols i und sqrt(-1)
+options_complex_numbers_i#:#i
+options_complex_numbers_j#:#j
+options_complex_numbers_symi#:#symi
+options_complex_numbers_symj#:#symj
+options_inverse_trigonometric#:#Inverse trigonometrische Funktionen
+options_inverse_trigonometric_info#:#Anzeige trigonometrischer Funktionen in der Ausgabe.
+options_inverse_trigonometric_cos#:#cos^(-1)(x)
+options_inverse_trigonometric_acos#:#acos(x)
+options_inverse_trigonometric_arccos#:#arccos(x)
+default_options_settings#:#Standard-Einstellungen für Frage-Optionen
+input_type#:#Eingabetyp
+input_type_info#:#Typ des Eingabeelements, z.B. Formularfeld, Wahr/Falsch, mehrzeiliges Textfeld.
+input_type_algebraic#:#Algebraische Eingabe
+input_type_boolean#:#Wahr/Falsch
+input_type_matrix#:#Matrix
+input_type_singlechar#:#Einzelzeichen
+input_type_textarea#:#Mehrzeilig
+input_box_size#:#Eingabebreite
+input_box_size_info#:#Breite des HTML-Eingabefeldes in Zeichen.
+input_strict_syntax#:#Strikte Syntax
+input_strict_syntax_info#:#Strikte Maxima-Syntax bei der Eingabe erfordern. Andernfalls gibt es mehr Varianten zur Interpretation fehlender Sterne (*), einschließlich Funktionsanwendung und wissenschaftlicher Notation.
+input_insert_stars#:#Sterne einfügen
+input_insert_stars_info#:#Wenn aktiviert, werden automatisch Sterne (*) in Muster eingefügt, die durch die strikte Syntax identifiziert wurden. Andernfalls wird eine Fehlermeldung angezeigt.
+input_forbidden_words#:#Verbotene Wörter
+input_forbidden_words_info#:#Kommagetrennte Liste von Zeichenketten, die in einer Teilnehmer-Antwort nicht erlaubt sind.
+input_forbid_float#:#Gleitkomma verbieten
+input_forbid_float_info#:#Jede Gleitkommazahl in einer Teilnehmer-Antwort wird als inkorrekt abgewiesen.
+input_require_lowest_terms#:#Vollständige Kürzung verlangen
+input_require_lowest_terms_info#:#Jeder Koeffizient oder jede rationale Zahl in einem Ausdruck muss als kleinstmöglicher Term geschrieben sein. Andernfalls wird die Antwort als nicht gültig abgewiesen.
+input_check_answer_type#:#Antwort-Typ überprüfen
+input_check_answer_type_info#:#Antworten mit einem anderen Typ als erwartet (z.B. Ausdruck, Gleichung, Matrix, Liste, Menge) werden als ungültig abgewiesen.
+input_must_verify#:#Verifizierung erforderlich
+input_must_verify_info#:#Die eingegebene Antwort wird zur Bestätigung zurückgemeldet, bevor sie bewertet wird.
+input_show_validation#:#Validierung anzeigen
+input_show_validation_info#:#Jede Rückmeldung aus der Eingabe-Validierung anzeigen, einschließlich Darstellung des Ausdrucks in traditioneller zweidimensionaler Schreibweise.
+default_input_settings#:#Standard-Einstellungen für Eingaben
+config_connection_changed_message#:#Die Einstellungen zur Verbindung mit Maxima wurden erfolgreich geändert.
+config_display_changed_message#:#Die Einstellungen zur mathematischen Darstellung wurden erfolgreich geändert.
+config_options_changed_message#:#Die Einstellungen für Frage-Optionen wurden erfolgreich geändert.
+config_inputs_changed_message#:#Die Einstellungen für Eingaben wurden erfolgreich geändert.
+config_default_connection_message#:#Die Einstellungen zur Verbindung mit Maxima wurden auf die Standardwerte gesetzt.
+config_default_display_message#:#Die Einstellungen zur mathematischen Darstellung wurden auf die Standardwerte gesetzt.
+config_default_options_message#:#Die Einstellungen für Frage-Optionen wurden auf die Standardwerte gesetzt.
+config_default_inputs_message#:#Die Einstellungen für Eingaben wurden auf die Standardwerte gesetzt.
+default_prt_correct_message#:#Korrekte Antwort, gut gemacht.
+default_prt_partially_correct_message#:#Ihre Antwort ist teilweise falsch.
+default_prt_incorrect_message#:#Falsche Antwort.
+error_importing_question_malformed#:#Eine oder mehrere Fragen konnten nicht korrekt importiert werden. Bitte überprüfen Sie die XML-Datei!
+validation_feedback_error_message#:#Ungültige Antwort:
+error_importing_question_to_test#:#STACK Fragen können nicht direkt mit einem Test importiert werden. Versuchen Sie, die Frage in einen Fragenpool zu importieren und von dort in einen Test zu kopieren.
+message_best_solution#:#Die beste Lösung ist:
+show_other_settings#:#Allgemeine Einstellungen
+show_healthcheck#:#Funktionstest
+healthcheck_expanded#:#Fehleranalyse-Daten anzeigen
+healthcheck_reduced#:#Funktionstest durchführen
+hc_passed#:#Bestanden
+hc_failed#:#Fehler aufgetreten!
+hc_connection_expanded_title#:#Überprüfung der Maxima-Verbindung (erweiterte Version)
+hc_connection_expanded_explanation#:#Auf dieser Seite sehen Sie die Ergebnisse verschiedener Funktionstests. Bei grünem Hintergrund wurde ein Test erfolgreich durchlaufen. Bei rotem Hintergrund trat ein Fehler auf und es wird evtl. ein Vorschlag zur Lösung angezeigt.
+hc_bat_location_title#:#Wurde eine installierte Maxima-Version vom Plugin gefunden?
+hc_bat_location#:#Maxima ist installiert und wurde vom Plugin erkannt. Die Datei maxima.bat wurde an folgender Stelle gefunden:
+hc_bat_location_error#:#Maxima ist nicht installiert oder wurde vom Plugin nicht gefunden. Die Datei maxima.bat sollte in einem der folgenden Verzeichnisse vorhanden sein:
+hc_maximalocal_title#:#Wurde maximalocal.mac korrekt erzeugt?
+hc_maximalocal#:#Die Datei maximalocal.mac wurde erfolgreich an folgende Stelle geschrieben:
+hc_maximalocal_content#:#Der Inhalt von maximalocal.mac ist:
+hc_maximalocal_error#:#Die Datei maximalocal.mac konnte nicht geschrieben werden und wurde nicht an folgender Stelle gefunden:
+hc_connection_status_title#:#Verbindung zu Maxima
+hc_connection_status_display#:#In diesem Abschnitt wird immer ein echter Aufruf an Maxima gesendet, unabhängig von der Cache-Einstellung. Damit wird getestet, ob die Maxima-Verbindung tatsächlich funktioniert.
+hc_sample_command#:#Der folgende CAS-Text wird zu Evaluation gesendet:
+hc_sample_command_title#:#Versuch zur Maxima-Verbindung
+hc_connection_reduced_title#:#Überprüfung der Maxima-Verbindung
+hc_connection_reduced_explanation#:#Auf dieser Seite sehen Sie die Ergebnisse verschiedener Funktionstests. Bei grünem Hintergrund wurde ein Test erfolgreich durchlaufen. Bei rotem Hintergrund trat ein Fehler auf und es wird evtl. ein Vorschlag zur Lösung angezeigt.
+info_old_version_question#:#WARNUNG: Diese Frage wurde vor der Plugin-Version 1.6 importiert und funktioniert nicht einwandfrei. Bitte löschen und importieren Sie die Frage erneut.
+info_functionality_not_developed#:#Diese Funktion ist noch nicht implementiert.
+error_import_question_in_test#:#FEHLER: Fragen können nicht direkt in einen Test importiert werden. Bitte importieren Sie die Fragen in einen Fragenpool, um sie in einem Test zu verwenden.
+hc_connection_status_display_error#:#Das Plugin kann keine Verbindung zu Maxima aufbauen. Bitte überprüfen Sie, ob Maxima an der richtigen Stelle installiert ist.
+error_evaluation_determining_status#:#Der Status der Frage kann nicht ermittelt werden.
+error_evaluation_determining_status_message#:#Der Status der Frage kann nicht ermittelt werden.
+cache_successfully_deleted#:#Der Cache wurde erfolgreich geleert.
+clear_cache#:#Cache leeren
+error_import_no_title#:#Beim Import einer Frage ist ein Fehler aufgetreten. In der XML-Datei gab es keinen Titel für diese Frage, so dass sie nicht angelegt werden konnte.
+error_import_no_question_text#:#Die Frage mit folgendem Titel konnte nicht angelegt werden, da sie keinen Fragentext enthält:
+error_import_no_points#:#Die Frage mit folgendem Titel konnte nicht angelegt werden, da ihr keine Punkte zugewiesen sind:
+error_import_no_inputs#:#Die Frage mit folgendem Titel konnte nicht angelegt werden, da in ihr keine Eingabe definiert ist:
+error_import_no_prt#:#Die Frage mit folgendem Titel konnte nicht angelegt werden, da in ihr kein Ergebnisbaum definiert ist:
+import_number_of_questions_created#:#Die Fragen wurden erzeugt.
+import_number_of_questions_created_1#:#Die Frage wurde erzeugt.
+randomisation_info_2#:#Achtung: Diese Frage enthält zufällige Variablen. Um die zufälligen Variablen zu ändern, laden Sie bitte die aktuelle Seite neu.
+message_question_text#:#Fragetext
+message_teacher_solution_part#:#Die Lösung ist:
+message_error_part#:#Die folgenden Fehler wurden gefunden:
+message_user_response_container#:#Die folgenden Antworten wurden ausgewertet:
+dsm_deployed_seeds#:#Vorbereitete Zufallswerte
+dsm_question_doesnt_use_randomisation#:#Diese Frage ist nicht randomisiert, daher können Sie keine Zufallswerte erzeugen.
+dsm_deployed_seeds_header#:#Zufallswert
+dsm_question_notes_header#:#Fragen-Notiz für den Zufallswert
+dsm_view_form_header#:#Aktionen
+dsm_new_deployed_seed_form#:#Neuen Zufallswert erzeugen
+dsm_new_deployed_seed_form_input#:#Zufallswert
+dsm_new_deployed_seed_form_button#:#Neuen Wert erzeugen
+dsm_delete_deployed_seed_form_button#:#Löschen
+dsm_deployed_seed_deleted#:#Der gewählte Wert wurde erfolgreich gelöscht.
+dsm_subtitle#:#Die folgenden Zufallswerte wurden für diese Frage vorbereitet.
+dsm_no_deployed_seeds#:#Für diese Frage gibt es noch keine vorbereiteten Zufallswerte.
+dsm_not_allowed_seed#:#Der von Ihnen eingegebene Wert ist nicht als Zufallswert geeignet.
+import_from_moodle#:#Fragen aus MoodleXML importieren
+scoring_management#:#Bewertung
+edit_question#:#Frage bearbeiten
+sco_scoring#:#Bewertung
+sco_subtitle#:#Auf dieser Seite sehen Sie die Auswertungsstruktur der Frage, um die maximale Punktzahl zu verändern und die Punktevergabe zu überprüfen.
+sco_scoring_form#:#Bewertungs-Status
+sco_current_scoring_form_input#:#Aktuelle Punktzahl
+sco_new_scoring_form_input#:#Neue Punktzahl
+sco_show_new_scoring_form_button#:#Zeige Vergleich
+sco_set_new_scoring_form_button#:#Punktzahl speichern
+sco_invalid_value#:#Die von Ihnen eingegebene Punktzahl ist für diese Frage nicht gültig.
+sco_prt_name#:# Name des Auswertungsbaums:
+sco_prt_value#:#Maximale Punktzahl für diesen Auswertungsbaum:
+sco_node_name#:#Knotenname:
+message_answernote_part#:#Antwort-Notiz
+exp_question_note#:#Fragen-Notiz
+exp_general_feedback#:#Allgemeines Feedback
+exp_student_answer#:#Abgegebene Antwort
+sco_current_scoring_info#:#Dies sind die aktuell maximal erreichbaren Punkte für diese Frage.
+sco_new_scoring_info#:#Hier können sie einen neuen Wert eingeben, um die Berechnung aus den Teilpunkten zu vergleichen oder eine neue maximale Punktzahl festzulegen.
+bs_your_solution_was#:#Ihre Lösung:
+bs_best_solution#:#Vorgeschlagene Lösung:
+ut_title#:#Testfälle
+ut_subtitle#:#Mit Testfällen können Sie überprüfen, dass Ihre Frage wie beabsichtigt ausgewertet wird.
+ut_testcase_name_header#:#Testfall-Name
+ut_testcase_name#:#Testfall
+ut_input_name#:#Eingabefeld-Name
+ut_student_response#:#Studentische Antwort
+ut_expected_mark#:#Erwartete Bewertung
+ut_received_mark#:#Erhaltene Bewertung
+ut_expected_penalty#:#Erwarteter Punktabzug
+ut_received_penalty#:#Erhaltener Punktabzug
+ut_cas_errors#:#CAS-Fehler
+ut_cas_feedback#:#CAS-Feedback
+ut_expected_answer_note#:#Erwartete Antwort-Notiz
+ut_received_answer_note#:#Erhaltene Antwort-Notiz
+ut_run_testcase#:#Testfall starten
+ut_edit_testcase#:#Testfall bearbeiten
+ut_delete_testcase#:#Testfall löschen
+ut_run_all_tests#:#Alle Testfälle dieser Frage starten
+ut_expected_score_for#:#Erwartete Bewertung für
+ut_expected_penalty_for#:#Erwarteter Punktabzug für
+ut_expected_answernote_for#:#Erwartete Antwort-Notiz für
+ut_test_passed#:#Bestanden
+ut_test_failed#:#Fehler aufgetreten!
+options_matrix_parens#:#Matrix Klammern
+options_matrix_parens_info#:#Bestimmt das Zeichen der Matrix-Klammern in der Ausgabe das CAS
+options_question_variables#:#Fragen-Variablen
+prt#:#Rückmeldebaum (PRT)
+prts#:#Rückmeldebäume (PRTs)
+prt_value#:#Aufgabenwert
+prt_value_info#:#Dieses Feld erlaubt es, CAS Variablen zu definieren und zu verändern, z.B. um Zufallsversionen zu ermöglichen. Diese Variablen sind in allen anderen Teilen der Aufgabe verfügbar.
+prt_simplify#:#Vereinfachung
+prt_simplify_info#:#Setzt die Variable "simp" für die Feedback-Variablen in diesem Rückmeldebaum, sowie für die Bewertung des Baums. Diese Einstellung überschreibt die Einstellung in Optionen.
+prt_feedback_variables#:#Feedback-Variablen
+prt_feedback_variables_info#:#Die Feedback-Variablen erlauben es die Eingabe zusammen mit den Aufgabenvariablen zu manipulieren, bevor der Rückmeldebaum durchlaufen wird. Variablen, die hier definiert werden, können überall im Rückmeldebaum benutzt werden.
+node_positive_part#:#Knoten wenn WAHR
+node_negative_part#:#Knoten wenn FALSCH
+prt_node_pos_mod#:#Mod wenn wahr
+prt_node_pos_mod_info#:#Wie die Bepunktung angepasst wird. "=" setzt die Punkte auf einen bestimmten Wert. "+/-" addieren oder subtrahieren Punkte von der aktuellen Summe.
+prt_node_pos_score#:#Punkte wenn wahr
+prt_node_pos_score_info#:#Bewertung wenn der Antworttest "wahr" ergibt.
+prt_node_pos_penalty#:#Abzüge wenn wahr
+prt_node_pos_penalty_info#:#Ziehe so viele Punkte ab.
+prt_node_pos_next#:#Knoten wenn wahr
+prt_node_pos_next_info#:#Knoten, mit dem fortgefahren wird (anhalten wenn leer).
+prt_node_pos_answernote#:#Antworthinweis wenn wahr
+prt_node_pos_answernote_info#:#Dieses Feld dient zur Berichterstattung. Es bestimmt den eindeutigen Pfad durch den Baum und das Ergebnis jeder Antwort. Es wird automatisch erzeugt, kann aber auch manuell zu etwas Sinnvollem geändert werden.
+prt_node_pos_specific_feedback#:#Feedback wenn wahr
+prt_node_pos_specific_feedback_info#:#Dieser CAS-Text kann die Aufgabenvariablen, die Eingabeelemente oder andere Feedbackvariablen verwenden. Er wird ausgewertet und angezeigt, sobald ein Studierender diesen Zweig erreicht.
+prt_node_neg_mod#:#Mod wenn falsch
+prt_node_neg_mod_info#:#Wie die Bepunktung angepasst wird. "=" setzt die Punkte auf einen bestimmten Wert. "+/-" addieren oder subtrahieren Punkte von der aktuellen Summe.
+prt_node_neg_score#:#Punkte wenn falsch
+prt_node_neg_score_info#:#Bewertung wenn der Antworttest "falsch" ergibt.
+prt_node_neg_penalty#:#Abzüge wenn falsch
+prt_node_neg_penalty_info#:#Ziehe so viele Punkte ab.
+prt_node_neg_next#:#Knoten wenn falsch
+prt_node_neg_next_info#:#Knoten, mit dem fortgefahren wird (anhalten wenn leer).
+prt_node_neg_answernote#:#Antworthinweis wenn falsch
+prt_node_neg_answernote_info#:#Dieses Feld dient zur Berichterstattung. Es bestimmt den eindeutigen Pfad durch den Baum und das Ergebnis jeder Antwort. Es wird automatisch erzeugt, kann aber auch manuell zu etwas Sinnvollem geändert werden.
+prt_node_neg_specific_feedback#:#Feedback wenn falsch
+prt_node_neg_specific_feedback_info#:#Dieser CAS-Text kann die Aufgabenvariablen, die Eingabeelemente oder andere Feedbackvariablen verwenden. Er wird ausgewertet und angezeigt, sobald ein Studierender diesen Zweig erreicht.
+inputs#:#Test-Eingaben
+options#:#Optionen
+show_options#:#Zeige Fragenoptionen
+show_input#:#Zeige Eingabe
+prt_name#:#Rückmeldebaum Name
+prt_name_info#:#Normalerweise werden die Rückmeldebäume mit prt1, prt2, ... benannt.
+prt_settings#:#Einstellungen
+prt_graph#:#Grafische Anzeige
+prt_settings_and_nodes#:#Einstellungen
+prt_nodes#:#Knoten
+enable_disable_info#:#Info-Meldungen aktivieren/deaktivieren
+end#:#Ende
+input_syntax_hint#:#Syntax-Hinweis
+input_allow_words#:#Zugelassene Wörter
+input_options#:#Zusätzliche Optionen
+input_syntax_hint_info#:#Der Syntaxhinweis erscheint, wenn das Antwortfeld von Studierenden leer gelassen wird.
+input_allow_words_info#:#Standardmäßig sind in der Antwort keine Funktionen oder Variablennamen mit mehr als zwei Zeichen Länge zugelassen. Dies ist eine kommagetrennte Liste der erlaubten Ausnahmen.
+input_options_info#:#Einige Eingabetypen erfordern zusätzliche Optionen. Geben Sie sie als CAS-Ausdruck (Maxima-Code) ein.
+auth_title#:#Frage bearbeiten
+auth_subtitle#:#Erstellen und Bearbeiten von STACK-Fragen.
+prt_node_answer_test#:#Antwortüberprüfung
+prt_node_student_answer#:#SAns
+prt_node_teacher_answer#:#TAns
+prt_node_options#:#Test-Optionen
+prt_node_quiet#:#Feedback unterdrücken
+prt_node_answer_test_info#:#Eine Antwortüberprüfung ist ein Test um zwei Ausdrücke dahingehend zu vergleichen, ob sie bestimmte mathematische Eigenschaften erfüllen.
+prt_node_student_answer_info#:#Dies ist das erste Argument der Antwortüberprüfungsfunktion. In asymmetrischen Tests wird dies als die Studierenden-Antwort angesehen, obwohl es jeder gültige CAS Ausdruck sein könnte. Es können darin auch Variablen aus der Aufgabe oder dem Feedback benutzt werden.
+prt_node_teacher_answer_info#:#Dies ist das zweite Argument der Antwortüberprüfungsfunktion. In asymmetrischen Tests wird dies als die Dozierenden-Antwort angesehen, obwohl es jeder gültige CAS Ausdruck sein könnte. Es können darin auch Variablen aus der Aufgabe oder dem Feedback benutzt werden.
+prt_node_options_info#:#Dieses Feld erlaubt Antwortüberprüfung eine Option zu verwenden, z.B. eine Variable oder eine bestimmte numerische Präzision.
+prt_node_quiet_info#:#Falls JA, wird jedes von der Antwortüberprüfung automatisch generierte Feedback unterdrückt und dem Studierenden nicht angezeigt. Dies betrifft aber nicht die Feedback-Felder der Verzweigungen des Rückmeldebaums.
+add_new_prt#:#Neuer Rückmeldebaum (PRT)
+add_new_node#:#Neuer Knoten
+delete_node#:#Lösche Knoten
+delete_prt#:#Lösche Rückmeldebaum
+authoring_points_info#:#Die Gesamtpunktzahl der Frage können Sie unter "Bewertung" festlegen.
+authoring_input_creation_info#:#Um ein neues Eingabefeld anzulegen, geben Sie im Fragetext die Platzhalter "[[input:Eingabename]]" und "[[validation:Eingabename]]" ein. Um es zu löschen, löschen Sie die Platzhalter im Fragentext.
+input_hint#:#Hinweis
+options_question_variables_info#:#Dieses Feld erlaubt es, CAS-Variablen zu definieren und zu verändern, z.B. um Zufallsversionen zu ermöglichen. Diese Variablen sind in allen anderen Teilen der Aufgabe verfügbar.
+options_how_to_solve#:#Allgemeines Feedback
+options_how_to_solve_info#:#Das allgemeine Feedback, auch Musterlösung genannt, wird den Studierenden nach seinem Beantwortungsversuch gezeigt. Im Gegensatz zum (spezifischen) Feedback wird es allen Studierenden gleichermaßen gezeigt, unabhängig von ihrer eingegebenen Antwort. Hier können Variablen aus dem Aufgabentext verwendet werden.
+node_creation_hint#:#Hinweis zur Knotenerstellung
+node_creation_hint_text#:#Um einen neuen Knoten zu erstellen, füllen Sie die Felder SAns (Studierenden-Antwort), TAns (Dozierenden-Antwort) und eines der Punkte- oder Abzugfelder aus. Nach dem Speichern kann der Knoten zum Rückmeldebaum hinzugefügt werden.
+input_model_answer#:#Musterlösung
+input_model_answer_info#:#Der Dozent muss eine Musterlösung für jedes Eingabefeld angeben. Dies muss eine gültige Maxima-Zeichenkette sein. Sie kann Variablen aus dem Aufgabentext enthalten.
+options_question_note#:#Aufgabenhinweis
+options_question_note_info#:#Mit dem Aufgabenhinweis soll zwischen den verschiedenen zufälligen Versionen einer Frage unterschieden werden. Zwei Fragen sind gleich, genau dann wenn die Aufgabenhinweise gleich sind. Für die spätere Analyse ist es hilfreich sinnvolle Antworthinweise zu erstellen.
+server#:#Server
+error_fields_missing#:#Einige Pflichtangaben fehlen.
+dsm_fix_deployed_seed_form_button_text#:#Korrigieren Sie diesen Wert für den Vorschau-Modus.
+dsm_fix_deployed_seed_form_button#:#Siehe Vorschau
+prt_first_node#:#Erster Knoten
+export_to_moodle#:#Export nach MoodleXML
+export_to_moodlexml#:#Export nach MoodleXML
+all_from_pool#:#Mode
+export_only_this#:#Nur diese Frage exportieren
+export_all_from_test#:#Fragen des aktuellen Tests exportieren
+export_all_from_pool#:#Fragen des aktuellen Pools exportieren
+export_only_this_info#:#Wählen Sie diese Option, um eine MoodleXML-Datei mit dieser Frage zu erzeugen
+export_all_from_test_info#:#Wählen Sie diese Option, um eine MoodleXML-Datei mit allen STACK-Fragen im aktuellen Test zu erzeugen
+export_all_from_pool_info#:#Wählen Sie diese Option, um eine MoodleXML-Datei mit allen STACK-Fragen im aktuellen Fragenpool zu erzeugen
+error_exporting_to_moodle_mode#:#Fehler: Den von Ihnen gewählten Exportmodus gibt es nicht.
+error_exporting_to_moodle_question_id#:#Fehler: Die Fragen-ID wurde nicht gefunden. Möglicherweise ist eine Frage, die Sie exportieren möchten, beschädigt.
+moodlexml_no_questions_selected#:#Fehler: Sie haben keine Frage ausgewählt.
+error_not_valid_prt_name#:#Der Name des Ergebnisbaums ist ungültig.
+exception_no_raw_given_in_keyval_creation#:#Beim Erzeugen des Maxima-Befehls gab es einen Fehler.
+error_no_question_note#:#Eine Frage mit zufälligen Variablen muss einen Aufgabenhinweis haben.
+error_prt_without_first_node#:#Warnung: Sie möchten eine Frage ohne Ergebnisbaum-Struktur erzeugen. Stellen Sie sicher, dass es mindesten einen Ergebnisbaum (PRT) mit mindestens einem Knoten als Startknoten gibt.
+warning_use_evaluation_button_instead#:#Bitte verwenden Sie stattdessen den darüber liegenden Auswertungs-Knopf.
+error_in_question_text#:#Im Fragentext oder Fragen-Variablen gibt es den folgenden Fehler
+error_in_specific_feedback#:#Im spezifischen Feedback gibt es den folgenden Fehler
+error_in_question_note#:#Fehler im Aufgabenhinweis.
+error_in_prt_correct#:#Im Feedback der richtigen Antwort gibt es den folgenden Fehler
+error_in_prt_partially_correct#:#Im Feedback der teilweise richtigen Antwort gibt es den folgenden Fehler
+error_in_prt_incorrect#:#Im Feedback der falschen Antwort gibt es den folgenden Fehler
+error_in_how_to_solve#:#In der Musterlösung gibt es den folgenden Fehler
+error_in_node_creation#:#Der Knoten konnte nicht gültig erzeugt werden. Er muss eine Studierenden-Antwort, eine Dozierenden-Antwort und Punkte oder Punktabzug enthalten.
+deletion_error_not_enought_prts#:#Sie können den einzigen Ergebnisbaum der Frage nicht löschen.
+deletion_error_not_enought_prt_nodes#:#Sie können den einzigen Knoten in diesem Ergebnisbaum nicht löschen.
+deletion_error_first_node#:#Sie können den Startknoten des Ergebnisbaums nicht löschen.
+no_model_solution_for_this_input#:#Zu dieser Eingabe gibt es keine Musterlösung.
+options_specific_feedback#:#Spezifisches Feedback
+options_specific_feedback_info#:#Standardgemäß wird Feedback für jeden potenziellen Rückmeldebaum in diesem Block angezeigt. Es kann auch zum Aufgabentext verschoben werden, wobei dann allerdings die Anzeige nicht abhängig von der Eingabe gemacht wird.
+questions_updated_new_feedback_system#:#Anzahl Fragen, die auf das neue Feedback-System umgestellt wurden
+questions_updated_new_feedback_system2#:#Die Feedback-Platzhalter wurden in das Feld für das spezifische Feedback verschoben, Sie können sie bei Bedarf zurück in den Fragentext verschieben.
+error_lack_of_following_feedback_placeholders#:#Die folgenden Ergebnisbäume haben keinen Feedback-Platzhalter (wie [[feedback:prt1]]) im Fragentext oder spezifischen Feedback:
+untitled_question#:#Untitel STACK Frage
+auth_tip1#:#Klicken Sie bitte hier, um den STACK Question Quick Authoring Guide auf Englisch zu lesen
+auth_tip2#:#Klicken Sie bitte hier, um den STACK Question Quick Authoring Guide auf Deutsch zu lesen
+auth_tip3#:#
+interpreted_by_maxima_as#:#Interpretiert von Maxima als:
+interpreted_by_maxima_as_2#:#Ihre Antwort wurde wie folgt interpretiert:
+sco_info#:#Diese Seite zeigt die Fragenbewertung in Punkten. Für jeden Knoten eines Ergebnisbaums werden die Punkte des positiven Antworttests in grün und die des negativen Antworttests in rot angezeigt. Für jeden Ergebnisbaum zeigen die maximal erreichbaren Punkte seine Gewichtung innerhalb der Frage
+castext_info#:#In diesem Feld können Sie CAS-Text verwenden. Das ist HTML-Code, in den LaTeX zwischen "\\(" und "\\)" und Maxima-Code zwischen "@" und "@" eingebettet werden können. Maxima-Code wird ausgeführt, bevor die Frage angezeigt wird. Er ist auch innerhalb von LaTeX möglich.
+html_info#:#In diesem Feld sind nur HTML-Elemente erlaubt, kein LaTeX und keine Maxima-Ausdrücke.
+casexpression_info#:#In diesem Feld können Sie nur Maxima-Code eingeben, kein LaTeX und kein HTML.
+casexpression_name#:#CAS-Ausdruck
+inputs_star#:#Test-Eingaben *
+error_in_question_variables#:#Der folgende Fehler tritt bei Fragevariablen auf:
+auth_inputs#:#Einstellungen der Eingabe
+info_allowed#:#Inhalt:
+castext_name#:#CAS-Text
+html_name#:#HTML
+auth_guide_name#:#STACK Authoring guide
+unix_optimised#:#Linux (Optimiert)
+error_model_answer_missing#:#Die Musterlösung der folgenden Eingabe(n) fehlt:
+error_student_answer_missing#:#Die Studierendenantwort ("SAns") für den folgenden PRT / Knoten fehlt:
+error_teacher_answer_missing#:#Die Dozierendenantwort ("TAns) für den folgenden PRT / Knoten fehlt:
+preview_no_answer#:#Sie müssen die Frage beantworten, um Feedback zu erhalten.
+update_to_version_3#:#Während des Updates wurden alle STACK-Fragen auf die neue CASText-Syntax konvertiert. Bitte überprüfen Sie die vorhandenen Fragen,um sicher zu gehen, dass sie korrekt funktionieren.
+update_to_version_3_2#:#Bitte überprüfen Sie die importierten Fragen, da sie zur neuen CASText-Syntax in dieser Version des Plugins konvertiert wurden.
+input_type_checkbox#:#Kontrollkästchen
+input_type_dropdown#:#Drop-Down-Liste
+input_type_equiv#:#Gleichungen
+input_type_notes#:#Notizen
+input_type_radio#:#Radio-Auswahl
+input_type_units#:#Einheiten
+maxima_libraries#:#Maxima-Bibliotheken
+cas_maxima_libraries_info#:#Diese kommagetrennte Liste von Maxima-Bibliotheken wird autmatisch in Maxima geladen. Es können nur unterstützte Bibliotheken verwendet werden, siehe Dokumentation. Die Bibliotheken werden nicht automatisch geladen, wenn Sie ein Performance-optimiertes Maxima-Image verwenden.
+input_type_string#:#Zeichenkette
+input_type_numerical#:#Numerisch
+show_validation_no#:#Nein
+show_validation_yes_with_vars#:#Ja, mit Variablenliste
+show_validation_yes_without_vars#:#Ja, ohne Variablenliste
+notes_best_solution_message#:#Notizen haben keine bestmögliche Lösung
+show_default_prts_settings#:#Vorgabewerte für Rückmeldebäume-Einstellungen
+default_prts_settings#:#Standard-Einstellungen für Rückmeldebäume und Knoten
+config_default_prts_message#:#Die Einstellungen für Rückmeldebäume wurden erfolgreich geändert.
+copy_node#:#Knoten kopieren
+paste_node#:#Knoten einfügen
+copy_prt#:# Rückmeldebaum kopieren
+paste_prt#:#Rückmeldebaum einfügen
+prt_copied_to_clipboard#:#Rückmeldebaum in die Zwischenablage kopiert
+node_copied_to_clipboard#:#Knoten in die Zwischenablage kopiert
+node_paste#:#In dieser Frage wurde ein Knoten eingefügt
+prt_paste#:#In dieser Frage wurde ein Rückmeldebaum eingefügt
+srv_purpose#:#Verwendung
+srv_purpose_info#:#Wählen Sie "Testdurchlauf" um einen Maxima-Server exklusiv für zeitkritische Anfragen währen eines Tests zu reservieren, z.B. für E-Klausuren. Stellen Sie dann einen zweiten Server für alle anderen Anfragen bereit ("Erstellung/Bewertung").
+srv_purpose_run#:#Testdurchlauf
+srv_purpose_edit#:#Erstellung/Bewertung
+srv_purpose_any#:#Beliebig
+srv_address#:#Server-Adresse
+srv_address_info#:#Geben Sie die komplette URL des Maxima-Server inklusive Port an, z.B. "http://localhost:8080/MaximaPool/MaximaPool"
+srv_active_info#:#Der Server kann für Maxima-Aufrufe verwendet werden
+basic_connection_settings#:#Grundeinstellungen
+server_configuration#:#Server-Konfiguration
+add_server#:#Server hinzufügen
+edit_server#:#Server bearbeiten
+delete_server#:#Server löschen
+maxima_command_server#:#Server-Aufruf
+maxima_command_server_info#:#Konfigurieren Sie die verfügbaren Server auf dem Tab <a href="%s">Server-Konfiguration</a>
+server_saved#:#Die Server-Einstellungen wurden gespeichert.
+server_activated#:#Der Server wurde aktiviert.
+servers_activated#:#Die Server wurden aktiviert.
+server_deactivated#:#Der Server wurde deaktiviert.
+servers_deactivated#:#Die Server wurden deaktiviert.
+no_server_selected#:#Bitte wählen Sie einen Server aus.
+confirm_delete_servers#:#Möchten Sie den/die folgenden Server löschen?
+server_deleted#:#Der Server wurde gelöscht.
+servers_deleted#:#Die Server wurden gelöscht.
