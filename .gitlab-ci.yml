@@ -39,10 +39,10 @@ build_maxima_webservice:
      - maxima_version="4.43.1"
      - stack_version="stack-2017121800"
   script:
-#     - IMAGENAME=${REGISTRY}/sbcl${sbcl_version}_maxima${maxima_version}_${stack_version}
-     - echo "hallo"
+     - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
+     - echo ${IMAGENAME}
 # ./buildimage.sh "2.0.2" "5.43.1" "stack-2017121800" "assStackQuestion/classes/stack/maxima" "172.30.190.249:5000"
-     - 
+#     - 
 #    - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
 #    - NAME2=${REGISTRY}maxima:latest
 #    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
