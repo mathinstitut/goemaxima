@@ -39,7 +39,7 @@ build_maxima_webservice:
      maxima_version: "4.43.1"
      stack_version: "stack-2017121800"
   script:
-     - apt-get update && apt-get install -y cowsay
+     - apt update && apt install -y cowsay
      - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
 #     - for
      - cowsay ${IMAGENAME}
