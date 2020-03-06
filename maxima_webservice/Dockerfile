@@ -32,7 +32,7 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && cd ${ASSETS} \
     && maxima -b optimize.mac \
     && mv maxima-optimised ${BIN}/maxima-optimised \
-    && rm -r ${ASSETS} ${LIB}
+    && rm -r ${LIB}
 
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
