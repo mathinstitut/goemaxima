@@ -15,7 +15,10 @@ RUN apt-get update \
     gettext-base 
 
 # specify here which stack or moodle to use:
-ARG LIB_PATH=assStackQuestion/classes/stack/maxima
+# normally something like 'assStackQuestion/classes/stack/maxima'
+ARG LIB_PATH
+
+RUN echo ${LIB_PATH?Error \$LIB_PATH is not defined. Define it with 'docker build --build-arg LIB_PATH=assStackQuestion/classes/stack/maxima -t name . '}
 
 RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
 

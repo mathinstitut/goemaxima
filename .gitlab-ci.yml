@@ -7,7 +7,7 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-  REGISTRY: ""
+  REGISTRY: "172.30.190.249/"
   BASE1: ${REGISTRY}maxima_base:v01
   BASE2: ${REGISTRY}maxima_base:latest
 
@@ -23,7 +23,7 @@ build_maxima_base:
   script:
     - cd maxima_baseimage
     - docker build -t ${BASE1} -t ${BASE2} .
-#   - docker push ${BASE1} ${BASE2}
+    - docker push ${BASE1} ${BASE2}
 
 build_submodule:
   stage: build_submodule
@@ -53,7 +53,8 @@ build_maxima_webservice:
 #      - maxima_webservice/**
   script:
     - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
-    - NAME2=${REGISTRY}maxima:latest
+#    - NAME2=${REGISTRY}maxima:latest
 #    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
+# get library path
     - cd maxima_webservice
-    - docker build -t ${NAME1} -t ${NAME2} --build-arg BASEIMAGE=${BASE2} .
+    - docker build -t ${NAME1} --build-arg BASEIMAGE=${BASE2} .
