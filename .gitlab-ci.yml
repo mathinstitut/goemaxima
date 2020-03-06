@@ -1,29 +1,12 @@
 image: "docker:latest"
 
 stages:
-  - build_maxima_base
   - build_submodule
-  - build_maxima_webservice
+  - build_webservice
 
 variables:
-  GIT_SUBMODULE_STRATEGY: recursive
-  REGISTRY: "172.30.190.249/"
-  BASE1: ${REGISTRY}maxima_base:v01
-  BASE2: ${REGISTRY}maxima_base:latest
-
-build_maxima_base:
-  stage: build_maxima_base
-  tags:
-    - docker
-  except:
-    - master
-#  only:
-#    changes:
-#      - maxima_base/**
-  script:
-    - cd maxima_baseimage
-    - docker build -t ${BASE1} -t ${BASE2} .
-    - docker push ${BASE1} ${BASE2}
+#  GIT_SUBMODULE_STRATEGY: recursive
+  REGISTRY: "172.30.190.249:5000"
 
 build_submodule:
   stage: build_submodule
@@ -38,7 +21,7 @@ build_submodule:
 #      - webservice/**
   script:
     - cd goe_web/src/web
-    - go build && GOBIN=${CI_PROJECT_DIR}/maxima_webservice/bin/ go install
+    - go build && GOBIN=${CI_PROJECT_DIR}/bin/ go install
 
 build_maxima_webservice:
   stage: build_maxima_webservice
@@ -51,10 +34,18 @@ build_maxima_webservice:
 #      - maxima_baseimage/**
 #      - goe_web/**
 #      - maxima_webservice/**
+  variables:
+     - sbcl_version="2.0.2"
+     - maxima_version="4.43.1"
+     - stack_version="stack-2017121800"
   script:
-    - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
+     - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
+     - echo ${IMAGENAME}
+# ./buildimage.sh "2.0.2" "5.43.1" "stack-2017121800" "assStackQuestion/classes/stack/maxima" "172.30.190.249:5000"
+     - 
+#    - NAME1=${REGISTRY}maxima:"$(echo $CI_COMMIT_REF_NAME | sed "s/stack\-//g")"
 #    - NAME2=${REGISTRY}maxima:latest
 #    - cp goe_web/bin/web ${CI_PROJECT_DIR}/maxima_webservice/bin/web
 # get library path
-    - cd maxima_webservice
-    - docker build -t ${NAME1} --build-arg BASEIMAGE=${BASE2} .
+#    - cd maxima_webservice
+#    - docker build -t ${NAME1} --build-arg BASEIMAGE=${BASE2} .

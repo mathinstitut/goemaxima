@@ -56,7 +56,6 @@ RUN cd ${SRC} \
 && make clean
 
 RUN rm -r ${SRC} /SBCL_ARCH
-RUN apt-get purge -y wget python3 make bzip2 texinfo
 RUN apt install -y gnuplot gettext-base
 
 RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
@@ -75,6 +74,8 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && maxima -b optimize.mac \
     && mv maxima-optimised ${BIN}/maxima-optimised \
     && rm -r ${LIB}
+
+RUN apt-get purge -y wget python3 make bzip2 texinfo
 
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
