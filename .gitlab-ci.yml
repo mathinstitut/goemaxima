@@ -35,9 +35,9 @@ build_maxima_webservice:
 #      - goe_web/**
 #      - maxima_webservice/**
   variables:
-     sbcl_version "2.0.2"
-     maxima_version "4.43.1"
-     stack_version "stack-2017121800"
+     sbcl_version: "2.0.2"
+     maxima_version: "4.43.1"
+     stack_version: "stack-2017121800"
   script:
      - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
      - echo ${IMAGENAME}
