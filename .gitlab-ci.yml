@@ -5,7 +5,7 @@ stages:
   - build_webservice
 
 variables:
-#  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: "172.30.190.249:5000"
 
 build_submodule:
@@ -39,8 +39,10 @@ build_maxima_webservice:
      maxima_version: "4.43.1"
      stack_version: "stack-2017121800"
   script:
+     - apt-get update && apt-get install -y cowsay
      - IMAGENAME=${REGISTRY}"/sbcl"${sbcl_version}"_maxima"${maxima_version}"_"${stack_version}
-     - echo ${IMAGENAME}
+#     - for
+     - cowsay ${IMAGENAME}
  #     - echo "12hallo"
 # ./buildimage.sh "2.0.2" "5.43.1" "stack-2017121800" "assStackQuestion/classes/stack/maxima" "172.30.190.249:5000"
 #     - 
