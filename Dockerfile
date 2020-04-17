@@ -56,7 +56,7 @@ RUN cd ${SRC} \
 && make clean
 
 RUN rm -r ${SRC} /SBCL_ARCH
-RUN apt install -y gnuplot gettext-base
+RUN apt-get install -y gnuplot gettext-base sudo psmisc
 
 RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
 
@@ -72,12 +72,21 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && cat ${ASSETS}/maximalocal.mac && cat ${ASSETS}/optimize.mac \
     && cd ${ASSETS} \
     && maxima -b optimize.mac \
-    && mv maxima-optimised ${BIN}/maxima-optimised \
-    && rm -r ${LIB}
+    && mv maxima-optimised ${BIN}/maxima-optimised
 
 RUN apt-get purge -y wget python3 make bzip2 texinfo
 
+RUN useradd -M maxima-server && echo "Defaults	lecture = always" > /etc/sudoers.d/maxima
+RUN for i in $(seq 16); do \
+           useradd -M "maxima-$i" \
+        && echo "maxima-server     ALL = (maxima-$i) NOPASSWD: ${BIN}/wrapper" >> /etc/sudoers.d/maxima \
+        && echo "maxima-server     ALL = (root) NOPASSWD: /usr/bin/killall -9 -u maxima-$i" >> /etc/sudoers.d/maxima; \
+    done
+
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
-CMD ["/opt/maxima/bin/goweb"]
+# Add wrapper
+COPY ./bin/wrapper ${BIN}/wrapper
+
+CMD ["su", "-c", "/opt/maxima/bin/goweb", "maxima-server"]
 
