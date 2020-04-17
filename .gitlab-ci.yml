@@ -21,7 +21,9 @@ build_submodule:
 #      - webservice/**
   script:
     - cd goe_web/src/web
-    - go build && GOBIN=${CI_PROJECT_DIR}/bin/ go install
+    - GOBIN=${CI_PROJECT_DIR}/bin/ go install
+    - cd ../wrapper
+    - GOBIN=${CI_PROJECT_DIR}/bin/ go install
 
 build_webservice:
   stage: build_webservice
