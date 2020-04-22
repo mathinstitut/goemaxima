@@ -8,7 +8,7 @@ IFS=",";
 set ${stack_version};
 # checkout repository
 cd assStackQuestion;
-git checkout $2
+#git checkout $2
 cd ../
 ./buildimage.sh ${sbcl_version} ${maxima_version} $1 "assStackQuestion/classes/stack/maxima" ${REGISTRY}
 unset IFS
