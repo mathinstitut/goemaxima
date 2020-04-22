@@ -8,33 +8,13 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: "172.30.190.249:5000"
 
-build_submodule:
-  stage: build_submodule
-  image: golang
-  tags:
-    - docker
-#  except:
-#    - master
-#  only:
-#    changes:
-#      - goe_web/**
-#      - webservice/**
-  script:
-    - go get github.com/prometheus/client_golang/prometheus
-    - go get github.com/prometheus/client_golang/prometheus/promhttp
-    - cd goe_web/src/web
-    - go build web.go
-    - GOBIN=${CI_PROJECT_DIR}/bin/ go install
-    - cd ../wrapper
-    - go build wrapper.go
-    - GOBIN=${CI_PROJECT_DIR}/bin/ go install
-  artifacts:
-    paths:
-      - bin/
-    expire_in: 1 hour
-
 build_webservice:
   stage: build_webservice
+  needs:
+    - project: martin.heide/goe_web
+      job: steve_jobs
+      ref: master
+      artifacts: true
   tags:
     - docker
   except:
