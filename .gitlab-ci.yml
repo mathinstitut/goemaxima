@@ -40,5 +40,4 @@ build_webservice:
   except:
     - master
   script:
-    - apt-get install -y git
     - ./build.sh ${REGISTRY}
