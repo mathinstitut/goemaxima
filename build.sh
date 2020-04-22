@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 REGISTRY=$1
 
 for sbcl_version in $(cat sbcl_version); do
@@ -10,7 +10,7 @@ set ${stack_version};
 cd assStackQuestion;
 #git checkout $2
 cd ../
-./buildimage.sh ${sbcl_version} ${maxima_version} $1 "assStackQuestion/classes/stack/maxima" ${REGISTRY}
+./buildimage.sh ${sbcl_version} ${maxima_version} $1 "assStackQuestion/classes/stack/maxima" ${REGISTRY} || exit 1
 unset IFS
 done
 #for moodle_version in $(cat moodle_version); do

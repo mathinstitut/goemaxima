@@ -14,7 +14,7 @@ IMAGENAME=$5"/sbcl"$1"_maxima"$2"_"$3
 # check if the image already exists on the server
 docker pull ${IMAGENAME}
 # build it
-docker build -t ${IMAGENAME} --build-arg MAXIMA_VERSION=$2 --build-arg SBCL_VERSION=$1 --build-arg LIB_PATH=$4 .
+docker build -t ${IMAGENAME} --build-arg MAXIMA_VERSION=$2 --build-arg SBCL_VERSION=$1 --build-arg LIB_PATH=$4 . || exit 1
 echo ${IMAGENAME}" wurde erfolgreich gebaut."
 # testing?
 # push it
