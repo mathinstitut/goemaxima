@@ -20,6 +20,8 @@ build_submodule:
 #      - goe_web/**
 #      - webservice/**
   script:
+    - go get github.com/prometheus/client_golang/prometheus
+    - go get github.com/prometheus/client_golang/prometheus/promhttp
     - cd goe_web/src/web
     - GOBIN=${CI_PROJECT_DIR}/bin/ go install
     - cd ../wrapper
