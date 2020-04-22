@@ -28,6 +28,10 @@ build_submodule:
     - cd ../wrapper
     - go build wrapper.go
     - GOBIN=${CI_PROJECT_DIR}/bin/ go install
+  artifacts:
+    paths:
+      - bin/
+    expire_in: 1 hour
 
 build_webservice:
   stage: build_webservice
