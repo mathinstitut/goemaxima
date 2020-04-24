@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 REGISTRY=$1
 
 for sbcl_version in $(cat sbcl_version); do
