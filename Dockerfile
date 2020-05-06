@@ -2,7 +2,7 @@ FROM debian:stable
 
 # e.g. 5.41.0
 ARG MAXIMA_VERSION
-# e.g. 1.4.11
+# e.g. 2.0.22.0.2
 ARG SBCL_VERSION
 # e.g. assStackQuestion/classes/stack/maxima
 ARG LIB_PATH
