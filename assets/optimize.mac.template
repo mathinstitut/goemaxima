@@ -3,6 +3,7 @@
    https://github.com/maths/moodle-qtype_stack/blob/master/doc/en/CAS/Optimising_Maxima.md */
 
 load("${ASSETS}/maximalocal.mac");
+load("${ASSETS}/maxima-fork.lisp");
 load("${LIB}/stackmaxima.mac");
 load(stats);
 load(distrib);

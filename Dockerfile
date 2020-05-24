@@ -4,11 +4,8 @@ FROM debian:stable
 ARG MAXIMA_VERSION
 # e.g. 2.0.22.0.2
 ARG SBCL_VERSION
-# e.g. assStackQuestion/classes/stack/maxima
-ARG LIB_PATH
 
-RUN echo ${LIB_PATH?Error \$LIB_PATH is not defined} \
-	 ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
+RUN echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
 	 ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
 
 ENV SRC=/opt/src \
@@ -28,6 +25,7 @@ RUN apt-get update \
     make \
     wget \
     python3 \
+    gcc \
 #    ca-certificates \
 #    curl \
     texinfo
@@ -55,16 +53,28 @@ RUN cd ${SRC} \
 && make install \
 && make clean
 
+
+RUN apt-get install -y gnuplot gettext-base sudo psmisc libbsd-dev tini
+
+COPY ./src/maxima_fork.c ${SRC}
+
+RUN cd ${SRC} && gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -o libmaximafork.so \
+    && mv libmaximafork.so /usr/lib
+
 RUN rm -r ${SRC} /SBCL_ARCH
-RUN apt-get install -y gnuplot gettext-base sudo psmisc
 
 RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
 
+
+# e.g. assStackQuestion/classes/stack/maxima
+ARG LIB_PATH
+
+RUN echo ${LIB_PATH?Error \$LIB_PATH is not defined}
 # Copy Libraries
 COPY ${LIB_PATH} ${LIB}
 
 # Copy optimization scripts
-COPY assets/optimize.mac.template assets/maximalocal.mac.template ${ASSETS}/
+COPY assets/maxima-fork.lisp assets/optimize.mac.template assets/maximalocal.mac.template ${ASSETS}/
 
 RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxima/stackmaximaversion \
     && sh -c 'envsubst < ${ASSETS}/maximalocal.mac.template > ${ASSETS}/maximalocal.mac \
@@ -74,19 +84,14 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && maxima -b optimize.mac \
     && mv maxima-optimised ${BIN}/maxima-optimised
 
-RUN apt-get purge -y wget python3 make bzip2 texinfo
+RUN apt-get purge -y wget python3 make bzip2 texinfo gcc
 
-RUN useradd -M maxima-server && echo "Defaults	lecture = always" > /etc/sudoers.d/maxima
 RUN for i in $(seq 16); do \
-           useradd -M "maxima-$i" \
-        && echo "maxima-server     ALL = (maxima-$i) NOPASSWD: ${BIN}/wrapper" >> /etc/sudoers.d/maxima \
-        && echo "maxima-server     ALL = (root) NOPASSWD: /usr/bin/killall -9 -u maxima-$i" >> /etc/sudoers.d/maxima; \
+           useradd -M "maxima-$i"; \
     done
 
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
-# Add wrapper
-COPY ./bin/wrapper ${BIN}/wrapper
 
-CMD ["su", "-c", "/opt/maxima/bin/goweb", "maxima-server"]
+CMD rm /dev/tty && exec tini ${BIN}/goweb
 
