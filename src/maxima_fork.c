@@ -29,7 +29,7 @@ char *fork_new_process() {
 	// the server process doesn't accidentally write into
 	// sbcl's buffer
 	// the server should not write anything before it has read this
-	write(STDOUT_FILENO, "S", 1);
+	write(STDOUT_FILENO, "\x02", 1);
 
 	// while the loop is running, the SIGCHLD handler
 	// is deactivated so that children are automatically reaped

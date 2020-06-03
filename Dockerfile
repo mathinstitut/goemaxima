@@ -93,5 +93,5 @@ RUN for i in $(seq 16); do \
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
 
-CMD rm /dev/tty && exec tini ${BIN}/goweb
+CMD rm /dev/tty && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
 
