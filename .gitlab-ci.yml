@@ -17,7 +17,5 @@ build_webservice:
       artifacts: true
   tags:
     - docker
-  except:
-    - master
   script:
     - ./build.sh ${REGISTRY}
