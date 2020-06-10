@@ -41,7 +41,6 @@ test_maxima:
     - docker
   script:
   - apt update && apt install git-core postgresql-client texinfo
-  - cd $CI_PROJECT_DIR/..
   - curl -sS https://getcomposer.org/installer | php
   - mv composer.phar /usr/local/bin/composer
   - composer create-project -n --no-dev moodlerooms/moodle-plugin-ci ci ^1
