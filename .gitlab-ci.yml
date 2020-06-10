@@ -1,6 +1,6 @@
 stages:
   - build_webservice
-  - job_4_3_2
+  - test_maxima
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -32,7 +32,7 @@ build_webservice:
   script:
     - ./build.sh ${REGISTRY}
 
-job_4_3_2:
+test_maxima:
   image: moodlehq/moodle-php-apache:7.3
   variables:
     MOODLE_BRANCH: "MOODLE_37_STABLE"
