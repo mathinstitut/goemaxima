@@ -42,4 +42,4 @@ test_maxima:
   tags:
     - docker
   script:
-    - ./install.sh
+    - bash testimage.sh
