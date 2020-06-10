@@ -1,6 +1,6 @@
 stages:
-  - build_submodule
   - build_webservice
+  - job_4_3_2
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
