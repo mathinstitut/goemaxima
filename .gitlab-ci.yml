@@ -37,6 +37,8 @@ test_maxima:
   variables:
     MOODLE_BRANCH: "MOODLE_37_STABLE"
     QSTACK_VERSION: "v4.3.2"
+  tags:
+    - docker
   script:
   - apt update && apt install git-core postgresql-client texinfo
   - cd $CI_PROJECT_DIR/..
