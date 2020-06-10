@@ -41,6 +41,9 @@ test_maxima:
     - docker
   script:
   - apt update && apt install git-core postgresql-client texinfo
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  - nvm install 14
+  - nvm use 14
   - curl -sS https://getcomposer.org/installer | php
   - mv composer.phar /usr/local/bin/composer
   - composer create-project -n --no-dev moodlerooms/moodle-plugin-ci ci ^1
