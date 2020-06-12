@@ -32,7 +32,7 @@ build_webservice:
     - ./build.sh ${REGISTRY}
 
 test_maxima:
-  image: moodlehq/moodle-php-apache:7.3
+  image: "$REGISTRY/moodle-ci-stack"
   stage: test_maxima
   services:
   - postgres:latest

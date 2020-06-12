@@ -1,16 +1,4 @@
 #!/bin/bash
-apt-get update -y && apt-get install -y git-core postgresql-client texinfo maxima maxima-share
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-. $HOME/.nvm/nvm.sh
-nvm install 14
-nvm use 14
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
-composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
-export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
-chmod u+x ci/bin/moodle-plugin-ci
-chmod u+x ci/bin/*
-umask u+x
 git clone --branch "$QSTACK_VERSION" https://github.com/maths/moodle-qtype_stack
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfexplicitvaildate
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfcbmexplicitvaildate
