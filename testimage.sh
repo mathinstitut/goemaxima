@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH="/ci/bin:/ci/vendor/bin:$PATH"
 git clone --branch "$QSTACK_VERSION" https://github.com/maths/moodle-qtype_stack
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfexplicitvaildate
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfcbmexplicitvaildate
