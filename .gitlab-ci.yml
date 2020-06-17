@@ -27,10 +27,6 @@ steve_jobs:
 build_webservice:
   image: "docker:latest"
   stage: build_webservice
-  needs:
-    - job: steve_jobs
-      ref: master
-      artifacts: true
   tags:
     - docker
   script:
