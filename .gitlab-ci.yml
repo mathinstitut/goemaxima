@@ -1,5 +1,5 @@
 stages:
-  - steve_jobs
+  - steve
   - build_webservice
 #  - test_maxima
 
