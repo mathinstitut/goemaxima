@@ -1,29 +1,34 @@
 stages:
+  - steve_jobs
   - build_webservice
-  - test_maxima
+#  - test_maxima
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: "172.30.190.249:5000"
-  DB: "pgsql"
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: ""
-  POSTGRES_HOST_AUTH_METHOD: "trust"
-  TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
 
 # gitlab ci script taken from https://gist.github.com/danielneis/5c6140ec8150c6151a54bccd26950278
 
-
-cache:
-  paths:
-  - $HOME/.compose/cache
+steve_jobs:
+  stage: steve
+  image: golang
+  tags:
+    - docker
+  script:
+    - go get github.com/prometheus/client_golang/prometheus
+    - go get github.com/prometheus/client_golang/prometheus/promhttp
+    - cd src/web
+    - GOBIN=${CI_PROJECT_DIR}/bin go install
+  artifacts:
+    paths:
+    - bin/web
+    expire_in: 1 week
 
 build_webservice:
   image: "docker:latest"
   stage: build_webservice
   needs:
-    - project: martin.heide/goe_web
-      job: steve_jobs
+    - job: steve_jobs
       ref: master
       artifacts: true
   tags:
@@ -31,15 +36,20 @@ build_webservice:
   script:
     - ./build.sh ${REGISTRY}
 
-test_maxima:
-  image: "$REGISTRY/moodle-ci-stack"
-  stage: test_maxima
-  services:
-  - postgres:latest
-  variables:
-    MOODLE_BRANCH: "MOODLE_37_STABLE"
-    QSTACK_VERSION: "v4.3.2"
-  tags:
-    - docker
-  script:
-    - bash testimage.sh
+#test_maxima:
+#  image: "$REGISTRY/moodle-ci-stack"
+#  stage: test_maxima
+#  services:
+#  - postgres:latest
+#  variables:
+#    MOODLE_BRANCH: "MOODLE_37_STABLE"
+#    QSTACK_VERSION: "v4.3.2"
+#    DB: "pgsql"
+#    POSTGRES_USER: "postgres"
+#    POSTGRES_PASSWORD: ""
+#    POSTGRES_HOST_AUTH_METHOD: "trust"
+#    TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
+#  tags:
+#    - docker
+#  script:
+#    - bash testimage.sh
