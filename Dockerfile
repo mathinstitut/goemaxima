@@ -93,8 +93,8 @@ RUN for i in $(seq 16); do \
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
 
-ARG LIB_PATH=''
-ENV GOEMAXIMA_LIB_PATH=$LIB_PATH
+ARG MAX_LIB_PATH=''
+ENV GOEMAXIMA_LIB_PATH=$MAX_LIB_PATH
 
 CMD rm /dev/tty && cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
 
