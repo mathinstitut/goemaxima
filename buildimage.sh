@@ -15,7 +15,7 @@ IMAGENAME="$5/goemaxima:$3"
 docker pull "${IMAGENAME}"
 # build it
 if [ "$stack" = "2017121800" ]; then
-	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" --build-arg "/opt/maxima/assets/maximalocal.mac" . || exit 1
+	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" --build-arg "MAX_LIB_PATH=/opt/maxima/assets/maximalocal.mac" . || exit 1
 else
 	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
 fi
