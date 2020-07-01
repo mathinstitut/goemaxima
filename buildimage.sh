@@ -14,7 +14,11 @@ IMAGENAME="$5/goemaxima:$3"
 # check if the image already exists on the server
 docker pull "${IMAGENAME}"
 # build it
-docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
+if [ "$stack" = "2017121800" ]; then
+	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" --build-arg "/opt/maxima/assets/maximalocal.mac" . || exit 1
+else
+	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
+fi
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # testing?
 # push it
