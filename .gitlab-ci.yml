@@ -19,10 +19,6 @@ steve_jobs:
     - go get github.com/prometheus/client_golang/prometheus/promhttp
     - cd src/web
     - GOBIN=${CI_PROJECT_DIR}/bin go install
-  only:
-   changes:
-     - src/web/**
-     
   artifacts:
     paths:
     - bin/web
