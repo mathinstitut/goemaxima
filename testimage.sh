@@ -5,18 +5,22 @@ git clone --branch "$QSTACK_VERSION" https://github.com/maths/moodle-qtype_stack
 cd moodle-qtype_stack || exit 1
 patch -p1 << "EOF"
 diff --git a/db/install.php b/db/install.php
-index d573cde9..63f6a16e 100644
+index d573cde9..5db9ba34 100644
 --- a/db/install.php
 +++ b/db/install.php
-@@ -58,7 +58,7 @@ function xmldb_qtype_stack_install() {
-         // Set to the same defaults as in settings.php - however, that has not been done
-         // yet in the Moodle install code flow, so we have to duplicate here.
-         set_config('maximaversion', 'default', 'qtype_stack');
--        set_config('castimeout', 10, 'qtype_stack');
-+        set_config('castimeout', 120, 'qtype_stack');
-         set_config('casresultscache', 'db', 'qtype_stack');
-         set_config('maximacommand', '', 'qtype_stack');
-         set_config('serveruserpass', '', 'qtype_stack');
+@@ -73,12 +73,5 @@ function xmldb_qtype_stack_install() {
+         set_config('maximalibraries', '', 'qtype_stack');
+         set_config('casdebugging', 1, 'qtype_stack');
+         set_config('mathsdisplay', 'mathjax', 'qtype_stack');
+-
+-        if (!defined('QTYPE_STACK_TEST_CONFIG_PLATFORM') || QTYPE_STACK_TEST_CONFIG_PLATFORM !== 'server') {
+-            list($ok, $message) = stack_cas_configuration::create_auto_maxima_image();
+-            if (!$ok) {
+-                throw new coding_exception('maxima_opt_auto creation failed.', $message);
+-            }
+-        }
+     }
+ }
 EOF
 cd ..
 
