@@ -1,7 +1,7 @@
 stages:
   - steve
   - build_webservice
-#  - test_maxima
+  - test_maxima
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -32,20 +32,20 @@ build_webservice:
   script:
     - ./build.sh ${REGISTRY}
 
-#test_maxima:
-#  image: "$REGISTRY/moodle-ci-stack"
-#  stage: test_maxima
-#  services:
-#  - postgres:latest
-#  variables:
-#    MOODLE_BRANCH: "MOODLE_37_STABLE"
-#    QSTACK_VERSION: "v4.3.2"
-#    DB: "pgsql"
-#    POSTGRES_USER: "postgres"
-#    POSTGRES_PASSWORD: ""
-#    POSTGRES_HOST_AUTH_METHOD: "trust"
-#    TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
-#  tags:
-#    - docker
-#  script:
-#    - bash testimage.sh
+test_maxima:
+  image: "$REGISTRY/moodle-ci-stack"
+  stage: test_maxima
+  services:
+  - postgres:latest
+  variables:
+    MOODLE_BRANCH: "MOODLE_37_STABLE"
+    QSTACK_VERSION: "v4.3.2"
+    DB: "pgsql"
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: ""
+    POSTGRES_HOST_AUTH_METHOD: "trust"
+    TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
+  tags:
+    - docker
+  script:
+    - bash testimage.sh
