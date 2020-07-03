@@ -45,6 +45,7 @@ test_maxima:
     POSTGRES_PASSWORD: ""
     POSTGRES_HOST_AUTH_METHOD: "trust"
     TRAVIS_BUILD_DIR: "$CI_PROJECT_DIR"
+    TEST_URL: "http://2020042000.kub00.math.uni-goettingen.de/MaximaPool"
   tags:
     - docker
   script:
