@@ -5,7 +5,7 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-  REGISTRY: "172.30.190.249:5000"
+  REGISTRY: "registry:5000"
 
 # gitlab ci script taken from https://gist.github.com/danielneis/5c6140ec8150c6151a54bccd26950278
 
@@ -31,9 +31,6 @@ build_webservice:
     - docker
   script:
     - ./build.sh "$REGISTRY" "$CI_COMMIT_TAG"
-  only:
-    - tags
-
 
 test_maxima:
   image: "$REGISTRY/moodle-ci-stack"
