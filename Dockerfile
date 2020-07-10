@@ -5,9 +5,6 @@ ARG MAXIMA_VERSION
 # e.g. 2.0.22.0.2
 ARG SBCL_VERSION
 
-RUN echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
-	 ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
-
 ENV SRC=/opt/src \
     LIB=/opt/maxima/lib \
     LOG=/opt/maxima/log \
@@ -15,6 +12,9 @@ ENV SRC=/opt/src \
     PLOT=/opt/maxima/plot \
     ASSETS=/opt/maxima/assets \
     BIN=/opt/maxima/bin
+
+RUN echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
+	 ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
   
 RUN SBCL_ARCH=$(dpkg --print-architecture); if [ $SBCL_ARCH = amd64 ]; then SBCL_ARCH=x86-64; fi; echo $SBCL_ARCH > /SBCL_ARCH
 
@@ -26,8 +26,6 @@ RUN apt-get update \
     wget \
     python3 \
     gcc \
-#    ca-certificates \
-#    curl \
     texinfo
 
 RUN mkdir -p ${SRC}
@@ -59,11 +57,8 @@ RUN apt-get install -y gnuplot gettext-base sudo psmisc libbsd-dev tini
 COPY ./src/maxima_fork.c ${SRC}
 
 RUN cd ${SRC} && gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -o libmaximafork.so \
-    && mv libmaximafork.so /usr/lib
-
-RUN rm -r ${SRC} /SBCL_ARCH
-
-RUN mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
+    && mv libmaximafork.so /usr/lib \
+    && rm -r ${SRC} /SBCL_ARCH && mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
 
 
 # e.g. assStackQuestion/classes/stack/maxima
@@ -82,11 +77,8 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && cat ${ASSETS}/maximalocal.mac && cat ${ASSETS}/optimize.mac \
     && cd ${ASSETS} \
     && maxima -b optimize.mac \
-    && mv maxima-optimised ${BIN}/maxima-optimised
-
-RUN apt-get purge -y wget python3 make bzip2 texinfo gcc
-
-RUN for i in $(seq 16); do \
+    && mv maxima-optimised ${BIN}/maxima-optimised \
+    && for i in $(seq 16); do \
            useradd -M "maxima-$i"; \
     done
 
@@ -97,4 +89,3 @@ ARG MAX_LIB_PATH=''
 ENV GOEMAXIMA_LIB_PATH=$MAX_LIB_PATH
 
 CMD rm /dev/tty && cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
-

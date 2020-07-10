@@ -11,6 +11,7 @@ echo "sbcl: $1"
 echo "maxima: $2"
 echo "stack: $3"
 IMAGENAME="goemaxima:$3"
+docker pull "$5/$IMAGENAME-dev"
 # build it
 if [ "$3" = "2017121800" ]; then
 	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" --build-arg "MAX_LIB_PATH=/opt/maxima/assets/maximalocal.mac" . || exit 1
@@ -19,7 +20,6 @@ else
 fi
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # push the image
-docker login -u mathinstitut -p "$DOCKERHUB_PASS"
 docker tag "$IMAGENAME" "$5/$IMAGENAME-dev"
 docker push "$5/$IMAGENAME-dev"
 if [ -n "$6" ]; then

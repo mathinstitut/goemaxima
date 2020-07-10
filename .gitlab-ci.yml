@@ -29,6 +29,8 @@ build_webservice:
   stage: build_webservice
   tags:
     - docker
+  before_script:
+    - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
   script:
     - ./build.sh "$REGISTRY" "$CI_COMMIT_TAG"
 
