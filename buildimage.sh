@@ -11,8 +11,11 @@ echo "sbcl: $1"
 echo "maxima: $2"
 echo "stack: $3"
 # tag the image
-IMAGENAME="$5/goemaxima-$3:$6"
-IMAGELATEST="$5/goemaxima-$3:latest"
+if [ -n "$6" ]; then
+	IMAGENAME="$5/goemaxima-$3:$6"
+else
+	IMAGENAME="$5/goemaxima-$3:dev"
+fi
 # check if the image already exists on the server
 docker pull "${IMAGENAME}"
 # build it
