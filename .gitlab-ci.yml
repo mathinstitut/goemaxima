@@ -5,7 +5,7 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-  REGISTRY: "http://registry:5000"
+  REGISTRY: "mathinstitut"
 
 # gitlab ci script taken from https://gist.github.com/danielneis/5c6140ec8150c6151a54bccd26950278
 
