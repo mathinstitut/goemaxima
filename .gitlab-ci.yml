@@ -30,7 +30,10 @@ build_webservice:
   tags:
     - docker
   script:
-    - ./build.sh ${REGISTRY}
+    - ./build.sh "$REGISTRY" "$CI_COMMIT_TAG"
+  only:
+    - tags
+
 
 test_maxima:
   image: "$REGISTRY/moodle-ci-stack"
@@ -50,3 +53,4 @@ test_maxima:
     - docker
   script:
     - bash testimage.sh
+  when: manual

@@ -239,7 +239,7 @@ func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess, user_queue chan<- *User, metrics *Metrics) {
 	if r.Method == "GET" && r.FormValue("input") == "" {
 		hostname, _ := os.Hostname()
-		fmt.Fprintf(w, "Hostname: %s, version: 0.1.1\n", hostname)
+		fmt.Fprintf(w, "Hostname: %s, version: 1.0.0\n", hostname)
 		return
 	}
 	// the maxima input to be evaluated
