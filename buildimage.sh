@@ -19,6 +19,7 @@ else
 fi
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # push the image
+docker login -u mathinstitut -p "$DOCKERHUB_PASS"
 docker tag "$IMAGENAME" "$5/$IMAGENAME-dev"
 docker push "$5/$IMAGENAME-dev"
 if [ -n "$6" ]; then
