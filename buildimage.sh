@@ -25,4 +25,6 @@ docker push "$5/$IMAGENAME-dev"
 if [ -n "$6" ]; then
 	docker tag "$IMAGENAME" "$5/$IMAGENAME-$6"
 	docker push "$5/$IMAGENAME-$6"
+	docker tag "$IMAGENAME" "$5/$IMAGENAME-latest"
+	docker push "$5/$IMAGENAME-latest"
 fi
