@@ -13,53 +13,10 @@ ENV SRC=/opt/src \
     ASSETS=/opt/maxima/assets \
     BIN=/opt/maxima/bin
 
-RUN echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
-	 ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
-  
-RUN SBCL_ARCH=$(dpkg --print-architecture); if [ $SBCL_ARCH = amd64 ]; then SBCL_ARCH=x86-64; fi; echo $SBCL_ARCH > /SBCL_ARCH
+COPY ./src/maxima_fork.c /
+COPY ./buildscript.sh /
 
-# Prerequisites for compiling
-RUN apt-get update \
-    && apt-get install -y \
-    bzip2 \
-    make \
-    wget \
-    python3 \
-    gcc \
-    texinfo
-
-RUN mkdir -p ${SRC}
-RUN wget https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz -O ${SRC}/maxima-${MAXIMA_VERSION}.tar.gz
-RUN wget https://sourceforge.net/projects/sbcl/files/sbcl/${SBCL_VERSION}/sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux-binary.tar.bz2 -O ${SRC}/sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux.tar.bz2
-
-# Compile sbcl
-RUN cd ${SRC} \
-&& bzip2 -d sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux.tar.bz2 \
-&& tar -xf sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux.tar \
-&& rm sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux.tar \
-&& ls \
-&& cd sbcl-${SBCL_VERSION}-$(cat /SBCL_ARCH)-linux \
-&& ./install.sh
-
-# Compile maxima
-RUN cd ${SRC} \
-&& tar -xf maxima-${MAXIMA_VERSION}.tar.gz \
-&& rm maxima-${MAXIMA_VERSION}.tar.gz \
-&& cd maxima-${MAXIMA_VERSION} \
-&& ./configure \
-&& make \
-&& make install \
-&& make clean
-
-
-RUN apt-get install -y gnuplot gettext-base sudo psmisc libbsd-dev tini
-
-COPY ./src/maxima_fork.c ${SRC}
-
-RUN cd ${SRC} && gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -o libmaximafork.so \
-    && mv libmaximafork.so /usr/lib \
-    && rm -r ${SRC} /SBCL_ARCH && mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
-
+RUN bash /buildscript.sh
 
 # e.g. assStackQuestion/classes/stack/maxima
 ARG LIB_PATH
