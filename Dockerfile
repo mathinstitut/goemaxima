@@ -85,7 +85,6 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
 
-ARG MAX_LIB_PATH=''
-ENV GOEMAXIMA_LIB_PATH=$MAX_LIB_PATH
+ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
 
 CMD rm /dev/tty && cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised

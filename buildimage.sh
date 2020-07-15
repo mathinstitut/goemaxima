@@ -13,11 +13,7 @@ echo "stack: $3"
 IMAGENAME="goemaxima:$3"
 docker pull "$5/$IMAGENAME-dev"
 # build it
-if [ "$3" = "2017121800" ]; then
-	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" --build-arg "MAX_LIB_PATH=/opt/maxima/assets/maximalocal.mac" . || exit 1
-else
-	docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
-fi
+docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # push the image
 docker tag "$IMAGENAME" "$5/$IMAGENAME-dev"
