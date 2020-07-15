@@ -42,5 +42,5 @@ gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -o libmaximafork.so
 mv libmaximafork.so /usr/lib
 rm -r ${SRC} /maxima_fork.c
 mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
-apt-get purge bzip2 make wget python3 gcc texinfo
-apt-get autoremove
+apt-get purge -y bzip2 make wget python3 gcc texinfo
+apt-get autoremove -y
