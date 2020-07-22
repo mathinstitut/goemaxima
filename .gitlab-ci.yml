@@ -15,10 +15,7 @@ steve_jobs:
   tags:
     - docker
   script:
-    - go get github.com/prometheus/client_golang/prometheus
-    - go get github.com/prometheus/client_golang/prometheus/promhttp
-    - cd src/web
-    - GOBIN=${CI_PROJECT_DIR}/bin go install
+    - ./buildweb.sh
   artifacts:
     paths:
     - bin/web

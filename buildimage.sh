@@ -1,26 +1,38 @@
-##/bin/bash
-# arg1: sbcl version
-# arg2: maxima version
-# arg3: stack or moodle version: "stack-XXX" or "moodlev.X"
-# arg4: LIB_PATH
-# arg5: REGISTRY or dockerhub id
-# arg6: version of goemaxima
-#
+#!/bin/bash
+# arg1: stack or moodle version: "stack-XXX" or "moodlev.X"
+# arg2: REGISTRY or dockerhub id
+
+stackver="$1"
+if [ -z "$stackver" ]; then
+	echo "Stack version is missing"
+	echo "Usage: $0 stackmaximaversion [registry] [containerversion]"
+fi
+verstring=$(awk '$1 == "'"$1"'"{ print $0 }' versions)
+sbclver="$(echo "$verstring" | cut -f2)"
+maximaver="$(echo "$verstring" | cut -f3)"
+goemaxver="$(cat goemaxima_version)"
+libpath="stack/$stackver/maxima"
 echo "starting to build image for:"
-echo "sbcl: $1"
-echo "maxima: $2"
-echo "stack: $3"
-IMAGENAME="goemaxima:$3"
-docker pull "$5/$IMAGENAME-dev"
+echo "sbcl: $maximaver"
+echo "maxima: $sbclver"
+echo "stackmaxima: $stackver"
+echo "goemaxima: $goemaxver"
+REG="$2"
+IMAGENAME="goemaxima:$1"
+if [ -n "$REG" ]; then
+	docker pull "$2/$IMAGENAME-dev"
+fi
 # build it
-docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$2" --build-arg SBCL_VERSION="$1" --build-arg LIB_PATH="$4" . || exit 1
+docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # push the image
-docker tag "$IMAGENAME" "$5/$IMAGENAME-dev"
-docker push "$5/$IMAGENAME-dev"
-if [ -n "$6" ]; then
-	docker tag "$IMAGENAME" "$5/$IMAGENAME-$6"
-	docker push "$5/$IMAGENAME-$6"
-	docker tag "$IMAGENAME" "$5/$IMAGENAME-latest"
-	docker push "$5/$IMAGENAME-latest"
+if [ -n "$REG" ]; then
+	docker tag "$IMAGENAME" "$2/$IMAGENAME-dev"
+	docker push "$2/$IMAGENAME-dev"
+	if [ -n "$3" ]; then
+		docker tag "$IMAGENAME" "$2/$IMAGENAME-$3"
+		docker push "$2/$IMAGENAME-$3"
+		docker tag "$IMAGENAME" "$2/$IMAGENAME-latest"
+		docker push "$2/$IMAGENAME-latest"
+	fi
 fi
