@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
      ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}

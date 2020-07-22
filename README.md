@@ -21,6 +21,8 @@ $ ./buildweb.sh
 $ ./buildimage.sh 2020061000
 ```
 
+The image should then be available as `goemaxima:2020061000-dev`.
+
 
 License
 =======

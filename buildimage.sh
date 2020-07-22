@@ -6,10 +6,11 @@ stackver="$1"
 if [ -z "$stackver" ]; then
 	echo "Stack version is missing"
 	echo "Usage: $0 stackmaximaversion [registry] [containerversion]"
+	exit 1
 fi
 verstring=$(awk '$1 == "'"$1"'"{ print $0 }' versions)
-sbclver="$(echo "$verstring" | cut -f2)"
-maximaver="$(echo "$verstring" | cut -f3)"
+maximaver="$(echo "$verstring" | cut -f2)"
+sbclver="$(echo "$verstring" | cut -f3)"
 goemaxver="$(cat goemaxima_version)"
 libpath="stack/$stackver/maxima"
 echo "starting to build image for:"
@@ -23,11 +24,11 @@ if [ -n "$REG" ]; then
 	docker pull "$2/$IMAGENAME-dev"
 fi
 # build it
-docker build -t "${IMAGENAME}" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
+docker build -t "${IMAGENAME}-dev" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
 echo "${IMAGENAME} wurde erfolgreich gebaut."
 # push the image
 if [ -n "$REG" ]; then
-	docker tag "$IMAGENAME" "$2/$IMAGENAME-dev"
+	docker tag "$IMAGENAME-dev" "$2/$IMAGENAME-dev"
 	docker push "$2/$IMAGENAME-dev"
 	if [ -n "$3" ]; then
 		docker tag "$IMAGENAME" "$2/$IMAGENAME-$3"
