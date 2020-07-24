@@ -25,7 +25,7 @@ if [ -n "$REG" ]; then
 fi
 # build it
 docker build -t "${IMAGENAME}-dev" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
-echo "${IMAGENAME} wurde erfolgreich gebaut."
+echo "${IMAGENAME} was built successfully."
 # push the image
 if [ -n "$REG" ]; then
 	docker tag "$IMAGENAME-dev" "$2/$IMAGENAME-dev"
