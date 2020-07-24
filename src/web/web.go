@@ -87,6 +87,8 @@ func new_mother_proc(binpath string, lib string) (*MotherProcess, error) {
 		debugf("Debug: Loaded file")
 	}
 
+	// start the lisp forking loop, which calls a functino from a c library
+	// that loops over stdin input and forks a new process for each line
 	_, err = fmt.Fprint(in_pipe_r, ":lisp (maxima-fork:forking-loop)\n")
 	if err != nil {
 		return nil, fmt.Errorf("cannot send command to process: %s", err)
@@ -180,9 +182,11 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	}, float64(total.Microseconds())/1000, nil
 }
 
+// takes a child process and evaluates a maxima command in it, while timing out if timeout is reached
 func (p *ChildProcess) eval_command(command string, timeout uint64) (*bytes.Buffer, float64, error) {
 	start := time.Now()
 	in_err := make(chan error, 1)
+	// write to stdin in separate goroutine to prevent deadlocks
 	go func() {
 		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout)*time.Millisecond))
 		_, err := io.Copy(p.Input, strings.NewReader(command))
@@ -190,6 +194,7 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) (*bytes.Buff
 		in_err<-err
 	}()
 	var outbuf bytes.Buffer
+	// read from stdout
 	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout)*time.Millisecond))
 	_, err := io.Copy(&outbuf, p.Output)
 	p.Outfile.Close()
@@ -210,6 +215,7 @@ func write_500(w http.ResponseWriter) {
 	fmt.Fprint(w, "500 - internal server error\n")
 }
 
+// kills all processes of user and remove temporary directories
 func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 	defer os.RemoveAll(tmp_dir)
 	defer func() {user_queue <- user}()
@@ -396,6 +402,7 @@ func get_env_number_positive(varname string, def uint) (uint, error) {
 }
 
 func main() {
+	// register/initialize various prometheus metrics
 	metrics := Metrics {
 		ResponseTime: prometheus.NewHistogram(prometheus.HistogramOpts{
 			Name:	"maxima_response_time",
@@ -428,18 +435,23 @@ func main() {
 	if len(os.Args) != 2 {
 		log.Fatal("Fatal: wrong cli-argument usage: web [path to maxima executable]")
 	}
+	// number of maxima users
 	user_number, err := get_env_number_positive("GOEMAXIMA_NUSER", 16)
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_NUSER contains invalid number");
 	}
+	// length of queue of ready maxima processes (-1)
 	queue_len, err := get_env_number_positive("GOEMAXIMA_QUEUE_LEN", 3)
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_QUEUE_LEN contains invalid number");
 	}
+	// enable debug messages
 	debug, err = get_env_number_positive("GOEMAXIMA_DEBUG", 0)
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_DEBUG contains invalid number");
 	}
+	// where to store temp files (plots, named pipes)
+	// should preferrably be tmpfs since it needs to be fast
 	tmp_prefix = os.Getenv("GOEMAXIMA_TEMP_DIR")
 	if tmp_prefix == "" {
 		tmp_prefix = "/tmp/maxima"
@@ -451,8 +463,12 @@ func main() {
 		log.Fatalf("Fatal: Cannot create %s: %s", tmp_prefix, err)
 	}
 
+	// queue of ready maxima processes
 	queue := make(chan *ChildProcess, queue_len)
+	// queue of available user ids
 	user_queue := make(chan *User, user_number)
+
+	// look up all the users
 	for i := (uint)(1); i <= user_number; i++ {
 		user_name := fmt.Sprintf("maxima-%d", i)
 		user, err := user.Lookup(user_name)
@@ -474,7 +490,10 @@ func main() {
 			Gid: gid,
 		}
 	}
+
+	// spawn maxima processes in separate goroutine
 	go generate_maximas(os.Args[1], os.Getenv("GOEMAXIMA_LIB_PATH"), queue, user_queue, &metrics)
+
 	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/maxima/",
 		func (w http.ResponseWriter, r *http.Request) {
