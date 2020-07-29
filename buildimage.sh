@@ -31,9 +31,9 @@ if [ -n "$REG" ]; then
 	docker tag "$IMAGENAME-dev" "$2/$IMAGENAME-dev"
 	docker push "$2/$IMAGENAME-dev"
 	if [ -n "$3" ]; then
-		docker tag "$IMAGENAME" "$2/$IMAGENAME-$3"
+		docker tag "$IMAGENAME-dev" "$2/$IMAGENAME-$3"
 		docker push "$2/$IMAGENAME-$3"
-		docker tag "$IMAGENAME" "$2/$IMAGENAME-latest"
+		docker tag "$IMAGENAME-dev" "$2/$IMAGENAME-latest"
 		docker push "$2/$IMAGENAME-latest"
 	fi
 fi
