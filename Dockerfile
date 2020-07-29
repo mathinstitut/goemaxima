@@ -18,7 +18,7 @@ COPY ./buildscript.sh /
 
 RUN bash /buildscript.sh
 
-# e.g. assStackQuestion/classes/stack/maxima
+# e.g. stack/20200701/maxima
 ARG LIB_PATH
 
 RUN echo ${LIB_PATH?Error \$LIB_PATH is not defined}
@@ -26,7 +26,7 @@ RUN echo ${LIB_PATH?Error \$LIB_PATH is not defined}
 COPY ${LIB_PATH} ${LIB}
 
 # Copy optimization scripts
-COPY assets/maxima-fork.lisp assets/optimize.mac.template assets/maximalocal.mac.template ${ASSETS}/
+COPY assets/maxima-fork.lisp assets/optimize.mac.template ${LIB_PATH}/../maximalocal.mac.template ${ASSETS}/
 
 RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxima/stackmaximaversion \
     && sh -c 'envsubst < ${ASSETS}/maximalocal.mac.template > ${ASSETS}/maximalocal.mac \
@@ -43,5 +43,11 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
 COPY ./bin/web ${BIN}/goweb
 
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
+ENV LANG C.UTF-8
 
+EXPOSE 80
+
+# rm /dev/tty because we do not want it to be opened by maxima for security reasons,
+# and clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,
+# which means that on a restart caused by an overfull tmpfs, it will keep restarting in a loop
 CMD rm /dev/tty && cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
