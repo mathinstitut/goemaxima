@@ -259,6 +259,12 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 		log.Printf("Warn: Invalid timeout: %s", err)
 		return
 	}
+	health := r.FormValue("health")
+	if health == "1" {
+		input = "print(\"healthcheck successful\");"
+		timeout = 1000
+		debugf("Debug: doing healthcheck")
+	}
 
 	if timeout > 30000 {
 		log.Printf("Warn: timeout %d was out of range range, reduced to 30000", timeout)
@@ -293,6 +299,21 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			log.Printf("Error: Communicating with maxima failed: %s", err)
 			return
 		}
+		if health == "1" {
+			if bytes.Contains(outbuf.Bytes(), []byte("healthcheck successful")) {
+				w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
+				outbuf.WriteTo(w)
+				debugf("Healthcheck passed")
+				// note: we don't update metrics here since they would get
+				// too polluted by the healthchecks
+				return
+			} else {
+				write_500(w)
+				metrics.NumIntError.Inc()
+				log.Printf("Error: Healthcheck did not pass")
+				return
+			}
+		}
 		output_dir := filepath.Clean(filepath.Join(proc.TempDir, "output")) + "/"
 		// if there are any files inside the output dir, we give back a zip file containing all output
 		// files and the command output inside a file named OUTPUT
@@ -317,6 +338,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			out, err := zipfile.Create("OUTPUT")
 			if err != nil {
 				write_500(w)
+				metrics.NumIntError.Inc()
 				log.Printf("Error: Could not add OUTPUT to zip archive: %s", err)
 				return
 			}
@@ -328,12 +350,14 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 				defer ffilein.Close()
 				if err != nil {
 					write_500(w)
+					metrics.NumIntError.Inc()
 					log.Printf("Error: could not open plot %s: %s", file.Name(), err)
 					return
 				}
 				fzipput, err := zipfile.Create("/" + file.Name())
 				if err != nil {
 					write_500(w)
+					metrics.NumIntError.Inc()
 					log.Printf("Error: could not add file %s to zip archive: %s", file.Name(), err)
 					return
 				}
@@ -363,7 +387,7 @@ func generate_maximas(binpath string, lib string, queue chan<- *ChildProcess, us
 	}()
 	var mother *MotherProcess
 	select {
-	case mom := <- mother_proc:
+	case mom := <-mother_proc:
 		mother = mom
 	case <- time.After(10*time.Second):
 		log.Fatal("Fatal: Could not start the mother process, timed out")
