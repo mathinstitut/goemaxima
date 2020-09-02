@@ -243,7 +243,8 @@ func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess, user_queue chan<- *User, metrics *Metrics) {
-	if r.Method == "GET" && r.FormValue("input") == "" {
+	health := r.FormValue("health") == "1"
+	if r.Method == "GET" && r.FormValue("input") == "" && !health {
 		hostname, _ := os.Hostname()
 		fmt.Fprintf(w, "Hostname: %s, version: 1.0.3\n", hostname)
 		return
@@ -252,18 +253,20 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	input := r.FormValue("input")
 	// template value for ploturl
 	ploturl := r.FormValue("ploturlbase")
-	timeout, err := strconv.ParseUint(r.FormValue("timeout"), 10, 64)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "400 - bad request (invalid timeout)\n")
-		log.Printf("Warn: Invalid timeout: %s", err)
-		return
-	}
-	health := r.FormValue("health")
-	if health == "1" {
+	var timeout uint64
+	var err error
+	if health {
 		input = "print(\"healthcheck successful\");"
 		timeout = 1000
 		debugf("Debug: doing healthcheck")
+	} else {
+		timeout, err = strconv.ParseUint(r.FormValue("timeout"), 10, 64)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprint(w, "400 - bad request (invalid timeout)\n")
+			log.Printf("Warn: Invalid timeout: %s", err)
+			return
+		}
 	}
 
 	if timeout > 30000 {
@@ -299,7 +302,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			log.Printf("Error: Communicating with maxima failed: %s", err)
 			return
 		}
-		if health == "1" {
+		if health {
 			if bytes.Contains(outbuf.Bytes(), []byte("healthcheck successful")) {
 				w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
 				outbuf.WriteTo(w)
