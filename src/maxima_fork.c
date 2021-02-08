@@ -14,7 +14,9 @@
 #include <bsd/unistd.h>
 #include <limits.h>
 #include <grp.h>
-#define N_SLOT 16
+#ifndef N_SLOT
+#define N_SLOT 32
+#endif
 #define RNOFILE 256
 #define FILEPATH_LEN (PATH_MAX + 1)
 char filepath[FILEPATH_LEN];

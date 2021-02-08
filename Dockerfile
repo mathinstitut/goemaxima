@@ -2,7 +2,7 @@ FROM debian:stable
 
 # e.g. 5.41.0
 ARG MAXIMA_VERSION
-# e.g. 2.0.22.0.2
+# e.g. 2.0.2
 ARG SBCL_VERSION
 
 ENV SRC=/opt/src \
@@ -35,7 +35,7 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && cd ${ASSETS} \
     && maxima -b optimize.mac \
     && mv maxima-optimised ${BIN}/maxima-optimised \
-    && for i in $(seq 16); do \
+    && for i in $(seq 32); do \
            useradd -M "maxima-$i"; \
     done
 
@@ -45,7 +45,7 @@ COPY ./bin/web ${BIN}/goweb
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
 ENV LANG C.UTF-8
 
-EXPOSE 80
+EXPOSE 8080
 
 # rm /dev/tty because we do not want it to be opened by maxima for security reasons,
 # and clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,

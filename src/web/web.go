@@ -463,7 +463,7 @@ func main() {
 		log.Fatal("Fatal: wrong cli-argument usage: web [path to maxima executable]")
 	}
 	// number of maxima users
-	user_number, err := get_env_number_positive("GOEMAXIMA_NUSER", 16)
+	user_number, err := get_env_number_positive("GOEMAXIMA_NUSER", 32)
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_NUSER contains invalid number");
 	}
@@ -522,10 +522,13 @@ func main() {
 	go generate_maximas(os.Args[1], os.Getenv("GOEMAXIMA_LIB_PATH"), queue, user_queue, &metrics)
 
 	http.Handle("/metrics", promhttp.Handler())
-	http.HandleFunc("/maxima/",
-		func (w http.ResponseWriter, r *http.Request) {
+	handler := func (w http.ResponseWriter, r *http.Request) {
 			handler(w, r, queue, user_queue, &metrics)
-		})
+	}
+	http.HandleFunc("/maxima", handler)
+	http.HandleFunc("/maxima/", handler)
+	http.HandleFunc("/goemaxima", handler)
+	http.HandleFunc("/goemaxima/", handler)
 	log.Print("Info: goe handler started")
 	err = http.ListenAndServe(":8080", nil)
 	log.Printf("Fatal: http handler closed unexpectedly, %s", err)

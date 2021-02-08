@@ -23,6 +23,12 @@ $ ./buildimage.sh 2020061000
 
 The image should then be available as `goemaxima:2020061000-dev`.
 
+Using the Docker Image
+======================
+
+The prebuilt docker images are available from the docker hub at `mathinstitut/goemaxima:[version]-latest`.
+
+The port of the server in the container is `8080` and the path that has to be input into stack is `http://[address:port]/goemaxima`.
 
 License
 =======

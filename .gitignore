@@ -19,3 +19,4 @@ tags
 [._]*.un~
 
 bin
+src/web/web
