@@ -1,14 +1,17 @@
 #!/bin/sh
+# This script build SBCL and Maxima from source.
+# It also compiles maxima_fork.c.
+
 set -e
 echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
      ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
-  
+
 SBCL_ARCH=$(dpkg --print-architecture)
 if [ $SBCL_ARCH = amd64 ]; then
 	SBCL_ARCH=x86-64
 fi
 
-apt-get update 
+apt-get update
 apt-get install -y bzip2 make wget python3 gcc texinfo
 
 mkdir -p ${SRC}

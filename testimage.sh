@@ -1,4 +1,8 @@
 #!/bin/bash
+# This script uses the moodle-plugin-ci utility (https://moodlehq.github.io/moodle-plugin-ci/)
+# To run all the STACK unit tests against a particular Maxima server, whose URL is given
+# in the environment variable $TEST_URL.
+
 export PATH="/ci/bin:/ci/vendor/bin:$PATH"
 . ~/.nvm/nvm.sh
 git clone --branch "$QSTACK_VERSION" https://github.com/maths/moodle-qtype_stack
