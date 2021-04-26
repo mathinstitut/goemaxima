@@ -29,6 +29,7 @@ Using the Docker Image
 The prebuilt docker images are available from the docker hub at `mathinstitut/goemaxima:[version]-latest`.
 
 The port of the server in the container is `8080` and the path that has to be input into stack is `http://[address:port]/goemaxima`.
+Some older versions of the image accept only `http://[address:port]/maxima` and this url should work in newer versions as well.
 
 License
 =======
