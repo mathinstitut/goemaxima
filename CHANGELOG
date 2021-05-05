@@ -1,0 +1,6 @@
+1.1.1
+-----
+* Add stackmaxima versions 2020100900, 2020101501, 2020120600
+* Increase maximum number of threads to 32 
+* Add `/goemaxima` as a request path
+* Add the ability to do a healthcheck by querying `/goemaxima?health=1`
