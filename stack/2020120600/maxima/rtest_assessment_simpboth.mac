@@ -1,0 +1,373 @@
+safe_op(1); 
+""$ 
+safe_op(x); 
+""$ 
+safe_op(%pi); 
+""$ 
+safe_op(z+3); 
+"+"$ 
+safe_op(3*z); 
+"*"$ 
+safe_op(3^z); 
+"^"$ 
+safe_op(3/z); 
+"/"$ 
+safe_op(sin(3*z)); 
+"sin"$ 
+safe_op((-1)/(1+x^2)); 
+"/"$ 
+safe_op(1-x); 
+"+"$ 
+safe_op(x-1); 
+"+"$ 
+safe_op(-(x-1)); 
+"-"$ 
+safe_op(-1/(1+x^2)); 
+"/"$ 
+safe_op(-2*x); 
+"*"$ 
+
+coeff_list(x^2-3*x+5,x);
+[5,-3,1]$
+
+decimalplaces(1.123456789,3); 
+1.123$ 
+decimalplaces(1.123456789,8); 
+1.12345679$ 
+decimalplaces(1.1292,2); 
+1.13$ 
+decimalplaces(-1.1292,2); 
+-1.13$
+decimalplaces(%pi,5); 
+3.14159$ 
+decimalplaces(%pi,4); 
+3.1416$ 
+
+significantfigures(11292,2); 
+11000$ 
+significantfigures(11292,3); 
+11300$ 
+significantfigures(1.1292,3); 
+1.13$ 
+significantfigures(0.011292,3); 
+0.0113$ 
+significantfigures(0.09999,3); 
+0.1$ 
+scientific_notation(1.123); 
+1.123$ 
+scientific_notation(1123); 
+1123.0$ 
+significantfigures(-0.99,1);
+-1$
+
+all_listp(real_numberp,[1,exp(1)^(%i*%pi),sqrt(2)+1,sin(1)]); 
+true$ 
+any_listp(real_numberp,[%i,%i+1,3+x,sqrt(-3)+1]); 
+false$ 
+
+expandp((x-1)*(1+x)); 
+false$ 
+expandp(2*(x-1)); 
+false$ 
+expandp(2*x-1); 
+true$ 
+expandp(x-1); 
+true$ 
+expandp((p-1)*(1+p)); 
+false$ 
+expandp(2*(p-1)); 
+false$ 
+expandp(3*y+6*p); 
+true$ 
+
+ineqprepare(x>1);
+x-1>0$
+ineqprepare(3*x<=7-x);
+7-4*x>=0$
+
+list_expression_numbers(x); 
+[]$ 
+list_expression_numbers(%pi); 
+[]$ 
+list_expression_numbers(1+x); 
+[1]$ 
+list_expression_numbers(1/2+x); 
+[1/2]$ 
+list_expression_numbers(4/2+x); 
+[4/2]$ 
+list_expression_numbers(1/sin(2*x)); 
+[1,2]$ 
+
+sublist([0.5],floatnump); 
+[0.5]$ 
+sublist([1,0.5],floatnump); 
+[0.5]$ 
+
+anyfloatex(0.5); 
+true$ 
+anyfloatex(x); 
+false$ 
+anyfloatex(1+x); 
+false$ 
+anyfloatex(0.5*x); 
+true$ 
+anyfloatex(sin(x*0.2)); 
+true$ 
+
+irred_Q(0,x); 
+[true,"",false]$ 
+irred_Q(x,x); 
+[true,"",false]$ 
+irred_Q(1+x,x); 
+[true,"",false]$ 
+irred_Q(1-x,x); 
+[true,"",false]$ 
+irred_Q(2-3*x,x); 
+[true,"",false]$ 
+irred_Q(2*x-2,x); 
+[false,"stack_trans('irred_Q_commonint'); ",true]$ 
+irred_Q(t+t*x,x); 
+[false,"",false]$ 
+irred_Q(3*x^2,x); 
+[true,"",false]$ 
+irred_Q(4*x^2,x); 
+[true,"stack_trans('irred_Q_optional_fac' , !quot!\\(4\\,x^2\\)!quot! ); ",false]$ 
+irred_Q(x^2-4,x); 
+[false,"",false]$ 
+irred_Q(x^2-2,x); 
+[true,"",false]$ 
+irred_Q(n+n^2,n); 
+[false,"",false]$ 
+irred_Q(n*(1+n),n); 
+[false,"",false]$ 
+irred_Q(n*(n-1),n); 
+[false,"",false]$ 
+irred_Q(0.5+x,x); 
+[true,"",false]$ 
+irred_Q(2-3*x+x^2,x); 
+[false,"",false]$ 
+irred_Q(1+x^2+x^5,x); 
+[true,"",false]$ 
+irred_Q(n^3-1,n); 
+[false,"",false]$
+irred_Q(3*x-6*x^3+3*x^6,x); 
+[false,"stack_trans('irred_Q_commonint'); ",false]$ 
+irred_Q(9-3*x+3*x^5,x); 
+[false,"stack_trans('irred_Q_commonint'); ",true]$ 
+
+irred_power_Qp(2,x);
+true$
+irred_power_Qp((x-1)^2,x);
+true$
+irred_power_Qp((3*x-6)^4,x);
+true$
+irred_power_Qp(x^2-1,x);
+false$
+irred_power_Qp(3*x-6*x^3+3*x^6,x);
+false$
+irred_power_Qp(9-3*x+3*x^5,x);
+true$
+
+continuousp(x^2,x,1); 
+true$ 
+continuousp(abs(x),x,1); 
+true$ 
+continuousp(abs(x),x,0); 
+true$ 
+continuousp(sgn(x),x,0); 
+false$ 
+continuousp(sin(1/x),x,0); 
+false$ 
+continuousp(x*sin(1/x),x,0); 
+true$ 
+
+diffp(x^2,x,1); 
+true$ 
+diffp(abs(x),x,1); 
+true$ 
+diffp(abs(x),x,0); 
+false$ 
+diffp(sgn(x),x,0); 
+false$ 
+diffp(sin(1/x),x,0); 
+false$ 
+diffp(x^2*sin(1/x),x,0); 
+false$ 
+diffp(x^3*sin(1/x),x,0); 
+true$ 
+
+listsoverlap([1,2],[2,3]); 
+true$ 
+listsoverlap([8,9],[2,3]); 
+false$ 
+listscontain([1,2],[2,3],1); 
+false$ 
+listscontain([8,9],[2,3],1); 
+false$ 
+listscontain([1,2],[1,3],1); 
+true$ 
+
+subst_int_const(x^4/4+c*x+x = %c9,k); 
+x^4/4+c*x+x = k$ 
+subst_int_const(x^4/4+c*x+x = %c9,v); 
+x^4/4+c*x+x = v$ 
+subst_int_const(x^2,k); 
+x^2$ 
+subst_int_const(c*x^4/4+c^2*x/2+c*x = %c9*c+%c10,[v]); 
+c*x^4/4+c^2*x/2+c*x = %c9*c+v$ 
+subst_int_const(c*x^4/4+c^2*x/2+c*x = %c9*c+%c10,[k1,k2]); 
+c*x^4/4+c^2*x/2+c*x = k1+c*k2$ 
+subst_int_const(c*x^4/4+c^2*x/2+c*x = %c9*c+%c10,[k1,k2,k3]); 
+c*x^4/4+c^2*x/2+c*x = k1+c*k2$ 
+
+subst_equiv(y+x^2,1+a^2); 
+[]$ 
+subst_equiv(1-2*x+x^2,(X-1)^2); 
+[x = X]$ 
+subst_equiv(y+x^2,b+a^2); 
+[x = a,y = b]$ 
+subst_equiv(y+x^2,b+a^2); 
+[x = a,y = b]$ 
+subst_equiv(y/z+x^2,c/b+a^2); 
+[x = a,y = c,z = b]$ 
+subst_equiv(y/z+x^2,z/x+y^2); 
+[x = y,y = z,z = x]$ 
+subst_equiv(y+x^2,x^2+y^2); 
+[]$ 
+subst_equiv(u^6+w^5+v^4+z^3+y^2+x,f+g^2+d^3+c^4+b^5+a^6); 
+false$ 
+subst_equiv(w+u+v+y+x^2,w+v+y+b+a^2); 
+[u = b,x = a]$ 
+
+exdowncase(1+X+X^2); 
+1+x+x^2$ 
+
+exdowncase(%pi); 
+%pi$ 
+
+stack_assignmentp(x = 1); 
+true$ 
+stack_assignmentp(x = sqrt(2)); 
+true$ 
+stack_assignmentp(3 = 1); 
+false$ 
+stack_assignmentp(d = v*t); 
+false$ 
+stack_assignmentp(1 = x); 
+false$ 
+
+StackDISP(a/b,""); 
+"\\frac{a}{b}"$ 
+StackDISP(-27,""); 
+"-27"$ 
+StackDISP(-sin(x^2),""); 
+"-\\sin \\left( x^2 \\right)"$ 
+StackDISP(asin(x),""); 
+"\\sin^{-1} \\left( x \\right)"$ 
+StackDISP(log(x),""); 
+"\\ln \\left( x \\right)"$ 
+StackDISP(y^3-2*y^2-8*y,"");
+"y^3-2\\,y^2-8\\,y"$ 
+StackDISP(y^2-2*y-8,""); 
+"y^2-2\\,y-8"$
+StackDISP(y^2-2*y-0.5,""); 
+"y^2-2\\,y-0.5"$
+
+strip_int_const(k+x,x); 
+x$ 
+strip_int_const(k+1+x,x); 
+1+x$ 
+strip_int_const(k^2+(x-1)^2,x); 
+(x-1)^2$ 
+strip_int_const(c+(t-1)^4/4,t); 
+(t-1)^4/4$ 
+
+buggy_pow((x+1)^2);
+x^2+1^2$
+buggy_pow(sin((x+y)^3));
+sin(x^3+y^3)$
+
+degree(y^3 * x^2 + x * y^4, x);
+2$
+degree((x + y)^5, x);
+5$
+degree((x + y)^5, x + y);
+0$
+
+list_remove([a,b,c,d], 1);
+[b,c,d]$
+list_remove([a,b,c,d], 2);
+[a,c,d]$
+list_remove([a,b,c,d], 3);
+[a,b,d]$
+list_remove([a,b,c,d], 0);
+[a,b,c,d]$
+list_remove([a,b,c,d], 6);
+[a,b,c,d]$
+list_remove([a,[b],[c,d],d], 2);
+[a,[c,d],d]$
+
+stack_disp(a+1, "i");
+"\\(a+1\\)"$
+stack_disp(1, "i");
+"\\(1\\)"$
+stack_disp(false, "i");
+"\\(\\mathbf{False}\\)"$
+stack_disp(ab0, "i");
+"\\({{\\it ab}}_{0}\\)"$
+stack_disp(epsilon0345, "i");
+"\\({\\varepsilon}_{0345}\\)"$
+stack_disp(a+1/pi3, "i");
+"\\(a+\\frac{1}{{\\pi}_{3}}\\)"$
+stack_disp(gamma7^3, "i");
+"\\({\\gamma}_{7}^3\\)"$
+stack_disp(gamma7^(2*x), "i");
+"\\({\\gamma}_{7}^{2\\,x}\\)"$
+stack_disp(f(x):=2*x^3, "i");
+"\\(f(x):=2*x^3\\)"$
+
+stack_unit_si_to_si_base(25);
+25$
+stack_unit_si_to_si_base(25*kg);
+25*kg$
+stack_unit_si_to_si_base(kg);
+kg$
+stack_unit_si_to_si_base(5*g);
+(1/200)*kg$
+stack_unit_si_to_si_base(stackunits(25,NULLUNITS));
+stackunits(25,NULLUNITS)$
+stack_unit_si_to_si_base(stackunits(25,kg));
+stackunits(25,kg)$
+stack_unit_si_to_si_base(stackunits(NULLNUMS,kg));
+stackunits(NULLNUMS,kg)$
+stack_unit_si_to_si_base(stackunits(NULLNUM,g));
+stackunits(1/1000,kg)$
+stack_unit_si_to_si_base(stackunits(5,g));
+stackunits(1/200,kg)$
+
+stackunits_to_product(stackunits(5,g));
+5*g$
+stackunits_to_product(stackunits(NULLNUM,g));
+g$
+stackunits_to_product(stackunits(6,NULLUNITS));
+6$
+
+factorlist(15); 
+[3,5]$ 
+factorlist(x^2);
+[x]$
+factorlist(x^2-1);
+[x-1,x+1]$
+factorlist(x^2-2);
+[x^2-2]$
+factorlist(-x^2);
+[x]$
+factorlist(1-x^2);
+[x-1,x+1]$
+factorlist(x^2-5*x+6);
+[x-3,x-2]$
+factorlist(-x^2-5*x+6);
+[x-1,x+6]$
+factorlist(x^3-1); 
+[x-1,x^2+x+1]$ 
+
