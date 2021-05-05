@@ -3,6 +3,6 @@
 set -e
 export GOBIN="$(realpath bin)"
 cd ./src/web
-go build web
+go mod download all
 go install web
 
