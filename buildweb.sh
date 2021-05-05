@@ -3,6 +3,6 @@
 set -e
 export GOBIN="$(realpath bin)"
 cd ./src/web
-go mod download github.com/prometheus/client_golang
+go build web
 go install web
 
