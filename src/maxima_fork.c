@@ -21,11 +21,39 @@
 #define FILEPATH_LEN (PATH_MAX + 1)
 char filepath[FILEPATH_LEN];
 
+
 // inits a maxima process for web service:
 // changes gid/uid to maxima-{slot}
 // redirects input/output, creates temporary subdirectories
 char *fork_new_process() {
 	fflush(stdout);
+	uid_t user_id[N_SLOT];
+	gid_t group_id[N_SLOT];
+
+	// cache and verify uids/gids on startup
+	for (int i = 1; i <= N_SLOT; i++) {
+		char username[16];
+		int len = snprintf(username, 15, "maxima-%d", i);
+		if (len < 0 || len > 15) {
+			dprintf(STDERR_FILENO, "Internal error getting user name\n");
+			return NULL;
+		}
+		struct passwd *userinfo = getpwnam(username);
+		if (!userinfo) {
+			dprintf(STDERR_FILENO, "Could not read user information for %s: %s\n",
+					username, strerror(errno));
+			return NULL;
+		}
+
+		uid_t uid = userinfo->pw_uid;
+		gid_t gid = userinfo->pw_gid;
+		if (uid == 0 || gid == 0) {
+			dprintf(STDERR_FILENO, "maxima-%d is root, quitting\n", i);
+			return NULL;
+		}
+		user_id[i - 1] = uid;
+		group_id[i - 1] = gid;
+	}
 
 	// send an S for Synchronization, so that
 	// the server process doesn't accidentally write into
@@ -143,34 +171,15 @@ char *fork_new_process() {
 		// note: this is a function from libbsd
 		closefrom(3);
 
-		// get uid/gid from username
+		// verify valid slot number
 		if (slot <= 0 || slot > N_SLOT) {
 			dprintf(STDERR_FILENO, "Invalid slot number: %d\n", slot);
 			ret = NULL;
 			break;
 		}
-		char username[16];
-		int len = snprintf(username, 15, "maxima-%d", slot);
-		if (len < 0 || len > 15) {
-			dprintf(STDERR_FILENO, "Internal error getting user name\n");
-			ret = NULL;
-			break;
-		}
-		struct passwd *userinfo = getpwnam(username);
-		if (!userinfo) {
-			dprintf(STDERR_FILENO, "Could not read user information for %s: %s\n",
-					username, strerror(errno));
-			ret = NULL;
-			break;
-		}
-		uid_t uid = userinfo->pw_uid;
-		gid_t gid = userinfo->pw_gid;
-		if (uid == 0 || gid == 0) {
-			dprintf(STDERR_FILENO, "Refusing to setuid/gid to root\n");
-			ret = NULL;
-			break;
-		}
 
+		uid_t uid = user_id[slot - 1];
+		gid_t gid = group_id[slot - 1];
 		// note: setgid should be executed before setuid when dropping from root
 		if (setgid(gid) == -1) {
 			perror("Could not set gid");
