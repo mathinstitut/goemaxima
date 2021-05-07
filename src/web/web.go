@@ -421,7 +421,7 @@ func get_env_number_positive(varname string, def uint) (uint, error) {
 	if !exists {
 		return def, nil
 	}
-	number, err := strconv.ParseUint(value, 32, 10)
+	number, err := strconv.ParseUint(value, 10, 32)
 	if err != nil {
 		return 0, err
 	}
@@ -464,6 +464,7 @@ func main() {
 	}
 	// number of maxima users
 	user_number, err := get_env_number_positive("GOEMAXIMA_NUSER", 32)
+	log.Printf("Info: Maximum number of processes is %d", user_number)
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_NUSER contains invalid number");
 	}
@@ -472,6 +473,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_QUEUE_LEN contains invalid number");
 	}
+	log.Printf("Info: Ready process queue length is %d", queue_len)
 	// enable debug messages
 	debug, err = get_env_number_positive("GOEMAXIMA_DEBUG", 0)
 	if err != nil {
