@@ -5,6 +5,9 @@ ARG MAXIMA_VERSION
 # e.g. 2.0.2
 ARG SBCL_VERSION
 
+# number of maxima-%d user names/maximum number of processes
+ARG MAX_USER=32
+
 ENV SRC=/opt/src \
     LIB=/opt/maxima/lib \
     LOG=/opt/maxima/log \
@@ -35,7 +38,7 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
     && cd ${ASSETS} \
     && maxima -b optimize.mac \
     && mv maxima-optimised ${BIN}/maxima-optimised \
-    && for i in $(seq 32); do \
+    && for i in $(seq $MAX_USER); do \
            useradd -M "maxima-$i"; \
     done
 
@@ -43,6 +46,8 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
 COPY ./bin/web ${BIN}/goweb
 
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
+ENV GOEMAXIMA_NUSER=$MAX_USER
+RUN sh -c 'echo $GOEMAXIMA_NUSER'
 ENV LANG C.UTF-8
 
 EXPOSE 8080

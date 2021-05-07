@@ -41,7 +41,8 @@ make clean
 apt-get install -y gnuplot-nox gettext-base libbsd-dev tini
 
 cd /
-gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -o libmaximafork.so
+test -n "$MAX_USER" || MAX_USER=32
+gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -DN_SLOT="${MAX_USER}" -o libmaximafork.so
 mv libmaximafork.so /usr/lib
 rm -r ${SRC} /maxima_fork.c
 mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
