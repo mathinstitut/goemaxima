@@ -1,3 +1,11 @@
+1.1.2
+-----
+* Update sbcl to 2.1.4
+* Add argument to Dockerfile which allows setting the maximum number of concurrent users
+* Add GOEMAXIMA_EXTRA_PACKAGES variable which allows loading extra maxima packages after
+    docker image has been built
+* Add lsquares and coma package
+* Fix incorrect parsing of environment variables
 1.1.1
 -----
 * Add stackmaxima versions 2020100900, 2020101501, 2020120600
