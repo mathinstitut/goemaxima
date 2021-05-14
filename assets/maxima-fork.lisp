@@ -7,9 +7,7 @@
 (defparameter |$url_base| "!ploturl!")
 
 (cl:defpackage "MAXIMA-FORK"
-	       (:use "CL" "SB-ALIEN"
-		     #+sb-thread "SB-THREAD"
-		     #+sb-thread "SB-IMPL")
+	       (:use "CL" "SB-ALIEN")
 	       (:export "FORKING-LOOP"))
 (cl:in-package "MAXIMA-FORK")
 
