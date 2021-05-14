@@ -45,15 +45,22 @@ Environment Variables
 =====================
 A few internal options can be set from environment variables.
 
-Some debug logs can be activated with `GOEMAXIMA_DEBUG=1` (or more with `GOEMAXIMA_DEBUG=2`).
+* `GOEMAXIMA_DEBUG` activates some debug logs with `GOEMAXIMA_DEBUG=1` (or more with `GOEMAXIMA_DEBUG=2`).
 
-`GOEMAXIMA_NUSER` sets the number of processes that can run at the same time. The maximum number is 32 and it is the default.
+* `GOEMAXIMA_EXTRA_PACKAGES` is a colon-separated list of maxima packages that gets loaded at startup at the server.
+   The load time of the packages mostly influences the startup time of the server itself and should not significantly affect the serve time of a request.
+   The entries simply get loaded through a load(entry) call in maxima.
+   This means you can also mount your own maxima libraries into the docker image and load them by using a path.
 
-`GOEMAXIMA_QUEUE_LEN` sets the target number of processes that are idle and ready to accept a request. The default is 3 (but note that there is always one extra process waiting).
+* `GOEMAXIMA_NUSER` sets the number of processes that can run at the same time. The maximum number is 32 and it is the default.
 
-`GOEMAXIMA_TEMP_DIR` is the temporary directory where maxima processes write plots and have their named pipes. Its default is `/tmp/maxima`. It is the only location where the server writes to and should be mapped to tmpfs to increase speed.
+* `GOEMAXIMA_QUEUE_LEN` sets the target number of processes that are idle and ready to accept a request. The default is 3 (but note that there is always one extra process waiting).
 
-`GOEMAXIMA_LIB_PATH` is the path to a library that is loaded on startup of the maxima process.
+* `GOEMAXIMA_TEMP_DIR` is the temporary directory where maxima processes write plots and have their named pipes. Its default is `/tmp/maxima`. It is the only location where the server writes to and should be mapped to tmpfs to increase speed.
+
+* `GOEMAXIMA_LIB_PATH` is the path to a library that is loaded on startup of the maxima process.
+   If you do not modify the container or use the webserver executable in another context than the image, you probably want to leave this variable unset.
+   If you want to load extra packages/libraries, use the `GOEMAXIMA_EXTRA_PACKAGES` variable instead.
 
 Metrics
 =======

@@ -60,7 +60,7 @@ func debugf(format string, a ...interface{}) {
 	}
 }
 
-func new_mother_proc(binpath string, lib string) (*MotherProcess, error) {
+func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 	cmd := exec.Command(binpath)
 	cmd.Stderr = os.Stderr
 
@@ -75,8 +75,11 @@ func new_mother_proc(binpath string, lib string) (*MotherProcess, error) {
 		return nil, fmt.Errorf("cannot start process: %s", err)
 	}
 
-	if lib != "" {
-		// this should be fine since this string is given at startup
+	for _, lib := range libs {
+		if lib == "" {
+			continue
+		}
+		// this should be fine since this string is given at startup and therefore trusted
 		lib = strings.ReplaceAll(lib, "\\", "\\\\")
 		lib = strings.ReplaceAll(lib, "\"", "\\\"")
 		debugf("Debug: load(\"%s\")$\n", lib)
@@ -379,10 +382,10 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	}
 }
 
-func generate_maximas(binpath string, lib string, queue chan<- *ChildProcess, user_queue <-chan *User, metrics *Metrics) {
+func generate_maximas(binpath string, libs []string, queue chan<- *ChildProcess, user_queue <-chan *User, metrics *Metrics) {
 	mother_proc := make(chan *MotherProcess, 0)
 	go func () {
-		mother, err := new_mother_proc(binpath, lib)
+		mother, err := new_mother_proc(binpath, libs)
 		if err != nil {
 			log.Fatalf("Fatal: Could not start mother process: %s", err)
 		}
@@ -520,8 +523,9 @@ func main() {
 		}
 	}
 
+	libs := append(strings.Split(os.Getenv("GOEMAXIMA_EXTRA_PACKAGES"), ":"),  os.Getenv("GOEMAXIMA_LIB_PATH"))
 	// spawn maxima processes in separate goroutine
-	go generate_maximas(os.Args[1], os.Getenv("GOEMAXIMA_LIB_PATH"), queue, user_queue, &metrics)
+	go generate_maximas(os.Args[1], libs, queue, user_queue, &metrics)
 
 	http.Handle("/metrics", promhttp.Handler())
 	handler := func (w http.ResponseWriter, r *http.Request) {
