@@ -2,9 +2,9 @@
    Credit goes to:
    https://github.com/maths/moodle-qtype_stack/blob/master/doc/en/CAS/Optimising_Maxima.md */
 
-// note: coma has a plot function, which clashes with Stack's plot function. Therefore, we load
-// it before we load stack so that the plot function of COMA (which is probably not needed in any case)
-// is overwritten by Stack's plot function
+/* note: coma has a plot function, which clashes with Stack's plot function. Therefore, we load
+   it before we load stack so that the plot function of COMA (which is probably not needed in any case)
+   is overwritten by Stack's plot function */
 load(coma);
 load("${ASSETS}/maximalocal.mac");
 load("${ASSETS}/maxima-fork.lisp");
