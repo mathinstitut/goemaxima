@@ -1,7 +1,7 @@
 goemaxima
 =========
 This project developed at the Mathematical Institute of Goettingen provides an alternative webservice for stack, which is a question type for ilias and moodle focused on math.
-It is mainly intended to be used as a docker container in a cluster, optimally one supporting autoscaling, as scaling in the service itself is not supported.
+The image was originally developed to be used in a cluster/loadbalancing setup, but for most workloads it is viable to use it as a single container.
 
 This implementation in golang strives to have faster startup and processing times than the corresponding java version by using fork instead of starting a new process for each request.
 For some more information on how this works, [see the documentation](/doc/How_it_works.md).
@@ -40,6 +40,9 @@ $ docker run --restart=always --tmpfs /tmp -p $port:8080 $imagename
 where `$port` is the port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2020120600-latest`).
 
 Note that this program prefers to quit on errors it can not recover from, so setting `restart=always` is strongly recommended.
+
+The memory usage of the container is around 50MB when idle and can quickly spike to 250MB on heavy use.
+The process startup time for a single request is a few milliseconds and negligible in comparison to processing the CAS request itself.
 
 Environment Variables
 =====================
