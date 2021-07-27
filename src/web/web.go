@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"bufio"
+	"errors"
 	"fmt"
 	"path/filepath"
 	"io"
@@ -191,14 +192,14 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) (*bytes.Buff
 	in_err := make(chan error, 1)
 	// write to stdin in separate goroutine to prevent deadlocks
 	go func() {
-		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout)*time.Millisecond))
+		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout + 10)*time.Millisecond))
 		_, err := io.Copy(p.Input, strings.NewReader(command))
 		p.Input.Close()
 		in_err<-err
 	}()
 	var outbuf bytes.Buffer
 	// read from stdout
-	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout)*time.Millisecond))
+	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout + 10)*time.Millisecond))
 	_, err := io.Copy(&outbuf, p.Output)
 	p.Outfile.Close()
 	input_err := <-in_err
@@ -286,7 +287,20 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	proc := <-queue
 	metrics.QueueLen.Dec()
 	user := proc.User
+	log_with_input := func(format string, a ...interface{}) {
+		msg := fmt.Sprintf(format, a...)
+		log.Printf("%s - input: `%s`, timeout: %d", msg, input, timeout);
+	}
 	debugf("Debug: input (%d): %s", user.Id, input)
+
+	write_timeout_err := func() {
+		w.WriteHeader(http.StatusRequestedRangeNotSatisfiable)
+		fmt.Fprint(w, "416 - timeout\n")
+		log_with_input("Warn: Process %s had timeout", user.Name)
+		metrics.ResponseTime.Observe(float64(timeout))
+		metrics.NumTimeout.Inc()
+	}
+
 	defer process_cleanup(user, user_queue, proc.TempDir)
 	proc_out := make(chan struct {buf *bytes.Buffer; time float64; err error}, 1)
 	go func() {
@@ -299,10 +313,15 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 		outbuf := outstr.buf
 		tim := outstr.time
 		err := outstr.err
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			debugf("Timeout with I/O pipe timeout")
+			write_timeout_err()
+			return
+		}
 		if err != nil {
 			write_500(w)
 			metrics.NumIntError.Inc()
-			log.Printf("Error: Communicating with maxima failed: %s", err)
+			log_with_input("Error: Communicating with maxima failed: %s", err)
 			return
 		}
 		if health {
@@ -316,7 +335,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			} else {
 				write_500(w)
 				metrics.NumIntError.Inc()
-				log.Printf("Error: Healthcheck did not pass")
+				log.Printf("Error: Healthcheck did not pass, output: %s", outbuf)
 				return
 			}
 		}
@@ -328,7 +347,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			// just return text if directory could not be read and assume no plots were generated
 			w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
 			outbuf.WriteTo(w)
-			log.Printf("Warn: could not read temp directory of maxima process: %s", err)
+			log_with_input("Warn: could not read temp directory of maxima process: %s", err)
 			metrics.ResponseTime.Observe(tim)
 			metrics.NumSuccess.Inc()
 		}
@@ -345,7 +364,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 			if err != nil {
 				write_500(w)
 				metrics.NumIntError.Inc()
-				log.Printf("Error: Could not add OUTPUT to zip archive: %s", err)
+				log_with_input("Error: Could not add OUTPUT to zip archive: %s", err)
 				return
 			}
 			outbuf.WriteTo(out)
@@ -357,14 +376,14 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 				if err != nil {
 					write_500(w)
 					metrics.NumIntError.Inc()
-					log.Printf("Error: could not open plot %s: %s", file.Name(), err)
+					log_with_input("Error: could not open plot %s: %s", file.Name(), err)
 					return
 				}
 				fzipput, err := zipfile.Create("/" + file.Name())
 				if err != nil {
 					write_500(w)
 					metrics.NumIntError.Inc()
-					log.Printf("Error: could not add file %s to zip archive: %s", file.Name(), err)
+					log_with_input("Error: could not add file %s to zip archive: %s", file.Name(), err)
 					return
 				}
 				io.Copy(fzipput, ffilein)
@@ -374,11 +393,9 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 		metrics.ResponseTime.Observe(tim)
 		metrics.NumSuccess.Inc()
 	case <-time.After(time.Duration(timeout) * time.Millisecond):
-		w.WriteHeader(http.StatusRequestedRangeNotSatisfiable)
-		fmt.Fprint(w, "416 - timeout\n")
-		log.Printf("Warn: Process %s had timeout", user.Name)
-		metrics.ResponseTime.Observe(float64(timeout))
-		metrics.NumTimeout.Inc()
+		debugf("Timeout with internal timer")
+		write_timeout_err()
+		return
 	}
 }
 
