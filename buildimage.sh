@@ -26,9 +26,9 @@ echo "goemaxima: $goemaxver"
 
 REG="$2"
 IMAGENAME="goemaxima:$1"
-if [ -n "$REG" ]; then
-	docker pull "$2/$IMAGENAME-dev"
-fi
+#if [ -n "$REG" ]; then
+#	docker pull "$2/$IMAGENAME-dev"
+#fi
 
 # build it
 DOCKER_BUILDKIT=1 docker build -t "${IMAGENAME}-dev" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
