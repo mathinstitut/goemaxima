@@ -12,7 +12,7 @@ if [ $SBCL_ARCH = amd64 ]; then
 fi
 
 apt-get update
-apt-get install -y bzip2 make wget python3 gcc texinfo
+apt-get install -y bzip2 make wget python3 gcc texinfo curl
 
 mkdir -p ${SRC}
 wget https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz -O ${SRC}/maxima-${MAXIMA_VERSION}.tar.gz

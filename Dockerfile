@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:11
 
 # e.g. 5.41.0
 ARG MAXIMA_VERSION
@@ -51,6 +51,8 @@ RUN sh -c 'echo $GOEMAXIMA_NUSER'
 ENV LANG C.UTF-8
 
 EXPOSE 8080
+
+HEALTHCHECK --interval=1m --timeout=3s CMD curl -f 'http://localhost:8080/goemaxima?health=1'
 
 # rm /dev/tty because we do not want it to be opened by maxima for security reasons,
 # and clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,

@@ -31,7 +31,7 @@ if [ -n "$REG" ]; then
 fi
 
 # build it
-docker build -t "${IMAGENAME}-dev" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
+DOCKER_BUILDKIT=1 docker build -t "${IMAGENAME}-dev" --build-arg MAXIMA_VERSION="$maximaver" --build-arg SBCL_VERSION="$sbclver" --build-arg LIB_PATH="$libpath" . || exit 1
 echo "${IMAGENAME} was built successfully."
 
 # push the image
