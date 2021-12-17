@@ -1,9 +1,9 @@
 version: "3.9"
 services:
   maxima:
-    image: goemaxima:${STACKMAXIMA_VERSION:-2021120900}-dev
+    image: mathinstitut/goemaxima:${STACKMAXIMA_VERSION:-2021120900}-latest
     ports:
-      - 8765:8080
+      - 0.0.0.0:8080:8080
     tmpfs:
       - "/tmp"
     restart: unless-stopped

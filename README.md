@@ -30,14 +30,22 @@ Using the Docker Image
 
 The prebuilt docker images are available from the docker hub at `mathinstitut/goemaxima:[version]-latest`.
 
-The port of the server in the container is `8080` and the path that has to be input into stack is `http://[address:port]/goemaxima`.
+They can be simply run with docker-compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
+```
+export STACKMAXIMA_VERSION=...
+docker-compose up -d
+```
+The container should then be available on port 8080 (from outside the host too, keep this behind a firewall so it is not reachable from the general internet).
+
+The port of the server inside the container is `8080` and the path that has to be input into stack is `http://[address:port]/goemaxima`.
 Some older versions of the image accept only `http://[address:port]/maxima` and this url should work in newer versions as well.
 
-You can the image with
+If you do not wish to use the docker-compose configuration, you can also run the image with
 ```
-$ docker run --restart=always --tmpfs /tmp -p $port:8080 $imagename
+$ docker run --restart=always --tmpfs /tmp -p $address:$port:8080 $imagename
 ```
-where `$port` is the port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2020120600-latest`).
+where `$address:$port` is the ip and port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2020120600-latest`).
+Use `0.0.0.0` as address to listen to all addresses.
 
 Note that this program prefers to quit on errors it can not recover from, so setting `restart=always` is strongly recommended.
 

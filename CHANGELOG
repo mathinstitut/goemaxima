@@ -1,3 +1,10 @@
+1.1.4
+-----
+* Add stackmaxima versions 2021010100, 2021120900
+* Add `HEALTHCHECK` to Dockerfile
+* Add docker-compose.yml
+* Update dependencies
+
 1.1.3
 -----
 * Fix bug where occasionally under load, timeouts would return error 500 instead of 416
