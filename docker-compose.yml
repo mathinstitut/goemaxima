@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   maxima:
-    image: goemaxima:${STACKMAXIMA_VERSION:-2020120600}-dev
+    image: goemaxima:${STACKMAXIMA_VERSION:-2021120900}-dev
     ports:
       - 8765:8080
     tmpfs:
