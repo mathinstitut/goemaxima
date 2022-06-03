@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "helmmaxima.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "helmmaxima.fullname" . }}
+  endpoints:
+  - port: http
+    interval: 60s
+

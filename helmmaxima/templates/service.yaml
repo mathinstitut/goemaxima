@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helmmaxima.fullname" . }}
+  labels:
+    {{- include "helmmaxima.labels" . | nindent 4 }}
+    app: {{ include "helmmaxima.fullname" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "helmmaxima.selectorLabels" . | nindent 4 }}

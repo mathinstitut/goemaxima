@@ -52,6 +52,8 @@ Note that this program prefers to quit on errors it can not recover from, so set
 The memory usage of the container is around 50MB when idle and can quickly spike to 250MB on heavy use.
 The process startup time for a single request is a few milliseconds and negligible in comparison to processing the CAS request itself.
 
+For advanced users, one can also deploy the image in kubernetes by using the helm chart provided in the `helmmaxima` directory.
+
 Environment Variables
 =====================
 A few internal options can be set from environment variables.

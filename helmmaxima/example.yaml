@@ -1,0 +1,9 @@
+---
+stackver: "2021120900"
+ingress:
+  hosts:
+    - host: "maxima.example.com"
+      paths:
+      - path: "/goemaxima"
+        pathType: Prefix
+
