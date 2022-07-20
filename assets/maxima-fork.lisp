@@ -23,6 +23,10 @@
   #+sb-thread (sb-thread::with-system-mutex (sb-thread::*make-thread-lock*)
 		(sb-impl::finalizer-thread-stop))
   (finish-output)
+  ;;; in order to prevent TIOCSTI related shenanigans, close the tty
+  ;;; (the native C function calls closefrom(3) so the tty fd will be closed as well)
+  (close *terminal-io*)
+  (setf *terminal-io* (make-two-way-stream sb-sys:*stdin* sb-sys:*stdout*))
   (let ((tmp-dir (fork-new-process)))
     #+sb-thread (sb-impl::finalizer-thread-start)
     (when (not tmp-dir)

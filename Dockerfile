@@ -54,7 +54,6 @@ EXPOSE 8080
 
 HEALTHCHECK --interval=1m --timeout=3s CMD curl -f 'http://localhost:8080/goemaxima?health=1'
 
-# rm /dev/tty because we do not want it to be opened by maxima for security reasons,
-# and clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,
+# clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,
 # which means that on a restart caused by an overfull tmpfs, it will keep restarting in a loop
-CMD rm /dev/tty && cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
+CMD cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
