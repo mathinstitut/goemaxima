@@ -1,3 +1,8 @@
+1.1.5
+-----
+* Add stackmaxima versions 2022060100, 2022071300
+* Minor changes of how files are handled on fork
+
 1.1.4
 -----
 * Add stackmaxima versions 2021010100, 2021120900
