@@ -133,39 +133,18 @@ char *fork_new_process() {
 
 		// redirect stdout to pipe
 		// note: open outpipe before inpipe to avoid deadlock
-		int outfd = open("outpipe", O_WRONLY);
-		if (outfd == -1) {
+		if (!freopen("outpipe", "a", stdout)) {
 			perror("Could not connect output pipe");
-			ret = NULL;
-			break;
-		}
-		if (dup2(outfd, STDOUT_FILENO) == -1) {
-			perror("Could not copy output file descriptor");
 			ret = NULL;
 			break;
 		}
 
 		// redirect stdin from pipe
-		int infd = open("inpipe", O_RDONLY);
-		if (infd == -1) {
+		if (!freopen("inpipe", "r", stdin)) {
 			perror("Could not create input pipe");
 			ret = NULL;
 			break;
 		}
-		if (dup2(infd, STDIN_FILENO) == -1) {
-			perror("Could not copy input file descriptor");
-			ret = NULL;
-			break;
-		}
-
-		// replace stdin with a new stream, for good measure
-		FILE *new_stdin = fdopen(STDIN_FILENO, "r");
-		if (!new_stdin) {
-			perror("Could not create stream from stdin");
-			ret = NULL;
-			break;
-		}
-		stdin = new_stdin;
 
 		// everything execpt std{in,out,err} is closed
 		// note: this is a function from libbsd
