@@ -5,7 +5,7 @@
 /* This file is regularly overwritten, so your changes will be lost.     */
 /* ***********************************************************************/
 
-/* File generated on July 15, 2022, 4:29 pm */
+/* File generated on August 29, 2022, 6:50 pm */
 
 /* Add the location to Maxima's search path */
 file_search_maxima:append( [sconcat("${LIB}/###.{mac,mc}")] , file_search_maxima)$
