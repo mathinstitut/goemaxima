@@ -39,6 +39,8 @@ build_gitrollout:
     - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
   script:
     - docker build -t mathinstitut/gitrollout:latest git-rollout
+    - docker push mathinstitut/gitrollout:latest
   only:
     changes:
       - git-rollout/**
+      - .gitlab-ci.yml
