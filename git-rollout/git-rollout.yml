@@ -1,0 +1,61 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: git-rollout
+rules:
+ - apiGroups: ["apps", "extensions"]
+   resources: ["deployments"]
+   verbs: ["get", "patch", "list"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: git-rollout
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: git-rollout
+subjects:
+- kind: ServiceAccount
+  name: git-rollout
+roleRef:
+  kind: Role
+  name: git-rollout
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: git-rollout
+  labels:
+    app: git-rollout
+spec:
+  selector:
+    matchLabels:
+      app: git-rollout
+  template:
+    metadata:
+      labels:
+        app: git-rollout
+    spec:
+      serviceAccountName: git-rollout
+      containers:
+      - name: git-rollout
+        image: "mathinstitut/git-rollout:latest"
+        imagePullPolicy: "Always"
+        args: ['https://github.com/eLearning-TUDarmstadt/maxima-scripts', 'gitrollout=goemaxima']
+        ports:
+        - containerPort: 9418
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: git-rollout
+spec:
+  selector:
+    app: git-rollout
+  ports:
+    - protocol: TCP
+      port: 9418
+      targetPort: 9418

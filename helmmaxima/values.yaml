@@ -12,6 +12,12 @@ image:
   image_prefix: mathinstitut/goemaxima
   pullPolicy: Always
 
+enableGitRollout: false
+gitRollout:
+  repo: 'git://$(GIT_ROLLOUT_SERVICE_HOST)/git'
+  branch: main
+  includefile: '/mnt/git/main.mac'
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

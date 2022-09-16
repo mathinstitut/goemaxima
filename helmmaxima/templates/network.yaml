@@ -6,6 +6,16 @@ spec:
   podSelector:
     matchLabels:
       app: {{ include "helmmaxima.fullname" . }}
-  # block all egress traffic
+  # block egress traffic
   policyTypes:
   - Egress
+  {{ if .Values.enableGitRollout }}
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: git-rollout
+    - ports:
+        - protocol: TCP
+          port: 9418
+  {{ end }}

@@ -1,7 +1,6 @@
 stages:
-  - steve
-  - build_webservice
-  - test_maxima
+  - build_server
+  - build
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -9,8 +8,8 @@ variables:
 
 # gitlab ci script taken from https://gist.github.com/danielneis/5c6140ec8150c6151a54bccd26950278
 
-steve_jobs:
-  stage: steve
+build_server_binary:
+  stage: build_server
   image: golang
   tags:
     - docker
@@ -21,12 +20,25 @@ steve_jobs:
     - bin/web
     expire_in: 1 week
 
-build_webservice:
+build_goemaxima_containers:
   image: "docker:latest"
-  stage: build_webservice
+  stage: build
   tags:
     - docker
   before_script:
     - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
   script:
     - ./build.sh "$REGISTRY" "$CI_COMMIT_TAG"
+
+build_gitrollout:
+  image: "docker:latest"
+  stage: build
+  tags:
+    - docker
+  before_script:
+    - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
+  script:
+    - docker build -t mathinstitut/gitrollout:latest git-rollout
+  only:
+    changes:
+      - git-rollout/**

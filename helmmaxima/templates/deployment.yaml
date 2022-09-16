@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: {{ include "helmmaxima.fullname" . }}
   labels:
+    {{ if .Values.enableGitRollout -}}
+    gitrollout: goemaxima
+    {{- end -}}
     {{- include "helmmaxima.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -15,6 +18,7 @@ spec:
         {{- include "helmmaxima.selectorLabels" . | nindent 8 }}
         app: {{ include "helmmaxima.fullname" . }}
     spec:
+      terminationGracePeriodSeconds: 45
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -22,6 +26,20 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       automountServiceAccountToken: false
+      {{ if .Values.enableGitRollout }}
+      initContainers:
+        - name: "{{ .Chart.Name }}-git"
+          image: "k8s.gcr.io/git-sync/git-sync:v3.6.1"
+          args: ['--root=/mnt', '--one-time', '--depth=1']
+          volumeMounts:
+            - mountPath: /mnt
+              name: git
+          env:
+            - name: GIT_SYNC_REPO
+              value: "{{ .Values.gitRollout.repo }}"
+            - name: GIT_SYNC_BRANCH
+              value: "{{ .Values.gitRollout.branch }}"
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -35,6 +53,10 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: tmptmpfs
+            {{ if .Values.enableGitRollout }}
+            - mountPath: /mnt
+              name: git
+            {{ end }}
           livenessProbe:
             httpGet:
               path: '/maxima?health=1'
@@ -49,12 +71,26 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
+          {{ if .Values.enableGitRollout }}
+          env:
+            - name: GOEMAXIMA_EXTRA_PACKAGES
+              value: "{{ .Values.gitRollout.includefile }}"
+          {{ end }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep", "35"]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: tmptmpfs
           emptyDir:
             medium: "Memory"
+        {{ if .Values.enableGitRollout }}
+        - name: git
+          emptyDir:
+            medium: "Memory"
+        {{ end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
