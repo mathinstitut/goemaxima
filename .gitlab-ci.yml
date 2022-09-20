@@ -38,8 +38,8 @@ build_gitrollout:
   before_script:
     - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
   script:
-    - docker build -t mathinstitut/gitrollout:latest git-rollout
-    - docker push mathinstitut/gitrollout:latest
+    - docker build -t mathinstitut/git-rollout:latest git-rollout
+    - docker push mathinstitut/git-rollout:latest
   only:
     changes:
       - git-rollout/**
