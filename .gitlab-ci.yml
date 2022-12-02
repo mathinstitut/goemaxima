@@ -26,7 +26,7 @@ build_goemaxima_containers:
   tags:
     - docker
   before_script:
-    - docker login -u mathinstitut -p "$DOCKERHUB_PASS"
+    - docker login -u mathinstitut -p "$DOCKERHUB_PASS" registry-1.docker.io
   script:
     - ./build.sh "$REGISTRY" "$CI_COMMIT_TAG"
 
