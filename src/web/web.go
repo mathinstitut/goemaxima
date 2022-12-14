@@ -220,11 +220,6 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) MaximaRespon
 	return MaximaResponse{&outbuf, float64(total.Microseconds()) / 1000, nil}
 }
 
-func write_500(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusInternalServerError)
-	fmt.Fprint(w, "500 - internal server error\n")
-}
-
 // kills all processes of user and remove temporary directories
 func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 	defer os.RemoveAll(tmp_dir)
@@ -278,7 +273,8 @@ func (req *MaximaRequest) write_timeout_err() {
 }
 
 func (req *MaximaRequest) respond_with_error(format string, a ...interface{}) {
-	write_500(req.W)
+	req.W.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprint(req.W, "500 - internal server error\n")
 	req.Metrics.NumIntError.Inc()
 	req.log_with_input(format, a...)
 }
@@ -329,9 +325,7 @@ func (req *MaximaRequest) WriteResponse(response MaximaResponse) {
 		return
 	}
 	if err != nil {
-		write_500(req.W)
-		req.Metrics.NumIntError.Inc()
-		req.log_with_input("Error: Communicating with maxima failed: %s", err)
+		req.respond_with_error("Error: Communicating with maxima failed: %s", err)
 		return
 	}
 	if req.Health {
@@ -492,8 +486,7 @@ func get_env_number_positive(varname string, def uint) (uint, error) {
 	return uint(number), nil
 }
 
-func main() {
-	// register/initialize various prometheus metrics
+func init_metrics() Metrics {
 	metrics := Metrics{
 		ResponseTime: prometheus.NewHistogram(prometheus.HistogramOpts{
 			Name:    "maxima_response_time",
@@ -522,6 +515,11 @@ func main() {
 	prometheus.MustRegister(metrics.NumIntError)
 	prometheus.MustRegister(metrics.NumTimeout)
 	prometheus.MustRegister(metrics.QueueLen)
+	return metrics
+}
+
+func main() {
+	metrics := init_metrics()
 
 	if len(os.Args) != 2 {
 		log.Fatal("Fatal: wrong cli-argument usage: web [path to maxima executable]")
