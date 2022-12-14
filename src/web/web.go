@@ -2,11 +2,10 @@ package main
 
 import (
 	"archive/zip"
-	"bytes"
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
-	"path/filepath"
 	"io"
 	"io/ioutil"
 	"log"
@@ -14,10 +13,12 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"path/filepath"
 	"strconv"
-	"time"
 	"strings"
 	"syscall"
+	"time"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -26,33 +27,33 @@ var tmp_prefix string
 var debug uint
 
 type User struct {
-	Id		uint
-	Name		string
-	Uid		int
-	Gid		int
+	Id   uint
+	Name string
+	Uid  int
+	Gid  int
 }
 
 type Metrics struct {
-	ResponseTime	prometheus.Histogram
-	SpawnTime	prometheus.Histogram
-	NumSuccess	prometheus.Counter
-	NumIntError	prometheus.Counter
-	NumTimeout	prometheus.Counter
-	QueueLen	prometheus.Gauge
+	ResponseTime prometheus.Histogram
+	SpawnTime    prometheus.Histogram
+	NumSuccess   prometheus.Counter
+	NumIntError  prometheus.Counter
+	NumTimeout   prometheus.Counter
+	QueueLen     prometheus.Gauge
 }
 
 type MotherProcess struct {
-	Cmd				*exec.Cmd
-	Input				*io.PipeWriter
-	Output				*io.PipeReader
+	Cmd    *exec.Cmd
+	Input  *io.PipeWriter
+	Output *io.PipeReader
 }
 
 type ChildProcess struct {
-	User				*User
-	Input				*os.File
-	Output				*bufio.Reader
-	Outfile				*os.File
-	TempDir				string
+	User    *User
+	Input   *os.File
+	Output  *bufio.Reader
+	Outfile *os.File
+	TempDir string
 }
 
 func debugf(format string, a ...interface{}) {
@@ -100,7 +101,7 @@ func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 	debugf("Debug: Attempting to find out readiness of mother process")
 	i := 0
 	for {
-		shortbuf := make([]byte,1)
+		shortbuf := make([]byte, 1)
 		n, err := out_pipe_w.Read(shortbuf)
 		if err != nil {
 			return nil, fmt.Errorf("cannot read readiness text from process: %s", err)
@@ -113,16 +114,15 @@ func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 			return nil, fmt.Errorf("unexpected short read")
 		}
 		if shortbuf[0] == '\x02' {
-			break;
+			break
 		}
 	}
 	return &MotherProcess{
-		Cmd: cmd,
-		Input: in_pipe_r,
+		Cmd:    cmd,
+		Input:  in_pipe_r,
 		Output: out_pipe_w,
 	}, nil
 }
-
 
 func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	start := time.Now()
@@ -169,7 +169,7 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 		return nil, 0.0, fmt.Errorf("could not open temp dir inpipe: %s", err)
 	}
 
-	out.SetReadDeadline(time.Now().Add(10*time.Second))
+	out.SetReadDeadline(time.Now().Add(10 * time.Second))
 	bufout := bufio.NewReader(out)
 	_, err = fmt.Fscanf(bufout, "\nT")
 	if err != nil {
@@ -177,41 +177,47 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	}
 	total := time.Since(start)
 	debugf("Debug: child took %s for startup", total)
-	return &ChildProcess {
-		User: user,
-		Input: in,
-		Output: bufout,
+	return &ChildProcess{
+		User:    user,
+		Input:   in,
+		Output:  bufout,
 		Outfile: out,
 		TempDir: tmp_dir,
-	}, float64(total.Microseconds())/1000, nil
+	}, float64(total.Microseconds()) / 1000, nil
+}
+
+type MaximaResponse struct {
+	Response *bytes.Buffer
+	Time     float64
+	Err      error
 }
 
 // takes a child process and evaluates a maxima command in it, while timing out if timeout is reached
-func (p *ChildProcess) eval_command(command string, timeout uint64) (*bytes.Buffer, float64, error) {
+func (p *ChildProcess) eval_command(command string, timeout uint64) MaximaResponse {
 	start := time.Now()
 	in_err := make(chan error, 1)
 	// write to stdin in separate goroutine to prevent deadlocks
 	go func() {
-		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout + 10)*time.Millisecond))
+		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
 		_, err := io.Copy(p.Input, strings.NewReader(command))
 		p.Input.Close()
-		in_err<-err
+		in_err <- err
 	}()
 	var outbuf bytes.Buffer
 	// read from stdout
-	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout + 10)*time.Millisecond))
+	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
 	_, err := io.Copy(&outbuf, p.Output)
 	p.Outfile.Close()
 	input_err := <-in_err
 	if input_err != nil {
-		return nil, 0.0, input_err
+		return MaximaResponse{nil, 0.0, input_err}
 	}
 	if err != nil {
-		return nil, 0.0, err
+		return MaximaResponse{nil, 0.0, err}
 	}
 	total := time.Since(start)
 	debugf("Debug: child took %s for evaluation", total)
-	return &outbuf, float64(total.Microseconds())/1000, nil
+	return MaximaResponse{&outbuf, float64(total.Microseconds()) / 1000, nil}
 }
 
 func write_500(w http.ResponseWriter) {
@@ -222,7 +228,7 @@ func write_500(w http.ResponseWriter) {
 // kills all processes of user and remove temporary directories
 func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 	defer os.RemoveAll(tmp_dir)
-	defer func() {user_queue <- user}()
+	defer func() { user_queue <- user }()
 
 	// TODO: replace with cgroups-v2 based freeze solution once docker support for cgroups2 lands
 	procs, err := ioutil.ReadDir("/proc")
@@ -244,6 +250,140 @@ func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 		syscall.Kill(pid, syscall.SIGKILL)
 	}
 	debugf("Debug: Process %d cleand up", user.Id)
+}
+
+type MaximaRequest struct {
+	Health    bool
+	Timeout   uint64
+	Input     string
+	Ploturl   string
+	Proc      *ChildProcess
+	Metrics   *Metrics
+	User      *User
+	UserQueue chan<- *User
+	W         http.ResponseWriter
+}
+
+func (req *MaximaRequest) log_with_input(format string, a ...interface{}) {
+	msg := fmt.Sprintf(format, a...)
+	log.Printf("%s - input: `%s`, timeout: %d", msg, req.Input, req.Timeout)
+}
+
+func (req *MaximaRequest) write_timeout_err() {
+	req.W.WriteHeader(http.StatusRequestedRangeNotSatisfiable)
+	fmt.Fprint(req.W, "416 - timeout\n")
+	req.log_with_input("Warn: Process %s had timeout", req.User.Name)
+	req.Metrics.ResponseTime.Observe(float64(req.Timeout))
+	req.Metrics.NumTimeout.Inc()
+}
+
+func (req *MaximaRequest) respond_with_error(format string, a ...interface{}) {
+	write_500(req.W)
+	req.Metrics.NumIntError.Inc()
+	req.log_with_input(format, a...)
+}
+
+func (req *MaximaRequest) WriteResponseWithoutPlots(response MaximaResponse) {
+	req.W.Header().Set("Content-Type", "text/plain;charset=UTF-8")
+	response.Response.WriteTo(req.W)
+	req.Metrics.ResponseTime.Observe(response.Time)
+	req.Metrics.NumSuccess.Inc()
+}
+
+func (req *MaximaRequest) WriteResponseWithPlots(response MaximaResponse, output_dir string, plots_output []os.FileInfo) {
+	debugf("Debug: output (%d) is zip, OUTPUT len %d", req.User.Id, response.Response.Len())
+	req.W.Header().Set("Content-Type", "application/zip;charset=UTF-8")
+	zipfile := zip.NewWriter(req.W)
+	out, err := zipfile.Create("OUTPUT")
+	if err != nil {
+		req.respond_with_error("Error: Could not add OUTPUT to zip archive: %s", err)
+		return
+	}
+	response.Response.WriteTo(out)
+	// loop over all plots in the output directory and put them into the zip
+	// that is to be returned
+	for _, file := range plots_output {
+		ffilein, err := os.Open(filepath.Join(output_dir, file.Name()))
+		if err != nil {
+			req.respond_with_error("Error: could not open plot %s: %s", file.Name(), err)
+			return
+		}
+		defer ffilein.Close()
+		fzipput, err := zipfile.Create("/" + file.Name())
+		if err != nil {
+			req.respond_with_error("Error: could not add file %s to zip archive: %s", file.Name(), err)
+			return
+		}
+		io.Copy(fzipput, ffilein)
+	}
+	zipfile.Close()
+	req.Metrics.ResponseTime.Observe(response.Time)
+	req.Metrics.NumSuccess.Inc()
+}
+
+func (req *MaximaRequest) WriteResponse(response MaximaResponse) {
+	err := response.Err
+	if errors.Is(err, os.ErrDeadlineExceeded) {
+		debugf("Timeout with I/O pipe timeout")
+		req.write_timeout_err()
+		return
+	}
+	if err != nil {
+		write_500(req.W)
+		req.Metrics.NumIntError.Inc()
+		req.log_with_input("Error: Communicating with maxima failed: %s", err)
+		return
+	}
+	if req.Health {
+		if bytes.Contains(response.Response.Bytes(), []byte("healthcheck successful")) {
+			req.W.Header().Set("Content-Type", "text/plain;charset=UTF-8")
+			response.Response.WriteTo(req.W)
+			debugf("Healthcheck passed")
+			// note: we don't update metrics here since they would get
+			// too polluted by the healthchecks
+			return
+		} else {
+			req.respond_with_error("Error: Healthcheck did not pass, output: %s", response.Response)
+			return
+		}
+	}
+	output_dir := filepath.Clean(filepath.Join(req.Proc.TempDir, "output")) + "/"
+	// if there are any files inside the output dir, we give back a zip file containing all output
+	// files and the command output inside a file named OUTPUT
+	plots_output, err := ioutil.ReadDir(output_dir)
+	if err != nil {
+		// just return text if directory could not be read and assume no plots were generated
+		req.log_with_input("Warn: could not read temp directory of maxima process: %s", err)
+		req.WriteResponseWithoutPlots(response)
+		return
+	}
+	// if there are no files produced, just give back the output directly
+	if len(plots_output) == 0 {
+		req.WriteResponseWithoutPlots(response)
+	} else {
+		req.WriteResponseWithPlots(response, output_dir, plots_output)
+	}
+}
+
+func (req *MaximaRequest) Respond() {
+	debugf("Debug: input (%d): %s", req.User.Id, req.Input)
+
+	defer process_cleanup(req.User, req.UserQueue, req.Proc.TempDir)
+
+	proc_out := make(chan MaximaResponse, 1)
+	go func() {
+		proc_out <- req.Proc.eval_command(req.Input, req.Timeout)
+	}()
+
+	select {
+	case outstr := <-proc_out:
+		req.WriteResponse(outstr)
+		return
+	case <-time.After(time.Duration(req.Timeout) * time.Millisecond):
+		debugf("Timeout with internal timer")
+		req.write_timeout_err()
+		return
+	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess, user_queue chan<- *User, metrics *Metrics) {
@@ -287,121 +427,25 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	proc := <-queue
 	metrics.QueueLen.Dec()
 	user := proc.User
-	log_with_input := func(format string, a ...interface{}) {
-		msg := fmt.Sprintf(format, a...)
-		log.Printf("%s - input: `%s`, timeout: %d", msg, input, timeout);
-	}
-	debugf("Debug: input (%d): %s", user.Id, input)
 
-	write_timeout_err := func() {
-		w.WriteHeader(http.StatusRequestedRangeNotSatisfiable)
-		fmt.Fprint(w, "416 - timeout\n")
-		log_with_input("Warn: Process %s had timeout", user.Name)
-		metrics.ResponseTime.Observe(float64(timeout))
-		metrics.NumTimeout.Inc()
+	request := MaximaRequest{
+		Health:    health,
+		Timeout:   timeout,
+		Input:     real_input,
+		Ploturl:   ploturl,
+		Proc:      proc,
+		Metrics:   metrics,
+		User:      user,
+		UserQueue: user_queue,
+		W:         w,
 	}
 
-	defer process_cleanup(user, user_queue, proc.TempDir)
-	proc_out := make(chan struct {buf *bytes.Buffer; time float64; err error}, 1)
-	go func() {
-		out, tim, err := proc.eval_command(real_input, timeout)
-		// grrr why doesn't go support tuples first-class!?
-		proc_out <- struct {buf *bytes.Buffer; time float64; err error}{out, tim, err}
-	}()
-	select {
-	case outstr := <-proc_out:
-		outbuf := outstr.buf
-		tim := outstr.time
-		err := outstr.err
-		if errors.Is(err, os.ErrDeadlineExceeded) {
-			debugf("Timeout with I/O pipe timeout")
-			write_timeout_err()
-			return
-		}
-		if err != nil {
-			write_500(w)
-			metrics.NumIntError.Inc()
-			log_with_input("Error: Communicating with maxima failed: %s", err)
-			return
-		}
-		if health {
-			if bytes.Contains(outbuf.Bytes(), []byte("healthcheck successful")) {
-				w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-				outbuf.WriteTo(w)
-				debugf("Healthcheck passed")
-				// note: we don't update metrics here since they would get
-				// too polluted by the healthchecks
-				return
-			} else {
-				write_500(w)
-				metrics.NumIntError.Inc()
-				log.Printf("Error: Healthcheck did not pass, output: %s", outbuf)
-				return
-			}
-		}
-		output_dir := filepath.Clean(filepath.Join(proc.TempDir, "output")) + "/"
-		// if there are any files inside the output dir, we give back a zip file containing all output
-		// files and the command output inside a file named OUTPUT
-		plots_output, err := ioutil.ReadDir(output_dir)
-		if err != nil {
-			// just return text if directory could not be read and assume no plots were generated
-			w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-			outbuf.WriteTo(w)
-			log_with_input("Warn: could not read temp directory of maxima process: %s", err)
-			metrics.ResponseTime.Observe(tim)
-			metrics.NumSuccess.Inc()
-		}
-		// if there are no files produced, just give back the output directly
-		if len(plots_output) == 0 {
-			debugf("Debug: output (%d) is text, len %d", user.Id, outbuf.Len())
-			w.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-			outbuf.WriteTo(w)
-		} else {
-			debugf("Debug: output (%d) is zip, OUTPUT len %d", user.Id, outbuf.Len())
-			w.Header().Set("Content-Type", "application/zip;charset=UTF-8")
-			zipfile := zip.NewWriter(w)
-			out, err := zipfile.Create("OUTPUT")
-			if err != nil {
-				write_500(w)
-				metrics.NumIntError.Inc()
-				log_with_input("Error: Could not add OUTPUT to zip archive: %s", err)
-				return
-			}
-			outbuf.WriteTo(out)
-			// loop over all plots in the output directory and put them into the zip
-			// that is to be returned
-			for _, file := range plots_output {
-				ffilein, err := os.Open(filepath.Join(output_dir, file.Name()))
-				defer ffilein.Close()
-				if err != nil {
-					write_500(w)
-					metrics.NumIntError.Inc()
-					log_with_input("Error: could not open plot %s: %s", file.Name(), err)
-					return
-				}
-				fzipput, err := zipfile.Create("/" + file.Name())
-				if err != nil {
-					write_500(w)
-					metrics.NumIntError.Inc()
-					log_with_input("Error: could not add file %s to zip archive: %s", file.Name(), err)
-					return
-				}
-				io.Copy(fzipput, ffilein)
-			}
-			zipfile.Close()
-		}
-		metrics.ResponseTime.Observe(tim)
-		metrics.NumSuccess.Inc()
-	case <-time.After(time.Duration(timeout) * time.Millisecond):
-		debugf("Timeout with internal timer")
-		write_timeout_err()
-		return
-	}
+	request.Respond()
 }
 
 func generate_maximas(binpath string, libs []string, queue chan<- *ChildProcess, user_queue <-chan *User, metrics *Metrics) {
-	mother_proc := make(chan *MotherProcess, 0)
-	go func () {
+	mother_proc := make(chan *MotherProcess)
+	go func() {
 		mother, err := new_mother_proc(binpath, libs)
 		if err != nil {
 			log.Fatalf("Fatal: Could not start mother process: %s", err)
@@ -412,7 +456,7 @@ func generate_maximas(binpath string, libs []string, queue chan<- *ChildProcess,
 	select {
 	case mom := <-mother_proc:
 		mother = mom
-	case <- time.After(10*time.Second):
+	case <-time.After(10 * time.Second):
 		log.Fatal("Fatal: Could not start the mother process, timed out")
 	}
 	fails := 0
@@ -450,27 +494,27 @@ func get_env_number_positive(varname string, def uint) (uint, error) {
 
 func main() {
 	// register/initialize various prometheus metrics
-	metrics := Metrics {
+	metrics := Metrics{
 		ResponseTime: prometheus.NewHistogram(prometheus.HistogramOpts{
-			Name:	"maxima_response_time",
-			Help:	"Response time of maxima processes",
-			Buckets:prometheus.ExponentialBuckets(1.19, 1.5, 25)}),
+			Name:    "maxima_response_time",
+			Help:    "Response time of maxima processes",
+			Buckets: prometheus.ExponentialBuckets(1.19, 1.5, 25)}),
 		SpawnTime: prometheus.NewHistogram(prometheus.HistogramOpts{
-			Name:	"maxima_spawn_time",
-			Help:	"Spawn time of maxima child",
-			Buckets:prometheus.LinearBuckets(1.0, 1.0, 20)}),
+			Name:    "maxima_spawn_time",
+			Help:    "Spawn time of maxima child",
+			Buckets: prometheus.LinearBuckets(1.0, 1.0, 20)}),
 		NumSuccess: prometheus.NewCounter(prometheus.CounterOpts{
-			Name:	"maxima_success_response",
-			Help:	"Count of successful responses"}),
+			Name: "maxima_success_response",
+			Help: "Count of successful responses"}),
 		NumIntError: prometheus.NewCounter(prometheus.CounterOpts{
-			Name:	"maxima_500_response",
-			Help:	"Count of 500 responses"}),
+			Name: "maxima_500_response",
+			Help: "Count of 500 responses"}),
 		NumTimeout: prometheus.NewCounter(prometheus.CounterOpts{
-			Name:	"maxima_timeout_response",
-			Help:	"Count of timeouts"}),
+			Name: "maxima_timeout_response",
+			Help: "Count of timeouts"}),
 		QueueLen: prometheus.NewGauge(prometheus.GaugeOpts{
-			Name:	"maxima_queue_len",
-			Help:	"Number of maxima processes waiting in queue"})}
+			Name: "maxima_queue_len",
+			Help: "Number of maxima processes waiting in queue"})}
 	metrics.QueueLen.Set(0)
 	prometheus.MustRegister(metrics.ResponseTime)
 	prometheus.MustRegister(metrics.SpawnTime)
@@ -486,18 +530,18 @@ func main() {
 	user_number, err := get_env_number_positive("GOEMAXIMA_NUSER", 32)
 	log.Printf("Info: Maximum number of processes is %d", user_number)
 	if err != nil {
-		log.Fatal("Fatal: GOEMAXIMA_NUSER contains invalid number");
+		log.Fatal("Fatal: GOEMAXIMA_NUSER contains invalid number")
 	}
 	// length of queue of ready maxima processes (-1)
 	queue_len, err := get_env_number_positive("GOEMAXIMA_QUEUE_LEN", 3)
 	if err != nil {
-		log.Fatal("Fatal: GOEMAXIMA_QUEUE_LEN contains invalid number");
+		log.Fatal("Fatal: GOEMAXIMA_QUEUE_LEN contains invalid number")
 	}
 	log.Printf("Info: Ready process queue length is %d", queue_len)
 	// enable debug messages
 	debug, err = get_env_number_positive("GOEMAXIMA_DEBUG", 0)
 	if err != nil {
-		log.Fatal("Fatal: GOEMAXIMA_DEBUG contains invalid number");
+		log.Fatal("Fatal: GOEMAXIMA_DEBUG contains invalid number")
 	}
 	// where to store temp files (plots, named pipes)
 	// should preferrably be tmpfs since it needs to be fast
@@ -505,7 +549,7 @@ func main() {
 	if tmp_prefix == "" {
 		tmp_prefix = "/tmp/maxima"
 	} else if !strings.HasPrefix(tmp_prefix, "/") {
-		log.Fatal("Fatal: GOEMAXIMA_TEMP_DIR must be an absolute path");
+		log.Fatal("Fatal: GOEMAXIMA_TEMP_DIR must be an absolute path")
 	}
 	err = os.MkdirAll(tmp_prefix, 0711)
 	if err != nil {
@@ -532,21 +576,21 @@ func main() {
 		if err != nil {
 			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", user.Gid, err)
 		}
-		user_queue <- &User {
-			Id: i,
+		user_queue <- &User{
+			Id:   i,
 			Name: user_name,
-			Uid: uid,
-			Gid: gid,
+			Uid:  uid,
+			Gid:  gid,
 		}
 	}
 
-	libs := append(strings.Split(os.Getenv("GOEMAXIMA_EXTRA_PACKAGES"), ":"),  os.Getenv("GOEMAXIMA_LIB_PATH"))
+	libs := append(strings.Split(os.Getenv("GOEMAXIMA_EXTRA_PACKAGES"), ":"), os.Getenv("GOEMAXIMA_LIB_PATH"))
 	// spawn maxima processes in separate goroutine
 	go generate_maximas(os.Args[1], libs, queue, user_queue, &metrics)
 
 	http.Handle("/metrics", promhttp.Handler())
-	handler := func (w http.ResponseWriter, r *http.Request) {
-			handler(w, r, queue, user_queue, &metrics)
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r, queue, user_queue, &metrics)
 	}
 	http.HandleFunc("/maxima", handler)
 	http.HandleFunc("/maxima/", handler)
@@ -555,5 +599,4 @@ func main() {
 	log.Print("Info: goe handler started")
 	err = http.ListenAndServe(":8080", nil)
 	log.Printf("Fatal: http handler closed unexpectedly, %s", err)
-	return
 }
