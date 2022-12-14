@@ -27,11 +27,8 @@ podSecurityContext: {}
 securityContext:
   capabilities:
     add:
-    - CHOWN
-    - DAC_OVERRIDE
     - SETGID
     - SETUID
-    - KILL
     drop:
     - ALL
   readOnlyRootFilesystem: true

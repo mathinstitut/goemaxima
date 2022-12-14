@@ -125,6 +125,29 @@ char *fork_new_process() {
 			continue;
 		}
 
+		uid_t uid = user_id[slot - 1];
+		gid_t gid = group_id[slot - 1];
+		// note: setgid should be executed before setuid when dropping from root
+		if (setgid(gid) == -1) {
+			perror("Could not set gid");
+			ret = NULL;
+			break;
+		}
+	
+		// remove all aux groups
+		if (setgroups(0, NULL)) {
+			perror("Could not remove aux groups");
+			ret = NULL;
+			break;
+		}
+	
+		// after this, we should be non-root
+		if (setuid(uid) == -1) {
+			perror("Could not set uid");
+			ret = NULL;
+			break;
+		}
+
 		if (chdir(tempdir) == -1) {
 			perror("Could not chdir to temporary directory");
 			ret = NULL;
@@ -157,36 +180,13 @@ char *fork_new_process() {
 			break;
 		}
 
-		uid_t uid = user_id[slot - 1];
-		gid_t gid = group_id[slot - 1];
-		// note: setgid should be executed before setuid when dropping from root
-		if (setgid(gid) == -1) {
-			perror("Could not set gid");
-			ret = NULL;
-			break;
-		}
-	
-		// remove all aux groups
-		if (setgroups(0, NULL)) {
-			perror("Could not remove aux groups");
-			ret = NULL;
-			break;
-		}
-	
-		// after this, we should be non-root
-		if (setuid(uid) == -1) {
-			perror("Could not set uid");
-			ret = NULL;
-			break;
-		}
-
 		// create temporary folders and files
-		if (mkdir("output", 0770) == -1) {
+		if (mkdir("output", 0755) == -1) {
 			perror("Could not create output directory");
 			ret = NULL;
 			break;
 		}
-		if (mkdir("work", 0770) == -1) {
+		if (mkdir("work", 0755) == -1) {
 			perror("Could not create work directory");
 			ret = NULL;
 			break;

@@ -25,12 +25,38 @@ import (
 
 var tmp_prefix string
 var debug uint
+var privilege_drop_channel chan<- ExecutionInfo
+
+const MAXIMA_SPAWN_TIMEOUT = time.Duration(10) * time.Second
 
 type User struct {
 	Id   uint
 	Name string
 	Uid  int
 	Gid  int
+}
+
+func (user *User) go_execute_as(f func(error)) {
+	uid16 := uint16(user.Uid)
+	gid16 := uint16(user.Gid)
+	privilege_drop_channel <- ExecutionInfo{
+		Uid: uid16,
+		Gid: gid16,
+		F:   f,
+	}
+}
+
+func (user *User) sync_execute_as(timeout time.Duration, f func(error) error) error {
+	err_chan := make(chan error)
+	user.go_execute_as(func(err error) {
+		err_chan <- f(err)
+	})
+	select {
+	case result := <-err_chan:
+		return result
+	case <-time.After(timeout):
+		return fmt.Errorf("timed out executing function with lowered privileges")
+	}
 }
 
 type Metrics struct {
@@ -126,64 +152,80 @@ func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 
 func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	start := time.Now()
-	tmp_dir, err := ioutil.TempDir(tmp_prefix, "maxima-plot-")
+	var result ChildProcess
+	err := user.sync_execute_as(MAXIMA_SPAWN_TIMEOUT, func(err error) error {
+		if err != nil {
+			return err
+		}
+		tmp_dir, err := ioutil.TempDir(tmp_prefix, "maxima-plot-")
+		if err != nil {
+			return fmt.Errorf("unable to create temp dir: %s", err)
+		}
+
+		err = os.Chmod(tmp_dir, 0755)
+		if err != nil {
+			return fmt.Errorf("unable to change permissions of temp dir: %s", err)
+		}
+
+		// create named pipe for process stdout
+		pipe_name_out := filepath.Clean(filepath.Join(tmp_dir, "outpipe"))
+
+		err = syscall.Mkfifo(pipe_name_out, 0600)
+		if err != nil {
+			return fmt.Errorf("could not create named pipe in temp folder: %s", err)
+		}
+
+		// create named pipe for process stdin
+		pipe_name_in := filepath.Clean(filepath.Join(tmp_dir, "inpipe"))
+
+		err = syscall.Mkfifo(pipe_name_in, 0600)
+		if err != nil {
+			return fmt.Errorf("could not create named pipe in temp folder: %s", err)
+		}
+
+		_, err = fmt.Fprintf(p.Input, "%d%s\n", user.Id, tmp_dir)
+		if err != nil {
+			return fmt.Errorf("unable to communicate with process: %s", err)
+		}
+
+		debugf("Debug: Opening pipes to child")
+		// note: open outpipe before inpipe to avoid deadlock
+		out, err := os.OpenFile(pipe_name_out, os.O_RDONLY, os.ModeNamedPipe)
+		if err != nil {
+			return fmt.Errorf("could not open temp dir outpipe: %s", err)
+		}
+
+		in, err := os.OpenFile(pipe_name_in, os.O_WRONLY, os.ModeNamedPipe)
+		if err != nil {
+			return fmt.Errorf("could not open temp dir inpipe: %s", err)
+		}
+
+		result.User = user
+		result.Input = in
+		result.Outfile = out
+		result.TempDir = tmp_dir
+		return nil
+	})
 	if err != nil {
-		return nil, 0.0, fmt.Errorf("unable to create temp dir: %s", err)
+		return nil, 0.0, fmt.Errorf("unable to start child process: %s", err)
 	}
-	// right permission for folders
-	err = os.Chown(tmp_dir, user.Uid, user.Gid)
+
+	debugf("Debug: Attempting to read from child")
+	err = result.Outfile.SetReadDeadline(time.Now().Add(MAXIMA_SPAWN_TIMEOUT))
 	if err != nil {
-		return nil, 0.0, fmt.Errorf("not able to change tempdir permission: %s", err)
+		return nil, 0.0, fmt.Errorf("unable to set read deadline: %s", err)
 	}
-
-	// create named pipe for process stdout
-	pipe_name_out := filepath.Clean(filepath.Join(tmp_dir, "outpipe"))
-
-	err = syscall.Mkfifo(pipe_name_out, 0600)
-	if err != nil {
-		return nil, 0.0, fmt.Errorf("could not create named pipe in temp folder: %s", err)
-	}
-
-	// create named pipe for process stdin
-	pipe_name_in := filepath.Clean(filepath.Join(tmp_dir, "inpipe"))
-
-	err = syscall.Mkfifo(pipe_name_in, 0600)
-	if err != nil {
-		return nil, 0.0, fmt.Errorf("could not create named pipe in temp folder: %s", err)
-	}
-
-	_, err = fmt.Fprintf(p.Input, "%d%s\n", user.Id, tmp_dir)
-	if err != nil {
-		return nil, 0.0, fmt.Errorf("unable to communicate with process: %s", err)
-	}
-
-	debugf("Debug: Opening pipes to child")
-	// note: open outpipe before inpipe to avoid deadlock
-	out, err := os.OpenFile(pipe_name_out, os.O_RDONLY, os.ModeNamedPipe)
-	if err != nil {
-		return nil, 0.0, fmt.Errorf("could not open temp dir outpipe: %s", err)
-	}
-
-	in, err := os.OpenFile(pipe_name_in, os.O_WRONLY, os.ModeNamedPipe)
-	if err != nil {
-		return nil, 0.0, fmt.Errorf("could not open temp dir inpipe: %s", err)
-	}
-
-	out.SetReadDeadline(time.Now().Add(10 * time.Second))
-	bufout := bufio.NewReader(out)
+	bufout := bufio.NewReader(result.Outfile)
 	_, err = fmt.Fscanf(bufout, "\nT")
 	if err != nil {
 		return nil, 0.0, fmt.Errorf("not able to find end marker: %s", err)
 	}
+	result.Output = bufout
+
 	total := time.Since(start)
+	total_ms := float64(total.Microseconds()) / 1000
 	debugf("Debug: child took %s for startup", total)
-	return &ChildProcess{
-		User:    user,
-		Input:   in,
-		Output:  bufout,
-		Outfile: out,
-		TempDir: tmp_dir,
-	}, float64(total.Microseconds()) / 1000, nil
+	return &result, total_ms, nil
 }
 
 type MaximaResponse struct {
@@ -198,15 +240,22 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) MaximaRespon
 	in_err := make(chan error, 1)
 	// write to stdin in separate goroutine to prevent deadlocks
 	go func() {
-		p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
-		_, err := io.Copy(p.Input, strings.NewReader(command))
+		err := p.Input.SetWriteDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
+		if err != nil {
+			in_err <- err
+			return
+		}
+		_, err = io.Copy(p.Input, strings.NewReader(command))
 		p.Input.Close()
 		in_err <- err
 	}()
 	var outbuf bytes.Buffer
 	// read from stdout
-	p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
-	_, err := io.Copy(&outbuf, p.Output)
+	err := p.Outfile.SetReadDeadline(time.Now().Add(time.Duration(timeout+10) * time.Millisecond))
+	if err != nil {
+		return MaximaResponse{nil, 0.0, err}
+	}
+	_, err = io.Copy(&outbuf, p.Output)
 	p.Outfile.Close()
 	input_err := <-in_err
 	if input_err != nil {
@@ -222,29 +271,36 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) MaximaRespon
 
 // kills all processes of user and remove temporary directories
 func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
-	defer os.RemoveAll(tmp_dir)
-	defer func() { user_queue <- user }()
-
-	// TODO: replace with cgroups-v2 based freeze solution once docker support for cgroups2 lands
-	procs, err := ioutil.ReadDir("/proc")
-	if err != nil {
-		return
-	}
-	for _, dir := range procs {
-		pid, err := strconv.Atoi(dir.Name())
+	user.go_execute_as(func(err error) {
 		if err != nil {
-			continue
+			log.Fatalf("Fatal: Error dropping privilege for process cleanup: %s", err)
+			return
 		}
-		stat, ok := dir.Sys().(*syscall.Stat_t)
-		if !ok {
-			continue
+		// we have an real uid of goemaxima-nobody in this context and an effective id
+		// of the target user maxima-%d
+		//
+		// this allows us to kill all processes of the user:
+		// processes we are allowed to kill with our real uid:
+		// 		just ourselves as long as goemaxima-nobody contains no other processes
+		//      but kill -1 doesn't kill the process itself on linux
+		// processes we are allowed to kill with our effective uid:
+		//      all the processes that the target user maxima-%d contains
+		// any CAP_KILL capability is also not effective because we changed our effective uid
+		// to be non-zero
+		//
+		// note that we do not walk proc since that would not allow atomic killing of processes
+		// which could allow someone to avoid getting killed by fork()ing very fast.
+		// Also, since we are in a docker container, using cgroups does not work well right now
+		//
+		// We ignore the error because we may not actually kill any processes
+		_ = syscall.Kill(-1, syscall.SIGKILL)
+		err = os.RemoveAll(tmp_dir)
+		if err != nil {
+			log.Printf("Warn: could not clean up directories of child: %s", err)
 		}
-		if int(stat.Uid) != user.Uid {
-			continue
-		}
-		syscall.Kill(pid, syscall.SIGKILL)
-	}
-	debugf("Debug: Process %d cleand up", user.Id)
+		user_queue <- user
+		debugf("Debug: Process %d cleaned up", user.Id)
+	})
 }
 
 type MaximaRequest struct {
@@ -272,7 +328,7 @@ func (req *MaximaRequest) write_timeout_err() {
 	req.Metrics.NumTimeout.Inc()
 }
 
-func (req *MaximaRequest) respond_with_error(format string, a ...interface{}) {
+func (req *MaximaRequest) respond_with_log_error(format string, a ...interface{}) {
 	req.W.WriteHeader(http.StatusInternalServerError)
 	fmt.Fprint(req.W, "500 - internal server error\n")
 	req.Metrics.NumIntError.Inc()
@@ -281,7 +337,10 @@ func (req *MaximaRequest) respond_with_error(format string, a ...interface{}) {
 
 func (req *MaximaRequest) WriteResponseWithoutPlots(response MaximaResponse) {
 	req.W.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-	response.Response.WriteTo(req.W)
+	_, err := response.Response.WriteTo(req.W)
+	if err != nil {
+		req.respond_with_log_error("could not write response body")
+	}
 	req.Metrics.ResponseTime.Observe(response.Time)
 	req.Metrics.NumSuccess.Inc()
 }
@@ -290,27 +349,36 @@ func (req *MaximaRequest) WriteResponseWithPlots(response MaximaResponse, output
 	debugf("Debug: output (%d) is zip, OUTPUT len %d", req.User.Id, response.Response.Len())
 	req.W.Header().Set("Content-Type", "application/zip;charset=UTF-8")
 	zipfile := zip.NewWriter(req.W)
+
 	out, err := zipfile.Create("OUTPUT")
 	if err != nil {
-		req.respond_with_error("Error: Could not add OUTPUT to zip archive: %s", err)
+		req.respond_with_log_error("Error: Could not add OUTPUT to zip archive: %s", err)
 		return
 	}
-	response.Response.WriteTo(out)
+
+	_, err = response.Response.WriteTo(out)
+	if err != nil {
+		req.respond_with_log_error("could not write response body")
+	}
+
 	// loop over all plots in the output directory and put them into the zip
 	// that is to be returned
 	for _, file := range plots_output {
 		ffilein, err := os.Open(filepath.Join(output_dir, file.Name()))
 		if err != nil {
-			req.respond_with_error("Error: could not open plot %s: %s", file.Name(), err)
+			req.respond_with_log_error("Error: could not open plot %s: %s", file.Name(), err)
 			return
 		}
 		defer ffilein.Close()
 		fzipput, err := zipfile.Create("/" + file.Name())
 		if err != nil {
-			req.respond_with_error("Error: could not add file %s to zip archive: %s", file.Name(), err)
+			req.respond_with_log_error("Error: could not add file %s to zip archive: %s", file.Name(), err)
 			return
 		}
-		io.Copy(fzipput, ffilein)
+		_, err = io.Copy(fzipput, ffilein)
+		if err != nil {
+			req.respond_with_log_error("could not write response body")
+		}
 	}
 	zipfile.Close()
 	req.Metrics.ResponseTime.Observe(response.Time)
@@ -325,19 +393,23 @@ func (req *MaximaRequest) WriteResponse(response MaximaResponse) {
 		return
 	}
 	if err != nil {
-		req.respond_with_error("Error: Communicating with maxima failed: %s", err)
+		req.respond_with_log_error("Error: Communicating with maxima failed: %s", err)
 		return
 	}
 	if req.Health {
 		if bytes.Contains(response.Response.Bytes(), []byte("healthcheck successful")) {
 			req.W.Header().Set("Content-Type", "text/plain;charset=UTF-8")
-			response.Response.WriteTo(req.W)
+			_, err = response.Response.WriteTo(req.W)
+			if err != nil {
+				req.respond_with_log_error("could not write response body")
+			}
+
 			debugf("Healthcheck passed")
 			// note: we don't update metrics here since they would get
 			// too polluted by the healthchecks
 			return
 		} else {
-			req.respond_with_error("Error: Healthcheck did not pass, output: %s", response.Response)
+			req.respond_with_log_error("Error: Healthcheck did not pass, output: %s", response.Response)
 			return
 		}
 	}
@@ -373,7 +445,7 @@ func (req *MaximaRequest) Respond() {
 	case outstr := <-proc_out:
 		req.WriteResponse(outstr)
 		return
-	case <-time.After(time.Duration(req.Timeout) * time.Millisecond):
+	case <-time.After(time.Duration(req.Timeout+10) * time.Millisecond):
 		debugf("Timeout with internal timer")
 		req.write_timeout_err()
 		return
@@ -450,25 +522,26 @@ func generate_maximas(binpath string, libs []string, queue chan<- *ChildProcess,
 	select {
 	case mom := <-mother_proc:
 		mother = mom
-	case <-time.After(10 * time.Second):
+	case <-time.After(MAXIMA_SPAWN_TIMEOUT):
 		log.Fatal("Fatal: Could not start the mother process, timed out")
 	}
 	fails := 0
 	for {
 		user := <-user_queue
-		new_proc, time, err := mother.spawn_new(user)
+		new_proc, tim, err := mother.spawn_new(user)
 		if err != nil {
 			fails += 1
 			log.Printf("Error: Could not spawn child process - fail %d, %s", fails, err)
 			if fails == 3 {
 				log.Fatal("Fatal: Failed to spawn child process 3 times in a row, giving up")
 			}
+			continue
 		} else {
 			fails = 0
 		}
 		debugf("Debug: Spawning process with id %d", user.Id)
 		metrics.QueueLen.Inc()
-		metrics.SpawnTime.Observe(time)
+		metrics.SpawnTime.Observe(tim)
 		queue <- new_proc
 		debugf("Debug: Spawned process with id %d", user.Id)
 	}
@@ -554,6 +627,11 @@ func main() {
 		log.Fatalf("Fatal: Cannot create %s: %s", tmp_prefix, err)
 	}
 
+	err = os.Chmod(tmp_prefix, 01777)
+	if err != nil {
+		log.Fatalf("Fatal: Cannot set permission on %s: %s", tmp_prefix, err)
+	}
+
 	// queue of ready maxima processes
 	queue := make(chan *ChildProcess, queue_len)
 	// queue of available user ids
@@ -581,6 +659,18 @@ func main() {
 			Gid:  gid,
 		}
 	}
+
+	drop_queue := make(chan ExecutionInfo, user_number)
+	err = InitializeDropper(drop_queue)
+	if err != nil {
+		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
+	}
+	// run two droppers for more parallelism
+	err = InitializeDropper(drop_queue)
+	if err != nil {
+		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
+	}
+	privilege_drop_channel = drop_queue
 
 	libs := append(strings.Split(os.Getenv("GOEMAXIMA_EXTRA_PACKAGES"), ":"), os.Getenv("GOEMAXIMA_LIB_PATH"))
 	// spawn maxima processes in separate goroutine

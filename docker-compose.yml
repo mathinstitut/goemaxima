@@ -8,11 +8,8 @@ services:
       - "/tmp"
     restart: unless-stopped
     cap_add:
-      - CHOWN
-      - DAC_OVERRIDE
       - SETGID
       - SETUID
-      - KILL
     cap_drop:
       - ALL
     read_only: true

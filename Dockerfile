@@ -42,8 +42,12 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
            useradd -M "maxima-$i"; \
     done
 
+RUN useradd -M "goemaxima-nobody"
+
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
+
+RUN chmod 0700 "${BIN}/goweb" "${BIN}/maxima-optimised"
 
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
 ENV GOEMAXIMA_NUSER=$MAX_USER
@@ -56,4 +60,4 @@ HEALTHCHECK --interval=1m --timeout=3s CMD curl -f 'http://localhost:8080/goemax
 
 # clear tmp because when kubernetes restarts a pod, it keeps the /tmp content even if it's tmpfs,
 # which means that on a restart caused by an overfull tmpfs, it will keep restarting in a loop
-CMD cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised
+CMD cd /tmp && rm --one-file-system -rf * && exec tini ${BIN}/goweb ${BIN}/maxima-optimised || echo oh no no >&2
