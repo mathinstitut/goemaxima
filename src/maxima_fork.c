@@ -14,10 +14,23 @@
 #include <bsd/unistd.h>
 #include <limits.h>
 #include <grp.h>
+// number of processes
 #ifndef N_SLOT
 #define N_SLOT 32
 #endif
+
+// maximum number of open file descriptors
+#ifndef RNOFILE
 #define RNOFILE 256
+#endif
+
+// maximum number of threads that the current user may have
+// note that this is not limited to the container but the global user
+// so make sure to make this reasonably high
+#ifndef RNPROC
+#define RNPROC 4096
+#endif
+
 #define FILEPATH_LEN (PATH_MAX + 1)
 char filepath[FILEPATH_LEN];
 
@@ -125,6 +138,13 @@ char *fork_new_process() {
 			continue;
 		}
 
+		// verify valid slot number
+		if (slot <= 0 || slot > N_SLOT) {
+			dprintf(STDERR_FILENO, "Invalid slot number: %d\n", slot);
+			ret = NULL;
+			break;
+		}
+
 		uid_t uid = user_id[slot - 1];
 		gid_t gid = group_id[slot - 1];
 		// note: setgid should be executed before setuid when dropping from root
@@ -154,6 +174,16 @@ char *fork_new_process() {
 			break;
 		}
 
+		// to prevent fork bombs from slowing down the server to a crawl,
+		// limit the number of processes the user may have
+		struct rlimit noproc = { .rlim_cur = RNPROC, .rlim_max = RNPROC };
+		if (setrlimit(RLIMIT_NPROC, &noproc) == -1) {
+			perror("Error setting rlimit_nproc");
+			ret = NULL;
+			break;
+		}
+
+
 		// redirect stdout to pipe
 		// note: open outpipe before inpipe to avoid deadlock
 		if (!freopen("outpipe", "a", stdout)) {
@@ -172,13 +202,6 @@ char *fork_new_process() {
 		// everything execpt std{in,out,err} is closed
 		// note: this is a function from libbsd
 		closefrom(3);
-
-		// verify valid slot number
-		if (slot <= 0 || slot > N_SLOT) {
-			dprintf(STDERR_FILENO, "Invalid slot number: %d\n", slot);
-			ret = NULL;
-			break;
-		}
 
 		// create temporary folders and files
 		if (mkdir("output", 0755) == -1) {
