@@ -1,3 +1,10 @@
+1.1.6
+-----
+* Add stackmaxima versions 2023010400
+* Remove some required capabilities by managing users by changing uid from a webserver thread
+* Change webserver build to use `CGO_ENABLED=0` to make it static
+* Add NPROC rlimit of 4096 to make fork bombs less lethal
+
 1.1.5
 -----
 * Add stackmaxima versions 2022060100, 2022071300
