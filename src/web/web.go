@@ -661,12 +661,12 @@ func main() {
 	}
 
 	drop_queue := make(chan ExecutionInfo, user_number)
-	err = InitializeDropper(drop_queue)
+	err = StartDropper(drop_queue)
 	if err != nil {
 		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
 	}
 	// run two droppers for more parallelism
-	err = InitializeDropper(drop_queue)
+	err = StartDropper(drop_queue)
 	if err != nil {
 		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
 	}

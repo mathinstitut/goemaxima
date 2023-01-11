@@ -91,7 +91,7 @@ func (dropper *PrivilegeDropper) run() {
 	}
 }
 
-func InitializeDropper(execution_channel chan ExecutionInfo) error {
+func StartDropper(execution_channel chan ExecutionInfo) error {
 	server, err := user.Current()
 	if err != nil {
 		return err
