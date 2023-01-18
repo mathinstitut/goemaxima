@@ -40,6 +40,9 @@ The container should then be available on port 8080 (from outside the host too, 
 The port of the server inside the container is `8080` and the path that has to be input into stack is `http://[address:port]/goemaxima`.
 Some older versions of the image accept only `http://[address:port]/maxima` and this url should work in newer versions as well.
 
+Stack expects a maxima version to be set in the settings.
+You can find out which maxima version to use for a particular `STACKMAXIMA_VERSION` by taking a look at the second column of the `versions` file at the root of this repository.
+
 If you do not wish to use the docker-compose configuration, you can also run the image with
 ```
 $ docker run --restart=always --tmpfs /tmp -p $address:$port:8080 $imagename
