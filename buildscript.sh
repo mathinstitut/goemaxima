@@ -15,16 +15,18 @@ apt-get update
 apt-get install -y bzip2 make wget python3 gcc texinfo curl libcap2-bin
 
 mkdir -p ${SRC}
-wget https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz -O ${SRC}/maxima-${MAXIMA_VERSION}.tar.gz
-wget https://sourceforge.net/projects/sbcl/files/sbcl/${SBCL_VERSION}/sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux-binary.tar.bz2 -O ${SRC}/sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux.tar.bz2
+wget "https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz" -O "${SRC}/maxima-${MAXIMA_VERSION}.tar.gz"
+wget "https://github.com/sbcl/sbcl/archive/refs/tags/sbcl-${SBCL_VERSION}.tar.gz" -O "${SRC}/sbcl-${SBCL_VERSION}.tar.gz"
 
-# Compile sbcl
+# Compile sbcl (installs and removes debian sbcl for bootstrapping)
+apt install -y sbcl
 cd ${SRC}
-bzip2 -d sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux.tar.bz2
-tar -xf sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux.tar
-rm sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux.tar
-ls
-cd sbcl-${SBCL_VERSION}-${SBCL_ARCH}-linux
+tar -xzf sbcl-${SBCL_VERSION}.tar.gz
+rm sbcl-${SBCL_VERSION}.tar.gz
+cd sbcl-sbcl-${SBCL_VERSION}
+echo "\"$SBCL_VERSION\"" > version.lisp-expr
+./make.sh
+apt remove -y sbcl
 ./install.sh
 
 # Compile maxima
