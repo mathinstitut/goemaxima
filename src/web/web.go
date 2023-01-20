@@ -28,6 +28,10 @@ var debug uint
 var privilege_drop_channel chan<- ExecutionInfo
 
 const MAXIMA_SPAWN_TIMEOUT = time.Duration(10) * time.Second
+const HEALTHCHECK_CMD = `
+	f: concat(maxima_tempdir, "/test")$
+	stringout(f, concat("healthcheck ", "successful"))$
+	printfile(f)$`
 
 type User struct {
 	Id   uint
@@ -466,7 +470,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	var timeout uint64
 	var err error
 	if health {
-		input = "print(\"healthcheck successful\");"
+		input = HEALTHCHECK_CMD
 		timeout = 1000
 		debugf("Debug: doing healthcheck")
 	} else {
