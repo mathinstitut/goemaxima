@@ -62,6 +62,9 @@ resources:
     cpu: 1000m
     memory: 256Mi
 
+# maximum size of /tmp
+tmpfsSizeLimit: 128Mi
+
 nodeSelector: {}
 
 tolerations: []

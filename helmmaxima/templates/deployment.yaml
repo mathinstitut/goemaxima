@@ -86,6 +86,7 @@ spec:
         - name: tmptmpfs
           emptyDir:
             medium: "Memory"
+            sizeLimit: "{{ .Values.tmpfsSizeLimit }}"
         {{ if .Values.enableGitRollout }}
         - name: git
           emptyDir:
