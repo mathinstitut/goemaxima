@@ -1,3 +1,8 @@
+1.1.7
+* Fix bug where restart of container without DAC_OVERRIDE capability results in indefinite
+    restarts of the container
+* Fix healthcheck not detecting inability to write to plot directory
+
 1.1.6
 -----
 * Add stackmaxima versions 2023010400
