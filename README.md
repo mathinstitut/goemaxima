@@ -10,6 +10,10 @@ For some more information on how this works, [see the documentation](/doc/How_it
 Building a Docker Image
 =======================
 
+There are prebuilt images are already available on the [dockerhub](https://hub.docker.com/r/mathinstitut/goemaxima).
+This section just describes the build process in case you want to build your own image anyway.
+Normally, you can just skip this step and go to [Using the Docker Image](#using-the-docker-image) directly.
+
 A docker image can be built by first building the web server with buildweb.sh, which will place the web server executable into `./bin/`.
 In order for that to work, `go` needs to be installed.
 
