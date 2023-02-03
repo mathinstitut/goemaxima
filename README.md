@@ -34,6 +34,10 @@ Using the Docker Image
 
 The prebuilt docker images are available from the docker hub at `mathinstitut/goemaxima:[version]-latest`.
 
+To use it, you first have to know what stackmaxima version you need.
+Note that this is different from the moodle stack version, ilias stack version and maxima version.
+The needed stackmaxima version can be seen in the ["What Stackmaxima version do I need?"](#what-stackmaxima-version-do-i-need) section.
+
 They can be simply run with docker-compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
 ```
 export STACKMAXIMA_VERSION=...
@@ -45,7 +49,7 @@ The port of the server inside the container is `8080` and the path that has to b
 Some older versions of the image accept only `http://[address:port]/maxima` and this url should work in newer versions as well.
 
 Stack expects a maxima version to be set in the settings.
-You can find out which maxima version to use for a particular `STACKMAXIMA_VERSION` by taking a look at the second column of the `versions` file at the root of this repository.
+You can find out which maxima version to use for a particular `STACKMAXIMA_VERSION` by taking a look at the last column in the ["What Stackmaxima version do I need?"](#what-stackmaxima-version-do-i-need) section
 
 If you do not wish to use the docker-compose configuration, you can also run the image with
 ```
@@ -60,6 +64,28 @@ The memory usage of the container is around 50MB when idle and can quickly spike
 The process startup time for a single request is a few milliseconds and negligible in comparison to processing the CAS request itself.
 
 For advanced users, one can also deploy the image in kubernetes by using the helm chart provided in the `helmmaxima` directory.
+
+What Stackmaxima version do I need?
+===================================
+
+| Ilias Stack Version | Moodle Stack Version | Stackmaxima version | Included Maxima version |
+| ------------------- | -------------------- | ------------------- | ----------------------- |
+| `5.3`, `5.4`        | -                    | 2017121800          | 5.41.0                  |
+| -                   | `4.2.1`              | 2018080600          | 5.41.0                  |
+| `6`, `7`            | `4.2.2a`             | 2019090200          | 5.41.0                  |
+| -                   | `4.3.1`              | 2020042000          | 5.41.0                  |
+| -                   | `4.3.2`              | 2020052700          | 5.41.0                  |
+| -                   | `4.3.3`              | 2020061000          | 5.41.0                  |
+| -                   | `4.3.4`              | 2020070100          | 5.41.0                  |
+| -                   | `4.3.6`              | 2020100900          | 5.41.0                  |
+| -                   | `4.3.7`              | 2020101501          | 5.41.0                  |
+| -                   | `4.3.8`              | 2020120600          | 5.41.0                  |
+| `7-DEV`             | `4.3.10`             | 2021120900          | 5.44.0                  |
+| -                   | `4.3.11`             | 2022060100          | 5.44.0                  |
+| -                   | `4.4.0`              | 2022071300          | 5.44.0                  |
+| -                   | `4.4.1`              | 2022082900          | 5.44.0                  |
+| -                   | `4.4.2`              | 2023010400          | 5.44.0                  |
+
 
 Environment Variables
 =====================
