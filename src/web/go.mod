@@ -8,6 +8,6 @@ require (
 	github.com/prometheus/client_golang v1.11.1
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
+	golang.org/x/sys v0.1.0
 	google.golang.org/protobuf v1.27.1 // indirect
 )
