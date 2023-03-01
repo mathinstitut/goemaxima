@@ -1,12 +1,16 @@
 stages:
   - build_server
   - build
+  - test
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   REGISTRY: "mathinstitut"
+  DB: "pgsql"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: "trust"
 
-# gitlab ci script taken from https://gist.github.com/danielneis/5c6140ec8150c6151a54bccd26950278
 
 build_server_binary:
   stage: build_server
@@ -44,3 +48,53 @@ build_gitrollout:
     changes:
       - git-rollout/**
       - .gitlab-ci.yml
+
+test_maxima:
+  image: "mathinstitut/moodle-ci-stack:latest"
+  stage: test
+  services:
+  - "postgres:latest"
+  - "mathinstitut/goemaxima:${TEST_VERSION}-dev"
+  before_script: []
+  script:
+  - export TEST_URL="http://localhost:8080/goemaxima"
+  - bash ./testimage.sh /tmp/moodle
+  when: manual
+  tags:
+    - docker
+  # the tests do not work perfectly for now because of
+  # sbcl issues
+  allow_failure: yes
+  parallel:
+    matrix:
+      - TEST_VERSION: "2023010400"
+        QSTACK_VERSION: "v4.4.2"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2022082900"
+        QSTACK_VERSION: "v4.4.1"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2022071300"
+        QSTACK_VERSION: "v4.4.0"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2022071300"
+        QSTACK_VERSION: "v4.4.0"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2022060100"
+        QSTACK_VERSION: "v4.3.11"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2021120900"
+        QSTACK_VERSION: "v4.3.10"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2020120600"
+        QSTACK_VERSION: "v4.3.8"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2020101501"
+        QSTACK_VERSION: "v4.3.7"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2020100900"
+        QSTACK_VERSION: "v4.3.6"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+      - TEST_VERSION: "2020070100"
+        QSTACK_VERSION: "v4.3.4"
+        MOODLE_BRANCH: "MOODLE_39_STABLE"
+
