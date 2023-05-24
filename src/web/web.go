@@ -460,7 +460,7 @@ func handler(w http.ResponseWriter, r *http.Request, queue <-chan *ChildProcess,
 	health := r.FormValue("health") == "1"
 	if r.Method == "GET" && r.FormValue("input") == "" && !health {
 		hostname, _ := os.Hostname()
-		fmt.Fprintf(w, "Hostname: %s, version: 1.1.8\n", hostname)
+		fmt.Fprintf(w, "Hostname: %s, version: 1.1.9\n", hostname)
 		return
 	}
 	// the maxima input to be evaluated

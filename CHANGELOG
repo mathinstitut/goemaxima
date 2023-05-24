@@ -1,3 +1,8 @@
+1.1.9
+-----
+* Add 2023052400 version
+* Load lsquares earlier than stackmaxima libraries so that fboundp does not get overwritten
+
 1.1.8
 -----
 * Backport cartesian_product fix for 5.44 maxima version
