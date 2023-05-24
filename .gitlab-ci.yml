@@ -68,7 +68,7 @@ test_maxima:
   parallel:
     matrix:
       - TEST_VERSION: "2023052400"
-        QSTACK_VERSION: "master"
+        QSTACK_VERSION: "v4.4.3"
         MOODLE_BRANCH: "MOODLE_39_STABLE"
       - TEST_VERSION: "2023010400"
         QSTACK_VERSION: "v4.4.2"
