@@ -6,6 +6,8 @@
    it before we load stack so that the plot function of COMA (which is probably not needed in any case)
    is overwritten by Stack's plot function */
 load(coma);
+/* same with lsquares and fboundp */
+load(lsquares);
 load("${ASSETS}/maximalocal.mac");
 load("${ASSETS}/maxima-fork.lisp");
 load("${LIB}/stackmaxima.mac");
@@ -13,6 +15,5 @@ load(stats);
 load(distrib);
 load(descriptive);
 load(simplex);
-load(lsquares);
 :lisp (sb-ext:save-lisp-and-die "maxima-optimised" :toplevel #'run :executable t)
 
