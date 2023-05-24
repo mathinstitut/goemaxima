@@ -18,6 +18,7 @@ When updating `goemaxima` to use a new version, the following has to be done:
 * Comment out the `load("stackmaxima.mac)` at the end of the file.
 * Add a line for the new version to the `versions` file in the top of the repository.
 * Update the default version in the `docker-compose.yml`.
+* Add the new version to the table in the README.
 * Run `./build.sh` to build the new image.
   It will be available as `goemaxima:$version-dev`.
 * Test the image with the moodle instance (for example using the answer-test script).

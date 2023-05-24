@@ -285,7 +285,7 @@ func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
 		//
 		// this allows us to kill all processes of the user:
 		// processes we are allowed to kill with our real uid:
-		// 		just ourselves as long as goemaxima-nobody contains no other processes
+		// 	    just ourselves as long as goemaxima-nobody contains no other processes
 		//      but kill -1 doesn't kill the process itself on linux
 		// processes we are allowed to kill with our effective uid:
 		//      all the processes that the target user maxima-%d contains
