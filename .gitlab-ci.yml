@@ -67,6 +67,9 @@ test_maxima:
   allow_failure: true
   parallel:
     matrix:
+      - TEST_VERSION: "2023072101"
+        QSTACK_VERSION: "v4.4.4"
+        MOODLE_BRANCH: "MOODLE_400_STABLE"
       - TEST_VERSION: "2023060500"
         QSTACK_VERSION: "v4.4.4"
         MOODLE_BRANCH: "MOODLE_400_STABLE"
