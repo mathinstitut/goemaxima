@@ -7,10 +7,9 @@ echo ${MAXIMA_VERSION?Error \$MAXIMA_VERSION is not defined} \
      ${SBCL_VERSION?Error \$SBCL_VERSION is not defined}
 
 apt-get update
-apt-get install -y bzip2 make wget python3 gcc texinfo curl libcap2-bin
+apt-get install -y bzip2 make wget python3 gcc texinfo curl libcap2-bin git autoconf
 
 mkdir -p ${SRC}
-wget "https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz" -O "${SRC}/maxima-${MAXIMA_VERSION}.tar.gz"
 wget "https://github.com/sbcl/sbcl/archive/refs/tags/sbcl-${SBCL_VERSION}.tar.gz" -O "${SRC}/sbcl-${SBCL_VERSION}.tar.gz"
 
 # Compile sbcl (installs and removes debian sbcl for bootstrapping)
@@ -24,11 +23,11 @@ echo "\"$SBCL_VERSION\"" > version.lisp-expr
 apt remove -y sbcl
 ./install.sh
 
-# Compile maxima
 cd ${SRC}
-tar -xf maxima-${MAXIMA_VERSION}.tar.gz
-rm maxima-${MAXIMA_VERSION}.tar.gz
-cd maxima-${MAXIMA_VERSION}
+git clone --depth 1 --branch "$MAXIMA_VERSION" "https://github.com/mathinstitut/maxima-mirror" maxima
+# Compile maxima
+cd maxima
+autoreconf -i
 ./configure
 make
 make install
@@ -43,5 +42,5 @@ gcc -shared maxima_fork.c -lbsd -fPIC -Wall -Wextra -DN_SLOT="${MAX_USER}" -o li
 mv libmaximafork.so /usr/lib
 rm -r ${SRC} /maxima_fork.c
 mkdir -p ${LIB} ${LOG} ${TMP} ${PLOT} ${ASSETS} ${BIN}
-apt-get purge -y bzip2 make wget python3 gcc texinfo
+apt-get purge -y bzip2 make wget python3 gcc texinfo libcap2-bin git autoconf
 apt-get autoremove -y
