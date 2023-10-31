@@ -10,7 +10,7 @@ apt-get update
 apt-get install -y bzip2 make wget python3 gcc texinfo curl libcap2-bin
 
 mkdir -p ${SRC}
-wget "https://sourceforge.net/projects/maxima/files/Maxima-source/${MAXIMA_VERSION}-source/maxima-${MAXIMA_VERSION}.tar.gz" -O "${SRC}/maxima-${MAXIMA_VERSION}.tar.gz"
+wget "https://github.com/mathinstitut/maxima-mirror/releases/download/${MAXIMA_VERSION}/maxima-${MAXIMA_VERSION}.tar.gz" -O "${SRC}/maxima-${MAXIMA_VERSION}.tar.gz"
 wget "https://github.com/sbcl/sbcl/archive/refs/tags/sbcl-${SBCL_VERSION}.tar.gz" -O "${SRC}/sbcl-${SBCL_VERSION}.tar.gz"
 
 # Compile sbcl (installs and removes debian sbcl for bootstrapping)
