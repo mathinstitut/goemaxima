@@ -62,13 +62,16 @@ test_maxima:
   when: manual
   tags:
     - docker
-  # the tests do not work perfectly for now because of
-  # sbcl issues
+  # the tests do not work perfectly for older versions
+  # because of sbcl issues
   allow_failure: true
   parallel:
     matrix:
+      - TEST_VERSION: "2023102700"
+        QSTACK_VERSION: "v4.4.6"
+        MOODLE_BRANCH: "MOODLE_400_STABLE"
       - TEST_VERSION: "2023072101"
-        QSTACK_VERSION: "v4.4.4"
+        QSTACK_VERSION: "v4.4.5"
         MOODLE_BRANCH: "MOODLE_400_STABLE"
       - TEST_VERSION: "2023060500"
         QSTACK_VERSION: "v4.4.4"
