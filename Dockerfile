@@ -1,4 +1,4 @@
-FROM debian:11
+FROM debian:12
 
 # e.g. 5.41.0
 ARG MAXIMA_VERSION
