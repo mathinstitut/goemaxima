@@ -1,6 +1,6 @@
 goemaxima
 =========
-This project developed at the Mathematical Institute of Goettingen provides an alternative webservice for stack, which is a question type for ilias and moodle focused on math.
+This project, originally developed at the Mathematical Institute of Goettingen, provides an alternative CAS server implementation for stack, which is a question type for ilias and moodle focused on math.
 The image was originally developed to be used in a cluster/loadbalancing setup, but for most workloads it is viable to use it as a single container.
 
 This implementation in golang strives to have faster startup and processing times than the corresponding java version by using fork instead of starting a new process for each request.
