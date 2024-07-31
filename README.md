@@ -40,8 +40,8 @@ The needed stackmaxima version can be seen in the ["What Stackmaxima version do 
 
 They can be simply run with docker compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
 ```
-export STACKMAXIMA_VERSION=...
-docker compose up -d
+echo STACKMAXIMA_VERSION=2024072400 > stackmaxima-version
+docker compose --env-file=stackmaxima-version up -d
 ```
 The container should then be available on port 8080 (from outside the host too, keep this behind a firewall so it is not reachable from the general internet).
 
