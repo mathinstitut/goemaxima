@@ -47,8 +47,6 @@ RUN useradd -M "goemaxima-nobody"
 # Add go webserver
 COPY ./bin/web ${BIN}/goweb
 
-RUN chmod 0700 "${BIN}/goweb" "${BIN}/maxima-optimised"
-
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
 ENV GOEMAXIMA_NUSER=$MAX_USER
 RUN sh -c 'echo $GOEMAXIMA_NUSER'

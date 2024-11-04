@@ -8,11 +8,15 @@ scalePercentage: 40
 scaleMin: 3
 scaleMax: 32
 
+# whether to include the coreos monitor resource for prometeus metrics
+monitor: true
+
 image:
   image_prefix: mathinstitut/goemaxima
   pullPolicy: Always
 
 enableGitRollout: false
+
 gitRollout:
   repo: 'git://$(GIT_ROLLOUT_SERVICE_HOST)/git'
   branch: main
@@ -23,6 +27,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 podSecurityContext: {}
+
+disableRoot: false
 
 securityContext:
   capabilities:

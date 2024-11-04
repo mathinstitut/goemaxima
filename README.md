@@ -115,6 +115,12 @@ A few internal options can be set from environment variables.
    If you do not modify the container or use the webserver executable in another context than the image, you probably want to leave this variable unset.
    If you want to load extra packages/libraries, use the `GOEMAXIMA_EXTRA_PACKAGES` variable instead.
 
+* `GOEMAXIMA_PROCESS_ISOLATION` is either `none` or `normal`.
+   If `normal` (the default), the maxima processes are run under separate users to prevent them from interfering with each other.
+   As a consequence of this, the server needs to be the root user (so that `CAP_SETUID`/`CAP_SETGID` are available).
+   However, in the case of `none`, the processes all run as the same user and the server must not run as root.
+   This is useful in environments where the root user is not allowed, however it does mean that, in case of a hijacked process, the attacker can also hijack the server process.
+
 Metrics
 =======
 Prometheus metrics are published on `/metrics` and include number of success, timeout and internal error responses and also histograms of process startup and response times.

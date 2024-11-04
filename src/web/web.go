@@ -25,6 +25,7 @@ import (
 
 var tmp_prefix string
 var debug uint
+var process_isolation bool
 var privilege_drop_channel chan<- ExecutionInfo
 
 const MAXIMA_SPAWN_TIMEOUT = time.Duration(10) * time.Second
@@ -75,7 +76,7 @@ type Metrics struct {
 type MotherProcess struct {
 	Cmd    *exec.Cmd
 	Input  *io.PipeWriter
-	Output *io.PipeReader
+	Output *bufio.Scanner
 }
 
 type ChildProcess struct {
@@ -84,6 +85,7 @@ type ChildProcess struct {
 	Output  *bufio.Reader
 	Outfile *os.File
 	TempDir string
+	Pid     int
 }
 
 func debugf(format string, a ...interface{}) {
@@ -150,7 +152,7 @@ func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 	return &MotherProcess{
 		Cmd:    cmd,
 		Input:  in_pipe_r,
-		Output: out_pipe_w,
+		Output: bufio.NewScanner(out_pipe_w),
 	}, nil
 }
 
@@ -226,6 +228,21 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	}
 	child.Output = bufout
 
+	debugf("Debug: Reading pid of child from mother")
+	if !p.Output.Scan() {
+		return nil, 0.0, fmt.Errorf("unexpected EOF when trying to read PID")
+	}
+	pid_str := p.Output.Text()
+	if err = p.Output.Err(); err != nil {
+		return nil, 0, fmt.Errorf("unable to read pid: %s", err)
+	}
+	pid, err := strconv.Atoi(pid_str)
+	if err != nil {
+		return nil, 0, fmt.Errorf("unable to convert pid to int: %s", err)
+	}
+	debugf("Debug: child pid is %d", pid)
+	child.Pid = pid
+
 	total := time.Since(start)
 	total_ms := float64(total.Microseconds()) / 1000
 	debugf("Debug: child took %s for startup", total)
@@ -274,30 +291,36 @@ func (p *ChildProcess) eval_command(command string, timeout uint64) MaximaRespon
 }
 
 // kills all processes of user and remove temporary directories
-func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string) {
+func process_cleanup(user *User, user_queue chan<- *User, tmp_dir string, pid int) {
 	user.go_execute_as(func(err error) {
 		if err != nil {
 			log.Fatalf("Fatal: Error dropping privilege for process cleanup: %s", err)
 			return
 		}
-		// we have an real uid of goemaxima-nobody in this context and an effective id
-		// of the target user maxima-%d
-		//
-		// this allows us to kill all processes of the user:
-		// processes we are allowed to kill with our real uid:
-		// 	    just ourselves as long as goemaxima-nobody contains no other processes
-		//      but kill -1 doesn't kill the process itself on linux
-		// processes we are allowed to kill with our effective uid:
-		//      all the processes that the target user maxima-%d contains
-		// any CAP_KILL capability is also not effective because we changed our effective uid
-		// to be non-zero
-		//
-		// note that we do not walk proc since that would not allow atomic killing of processes
-		// which could allow someone to avoid getting killed by fork()ing very fast.
-		// Also, since we are in a docker container, using cgroups does not work well right now
-		//
-		// We ignore the error because we may not actually kill any processes
-		_ = syscall.Kill(-1, syscall.SIGKILL)
+		if process_isolation {
+			// we have an real uid of goemaxima-nobody in this context and an effective id
+			// of the target user maxima-%d
+			//
+			// this allows us to kill all processes of the user:
+			// - processes we are allowed to kill with our real uid:
+			// 	    just ourselves as long as goemaxima-nobody contains no other processes
+			//      but kill -1 doesn't kill the process itself on linux
+			// - processes we are allowed to kill with our effective uid:
+			//      all the processes that the target user maxima-%d contains
+			// any CAP_KILL capability is also not effective because we changed our effective uid
+			// to be non-zero
+			//
+			// note that we do not walk proc since that would not allow atomic killing of processes
+			// which could allow someone to avoid getting killed by fork()ing very fast.
+			// Also, since we are in a docker container, using cgroups does not work well right now
+			//
+			// We ignore the error because we may not actually kill any processes
+			_ = syscall.Kill(-1, syscall.SIGKILL)
+		} else {
+			// in case process_isolation is false, we just kill the process group,
+			// which corresponds to -pid since we start a new process group in maxima_fork.c
+			_ = syscall.Kill(-pid, syscall.SIGKILL)
+		}
 		err = os.RemoveAll(tmp_dir)
 		if err != nil {
 			log.Printf("Warn: could not clean up directories of child: %s", err)
@@ -438,7 +461,7 @@ func (req *MaximaRequest) WriteResponse(response MaximaResponse) {
 func (req *MaximaRequest) Respond() {
 	debugf("Debug: input (%d): %s", req.User.Id, req.Input)
 
-	defer process_cleanup(req.User, req.UserQueue, req.Proc.TempDir)
+	defer process_cleanup(req.User, req.UserQueue, req.Proc.TempDir, req.Proc.Pid)
 
 	proc_out := make(chan MaximaResponse, 1)
 	go func() {
@@ -595,6 +618,47 @@ func init_metrics() Metrics {
 	return metrics
 }
 
+func user_info(user_id uint) (*User, error) {
+	user_name := fmt.Sprintf("maxima-%d", user_id)
+	usr, err := user.Lookup(user_name)
+	if err != nil {
+		log.Fatalf("Fatal: Could not look up user with id %d: %s", user_id, err)
+	}
+	var uid int
+	var gid int
+	if process_isolation {
+		uid, err = strconv.Atoi(usr.Uid)
+		if err != nil {
+			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", usr.Uid, err)
+		}
+		gid, err = strconv.Atoi(usr.Gid)
+		if err != nil {
+			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", usr.Gid, err)
+		}
+	} else {
+		server, err := user.Current()
+		if err != nil {
+			return nil, err
+		}
+
+		uid, err = strconv.Atoi(server.Uid)
+		if err != nil {
+			return nil, err
+		}
+
+		gid, err = strconv.Atoi(server.Gid)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &User{
+		Id:   user_id,
+		Name: user_name,
+		Uid:  uid,
+		Gid:  gid,
+	}, nil
+}
+
 func main() {
 	metrics := init_metrics()
 
@@ -618,6 +682,20 @@ func main() {
 	if err != nil {
 		log.Fatal("Fatal: GOEMAXIMA_DEBUG contains invalid number")
 	}
+	proc_sep, exists := os.LookupEnv("GOEMAXIMA_PROCESS_ISOLATION")
+	if exists {
+		switch proc_sep {
+		case "none":
+			process_isolation = false
+		case "":
+		case "normal":
+			process_isolation = true
+		default:
+			log.Fatal("Fatal: GOEMAXIMA_PROCESS_ISOLATION must be one of none, normal")
+		}
+	} else {
+		process_isolation = true
+	}
 	// where to store temp files (plots, named pipes)
 	// should preferrably be tmpfs since it needs to be fast
 	tmp_prefix = os.Getenv("GOEMAXIMA_TEMP_DIR")
@@ -626,6 +704,12 @@ func main() {
 	} else if !strings.HasPrefix(tmp_prefix, "/") {
 		log.Fatal("Fatal: GOEMAXIMA_TEMP_DIR must be an absolute path")
 	}
+
+	if process_isolation {
+		// we shouldn't need any aux groups
+		syscall.Setgroups([]int{})
+	}
+
 	err = os.MkdirAll(tmp_prefix, 0711)
 	if err != nil {
 		log.Fatalf("Fatal: Cannot create %s: %s", tmp_prefix, err)
@@ -643,34 +727,20 @@ func main() {
 
 	// look up all the users
 	for i := (uint)(1); i <= user_number; i++ {
-		user_name := fmt.Sprintf("maxima-%d", i)
-		user, err := user.Lookup(user_name)
+		info, err := user_info(i)
 		if err != nil {
-			log.Fatalf("Fatal: Could not look up user with id %d: %s", i, err)
+			log.Fatalf("Fatal: Cannot get user info for user %d: %s", i, err)
 		}
-		uid, err := strconv.Atoi(user.Uid)
-		if err != nil {
-			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", user.Uid, err)
-		}
-		gid, err := strconv.Atoi(user.Gid)
-		if err != nil {
-			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", user.Gid, err)
-		}
-		user_queue <- &User{
-			Id:   i,
-			Name: user_name,
-			Uid:  uid,
-			Gid:  gid,
-		}
+		user_queue <- info
 	}
 
 	drop_queue := make(chan ExecutionInfo, user_number)
-	err = StartDropper(drop_queue)
+	err = StartDropper(drop_queue, process_isolation)
 	if err != nil {
 		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
 	}
 	// run two droppers for more parallelism
-	err = StartDropper(drop_queue)
+	err = StartDropper(drop_queue, process_isolation)
 	if err != nil {
 		log.Fatalf("Fatal: cannot run privilege dropper: %s", err)
 	}

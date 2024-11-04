@@ -44,6 +44,13 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+            {{ if .Values.disableRoot }}
+            capabilities:
+              drop:
+                - ALL
+            runAsUser: 1000
+            runAsGroup: 1000
+            {{ end }}
           image: "{{ .Values.image.image_prefix }}:{{ .Values.stackver }}-{{ .Values.tagappend | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
@@ -71,8 +78,14 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
-          {{ if .Values.enableGitRollout }}
           env:
+            - name: GOEMAXIMA_PROCESS_ISOLATION
+          {{ if .Values.disableRoot }}
+              value: "none"
+          {{ else }}
+              value: "normal"
+          {{ end }}
+          {{ if .Values.enableGitRollout }}
             - name: GOEMAXIMA_EXTRA_PACKAGES
               value: "{{ .Values.gitRollout.includefile }}"
           {{ end }}

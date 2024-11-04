@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 
 #include <bsd/unistd.h>
+#include <unistd.h>
 #include <limits.h>
 #include <grp.h>
 
@@ -115,6 +116,7 @@ char *fork_new_process() {
 			break;
 		}
 		if (pid != 0) {
+			dprintf(STDOUT_FILENO, "%d\n", pid);
 			continue;
 		}
 
@@ -134,13 +136,6 @@ char *fork_new_process() {
 		// note: setgid should be executed before setuid when dropping from root
 		if (setgid(gid) == -1) {
 			perror("Could not set gid");
-			ret = NULL;
-			break;
-		}
-	
-		// remove all aux groups
-		if (setgroups(0, NULL)) {
-			perror("Could not remove aux groups");
 			ret = NULL;
 			break;
 		}

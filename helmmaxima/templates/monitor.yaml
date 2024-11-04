@@ -1,3 +1,4 @@
+{{ if .Values.monitor }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -10,3 +11,4 @@ spec:
   - port: http
     interval: 60s
 
+{{ end }}

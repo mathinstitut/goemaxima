@@ -91,7 +91,7 @@ func (dropper *PrivilegeDropper) run() {
 	}
 }
 
-func StartDropper(execution_channel chan ExecutionInfo) error {
+func StartDropper(execution_channel chan ExecutionInfo, process_isolation bool) error {
 	server, err := user.Current()
 	if err != nil {
 		return err
@@ -107,24 +107,31 @@ func StartDropper(execution_channel chan ExecutionInfo) error {
 		return err
 	}
 
-	nobody, err := user.Lookup(goemaxima_nobody)
-	if err != nil {
-		return fmt.Errorf("no %s user found, please make sure it exists and is not the user used by the server; error: %s", goemaxima_nobody, err)
-	}
+	var nobody_uid, nobody_gid int
 
-	nobody_uid, err := strconv.Atoi(nobody.Uid)
-	if err != nil {
-		return err
-	}
+	if process_isolation {
+		nobody, err := user.Lookup(goemaxima_nobody)
+		if err != nil {
+			return fmt.Errorf("no %s user found, please make sure it exists and is not the user used by the server; error: %s", goemaxima_nobody, err)
+		}
 
-	nobody_gid, err := strconv.Atoi(nobody.Gid)
-	if err != nil {
-		return err
-	}
+		nobody_uid, err = strconv.Atoi(nobody.Uid)
+		if err != nil {
+			return err
+		}
 
-	if nobody_uid == server_uid {
-		return fmt.Errorf("server uid %d is same as %s uid %d. Please make sure that the server does not run as %s",
-			server_uid, goemaxima_nobody, nobody_uid, goemaxima_nobody)
+		nobody_gid, err = strconv.Atoi(nobody.Gid)
+		if err != nil {
+			return err
+		}
+
+		if nobody_uid == server_uid {
+			return fmt.Errorf("server uid %d is same as %s uid %d. Please make sure that the server does not run as %s",
+				server_uid, goemaxima_nobody, nobody_uid, goemaxima_nobody)
+		}
+	} else {
+		nobody_uid = server_uid
+		nobody_gid = server_gid
 	}
 
 	dropper := PrivilegeDropper{
