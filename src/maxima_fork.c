@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 #include <stdlib.h>
-#include <pwd.h>
 #include <signal.h>
 
 #include <sys/resource.h>
@@ -10,14 +8,9 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include <fcntl.h>
 #include <bsd/unistd.h>
 #include <limits.h>
 #include <grp.h>
-// number of processes
-#ifndef N_SLOT
-#define N_SLOT 32
-#endif
 
 // maximum number of open file descriptors
 #ifndef RNOFILE
@@ -40,33 +33,6 @@ char filepath[FILEPATH_LEN];
 // redirects input/output, creates temporary subdirectories
 char *fork_new_process() {
 	fflush(stdout);
-	uid_t user_id[N_SLOT];
-	gid_t group_id[N_SLOT];
-
-	// cache and verify uids/gids on startup
-	for (int i = 1; i <= N_SLOT; i++) {
-		char username[16];
-		int len = snprintf(username, 15, "maxima-%d", i);
-		if (len < 0 || len > 15) {
-			dprintf(STDERR_FILENO, "Internal error getting user name\n");
-			return NULL;
-		}
-		struct passwd *userinfo = getpwnam(username);
-		if (!userinfo) {
-			dprintf(STDERR_FILENO, "Could not read user information for %s: %s\n",
-					username, strerror(errno));
-			return NULL;
-		}
-
-		uid_t uid = userinfo->pw_uid;
-		gid_t gid = userinfo->pw_gid;
-		if (uid == 0 || gid == 0) {
-			dprintf(STDERR_FILENO, "maxima-%d is root, quitting\n", i);
-			return NULL;
-		}
-		user_id[i - 1] = uid;
-		group_id[i - 1] = gid;
-	}
 
 	// send an S for Synchronization, so that
 	// the server process doesn't accidentally write into
@@ -101,25 +67,39 @@ char *fork_new_process() {
 	for (;;) {
 		// can't flush enough
 		fflush(stdout);
-		int slot;
 		
-		// the slot number and temp directory is sent to the process
-		// over stdin in the format "%d%s", where %s can contain anything
+		// the uid/gid and temp directory is sent to the process
+		// over stdin in the format "%d:%d%s", where %s can contain anything
 		// but newlines and musn't start with a number, which isn't a
 		// problem for absolute paths
-		if (scanf("%d", &slot) == EOF) {
-			if (errno != 0) {
-				perror("Error getting slot number from stdin");
-				ret = NULL;
-			}
-			break;
-		}
-		char *tempdir = fgets(filepath, FILEPATH_LEN, stdin);
-		if (!tempdir) {
-			perror("Error getting temp path name");
+		char *input = fgets(filepath, FILEPATH_LEN, stdin);
+		if (!input) {
+			perror("Error getting input");
 			ret = NULL;
 			break;
 		}
+
+		char *cur;
+		long uid = strtol(input, &cur, 10);
+		if (cur == input) {
+			fprintf(stderr, "Invalid uid\n");
+			ret = NULL;
+			break;
+		}
+		if (*cur++ != ':') {
+			fprintf(stderr, "Invalid input\n");
+			ret = NULL;
+			break;
+		}
+		input = cur;
+		long gid = strtol(input, &cur, 10);
+		if (cur == input) {
+			fprintf(stderr, "Invalid gid\n");
+			ret = NULL;
+			break;
+		}
+		char *tempdir = cur;
+
 		// remove the last newline, if it exists
 		size_t last_char = strlen(tempdir) - 1;
 		if (tempdir[last_char] == '\n') {
@@ -138,15 +118,19 @@ char *fork_new_process() {
 			continue;
 		}
 
-		// verify valid slot number
-		if (slot <= 0 || slot > N_SLOT) {
-			dprintf(STDERR_FILENO, "Invalid slot number: %d\n", slot);
+		// valididate uid and gid
+		if (uid <= 0 || uid > 0xffff) {
+			dprintf(STDERR_FILENO, "Invalid uid: %ld\n", uid);
+			ret = NULL;
+			break;
+		}
+		if (gid <= 0 || gid > 0xffff) {
+			dprintf(STDERR_FILENO, "Invalid gid: %ld\n", gid);
 			ret = NULL;
 			break;
 		}
 
-		uid_t uid = user_id[slot - 1];
-		gid_t gid = group_id[slot - 1];
+
 		// note: setgid should be executed before setuid when dropping from root
 		if (setgid(gid) == -1) {
 			perror("Could not set gid");
@@ -164,6 +148,13 @@ char *fork_new_process() {
 		// after this, we should be non-root
 		if (setuid(uid) == -1) {
 			perror("Could not set uid");
+			ret = NULL;
+			break;
+		}
+
+		// start new process group
+		if (setpgid(0, 0) == -1) {
+			perror("Could not set pgid");
 			ret = NULL;
 			break;
 		}

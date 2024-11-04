@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -156,12 +156,12 @@ func new_mother_proc(binpath string, libs []string) (*MotherProcess, error) {
 
 func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	start := time.Now()
-	var result ChildProcess
+	var child ChildProcess
 	err := user.sync_execute_as(MAXIMA_SPAWN_TIMEOUT, func(err error) error {
 		if err != nil {
 			return err
 		}
-		tmp_dir, err := ioutil.TempDir(tmp_prefix, "maxima-plot-")
+		tmp_dir, err := os.MkdirTemp(tmp_prefix, "maxima-plot-")
 		if err != nil {
 			return fmt.Errorf("unable to create temp dir: %s", err)
 		}
@@ -187,7 +187,7 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 			return fmt.Errorf("could not create named pipe in temp folder: %s", err)
 		}
 
-		_, err = fmt.Fprintf(p.Input, "%d%s\n", user.Id, tmp_dir)
+		_, err = fmt.Fprintf(p.Input, "%d:%d%s\n", user.Uid, user.Gid, tmp_dir)
 		if err != nil {
 			return fmt.Errorf("unable to communicate with process: %s", err)
 		}
@@ -204,10 +204,10 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 			return fmt.Errorf("could not open temp dir inpipe: %s", err)
 		}
 
-		result.User = user
-		result.Input = in
-		result.Outfile = out
-		result.TempDir = tmp_dir
+		child.User = user
+		child.Input = in
+		child.Outfile = out
+		child.TempDir = tmp_dir
 		return nil
 	})
 	if err != nil {
@@ -215,21 +215,21 @@ func (p *MotherProcess) spawn_new(user *User) (*ChildProcess, float64, error) {
 	}
 
 	debugf("Debug: Attempting to read from child")
-	err = result.Outfile.SetReadDeadline(time.Now().Add(MAXIMA_SPAWN_TIMEOUT))
+	err = child.Outfile.SetReadDeadline(time.Now().Add(MAXIMA_SPAWN_TIMEOUT))
 	if err != nil {
 		return nil, 0.0, fmt.Errorf("unable to set read deadline: %s", err)
 	}
-	bufout := bufio.NewReader(result.Outfile)
+	bufout := bufio.NewReader(child.Outfile)
 	_, err = fmt.Fscanf(bufout, "\nT")
 	if err != nil {
 		return nil, 0.0, fmt.Errorf("not able to find end marker: %s", err)
 	}
-	result.Output = bufout
+	child.Output = bufout
 
 	total := time.Since(start)
 	total_ms := float64(total.Microseconds()) / 1000
 	debugf("Debug: child took %s for startup", total)
-	return &result, total_ms, nil
+	return &child, total_ms, nil
 }
 
 type MaximaResponse struct {
@@ -349,7 +349,7 @@ func (req *MaximaRequest) WriteResponseWithoutPlots(response MaximaResponse) {
 	req.Metrics.NumSuccess.Inc()
 }
 
-func (req *MaximaRequest) WriteResponseWithPlots(response MaximaResponse, output_dir string, plots_output []os.FileInfo) {
+func (req *MaximaRequest) WriteResponseWithPlots(response MaximaResponse, output_dir string, plots_output []fs.DirEntry) {
 	debugf("Debug: output (%d) is zip, OUTPUT len %d", req.User.Id, response.Response.Len())
 	req.W.Header().Set("Content-Type", "application/zip;charset=UTF-8")
 	zipfile := zip.NewWriter(req.W)
@@ -420,7 +420,7 @@ func (req *MaximaRequest) WriteResponse(response MaximaResponse) {
 	output_dir := filepath.Clean(filepath.Join(req.Proc.TempDir, "output")) + "/"
 	// if there are any files inside the output dir, we give back a zip file containing all output
 	// files and the command output inside a file named OUTPUT
-	plots_output, err := ioutil.ReadDir(output_dir)
+	plots_output, err := os.ReadDir(output_dir)
 	if err != nil {
 		// just return text if directory could not be read and assume no plots were generated
 		req.log_with_input("Warn: could not read temp directory of maxima process: %s", err)
