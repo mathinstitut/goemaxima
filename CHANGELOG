@@ -1,3 +1,8 @@
+1.2.0
+-----
+* Add `GOEMAXIMA_PROCESS_ISOLATION` variable which allows running in unprivileged environments
+* Update dependencies
+
 1.1.9
 -----
 * Add 2023052400 version
