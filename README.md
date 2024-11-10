@@ -7,28 +7,6 @@ This implementation in golang strives to have faster startup and processing time
 For some more information on how this works, [see the documentation](/doc/How_it_works.md).
 
 
-Building a Docker Image
-=======================
-
-There are prebuilt images are already available on the [dockerhub](https://hub.docker.com/r/mathinstitut/goemaxima).
-This section just describes the build process in case you want to build your own image anyway.
-Normally, you can just skip this step and go to [Using the Docker Image](#using-the-docker-image) directly.
-
-A docker image can be built by first building the web server with buildweb.sh, which will place the web server executable into `./bin/`.
-In order for that to work, `go` needs to be installed.
-
-After that, the docker container for a particular stackmaxima version can be built by invoking `buildimage.sh STACKMAXIMA_VERSION` with `STACKMAXIMA_VERSION` substitutet to be the stackmaxima version to base the container off.
-
-Example:
-```
-$ ./buildweb.sh
-$ ./buildimage.sh 2020061000
-```
-
-The image should then be available as `goemaxima:2020061000-dev`.
-
-The supported stackmaxima versions can be seen by looking at the versions file of the root of this repository.
-
 Using the Docker Image
 ======================
 
@@ -92,6 +70,25 @@ What Stackmaxima version do I need?
 | -                   | `4.5.0-hf2`          | 2024012900          | 5.44.0                  |
 | -                   | `4.6.0`              | 2024060300          | 5.44.0                  |
 | -                   | `4.7.0`              | 2024072400          | 5.44.0                  |
+
+
+Building a Docker Image
+=======================
+
+There are prebuilt images are already available on the [dockerhub](https://hub.docker.com/r/mathinstitut/goemaxima).
+This section just describes the build process in case you want to build your own image anyway.
+Normally, you can just skip this step and go to [Using the Docker Image](#using-the-docker-image) directly.
+
+The docker container for a particular stackmaxima version can be built by invoking `buildimage.sh STACKMAXIMA_VERSION` with `STACKMAXIMA_VERSION` being the stackmaxima version to base the container off.
+
+Example:
+```
+$ ./buildimage.sh 2020061000
+```
+
+The image should then be available as `goemaxima:2020061000-dev`.
+
+The supported stackmaxima versions can be seen by looking at the versions file of the root of this repository.
 
 
 Environment Variables

@@ -1,3 +1,9 @@
+FROM golang:1-bookworm AS web
+COPY ./buildweb.sh /
+COPY ./src/web /src/web
+WORKDIR /
+RUN ./buildweb.sh
+
 FROM debian:12
 
 # e.g. 5.41.0
@@ -44,8 +50,7 @@ RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxi
 
 RUN useradd -M "goemaxima-nobody"
 
-# Add go webserver
-COPY ./bin/web ${BIN}/goweb
+COPY --from=web /bin/web ${BIN}/goweb
 
 ENV GOEMAXIMA_LIB_PATH=/opt/maxima/assets/maximalocal.mac
 ENV GOEMAXIMA_NUSER=$MAX_USER
