@@ -18,7 +18,7 @@ The needed stackmaxima version can be seen in the ["What Stackmaxima version do 
 
 They can be simply run with docker compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
 ```
-echo STACKMAXIMA_VERSION=2024072400 > stackmaxima-version
+echo STACKMAXIMA_VERSION=2024111500 > stackmaxima-version
 docker compose --env-file=stackmaxima-version up -d
 ```
 The container should then be available on port 8080 (from outside the host too, keep this behind a firewall so it is not reachable from the general internet).
@@ -48,7 +48,6 @@ What Stackmaxima version do I need?
 
 | Ilias Stack Version | Moodle Stack Version | Stackmaxima version | Included Maxima version |
 | ------------------- | -------------------- | ------------------- | ----------------------- |
-| -                   | `4.2.1`              | 2018080600          | 5.41.0                  |
 | `6`, `7`            | `4.2.2a`             | 2019090200          | 5.41.0                  |
 | -                   | `4.3.1`              | 2020042000          | 5.41.0                  |
 | -                   | `4.3.2`              | 2020052700          | 5.41.0                  |
@@ -70,6 +69,7 @@ What Stackmaxima version do I need?
 | -                   | `4.5.0-hf2`          | 2024012900          | 5.44.0                  |
 | -                   | `4.6.0`              | 2024060300          | 5.44.0                  |
 | -                   | `4.7.0`              | 2024072400          | 5.44.0                  |
+| -                   | `4.8.0`              | 2024111500          | 5.44.0                  |
 
 
 Building a Docker Image
