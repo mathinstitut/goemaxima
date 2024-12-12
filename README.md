@@ -76,6 +76,7 @@ What Stackmaxima version do I need?
 Building a Docker Image
 =======================
 
+## Using a bundled stackmaxima
 There are prebuilt images are already available on the [dockerhub](https://hub.docker.com/r/mathinstitut/goemaxima).
 This section just describes the build process in case you want to build your own image anyway.
 Normally, you can just skip this step and go to [Using the Docker Image](#using-the-docker-image) directly.
@@ -91,6 +92,14 @@ The image should then be available as `goemaxima:2020061000-dev`.
 
 The supported stackmaxima versions can be seen by looking at the versions file of the root of this repository.
 
+## Dynamically building against qtype_stack
+The Docker buildfile can also build an image that will work with a specified version of [Moodle's qtype_stack plugin](https://github.com/maths/moodle-qtype_stack).
+By providing the build arguments `QTYPE_STACK_REMOTE` and `QTYPE_STACK_COMMIT` the appropriate stackmaxima libraries 
+will be extracted and the image will be built using the appropriate Maxima and SBCL versions (based on the versions
+file in this repository).
+
+If the build args `MAXIMA_VERSION` or `SBCL_VERSION` are specified alongside `QTYPE_STACK_REMOTE` and `QTYPE_STACK_COMMIT`
+then the specified Maxima or SBCL version will be used, instead of being inferred from the versions file.
 
 Environment Variables
 =====================
