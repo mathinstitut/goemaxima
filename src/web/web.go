@@ -620,13 +620,13 @@ func init_metrics() Metrics {
 
 func user_info(user_id uint) (*User, error) {
 	user_name := fmt.Sprintf("maxima-%d", user_id)
-	usr, err := user.Lookup(user_name)
-	if err != nil {
-		log.Fatalf("Fatal: Could not look up user with id %d: %s", user_id, err)
-	}
 	var uid int
 	var gid int
 	if process_isolation {
+		usr, err := user.Lookup(user_name)
+		if err != nil {
+			log.Fatalf("Fatal: Could not look up user with id %d: %s", user_id, err)
+		}
 		uid, err = strconv.Atoi(usr.Uid)
 		if err != nil {
 			log.Fatalf("Fatal: Cannot parse uid %s as number: %s", usr.Uid, err)
