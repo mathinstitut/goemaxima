@@ -1,0 +1,71 @@
+/*  Author Chris Sangwin
+    Lougborough University
+    Copyright (C) 2015 Chris Sangwin
+
+    This program is free software: you can redistribute it or modify
+    it under the terms of the GNU General Public License version two.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>. */
+
+
+/* THIS IS EXPERIMENTAL CODE */
+/* Currently this is under development by CJS and is not connected to the main STACK codebase */
+/* It sits here because the long-term goal is to incorporate it */
+
+/* More general random function - recurses across the structure.
+   Notice the use of the dummy "protect()" function to stop further evaluation.
+   E.g.
+   rand_recurse((5+protect(2))*x^protect(2)+3*x+7);
+   rand_recurse(sin([x,y,z]));
+*/
+rand_recurse(ex) := block(
+    if (integerp(ex) or floatnump(ex) or matrixp(ex) or listp(ex)) then return(rand(ex)),
+    if atom(ex) then return(ex),
+    if op(ex)=protect then return(first(args(ex))),
+    apply(op(ex), maplist(rand_recurse, args(ex)))
+    );
+
+/* Truncates a polynomial to only terms of degree "d" or less - always expands out */
+poly_truncate(pa,d) := apply("+",maplist(lambda([ex],if hipow(ex,x)>d then 0 else ex), args(expand(pa))));
+
+/****************************************************************/
+/*  Square root functions for STACK                             */
+/*                                                              */
+/*  Chris Sangwin, <C.J.Sangwin@ed.ac.uk>                       */
+/*  V0.1 August 2015                                            */
+/*                                                              */
+/****************************************************************/
+
+/* With simp:false */
+
+/* Some examples:  
+p1: (2 + sqrt (2)) * sqrt (2);
+p2:distrib(p1);
+p3:sqrt(a)*sqrt(b)*sqrt(b)*sqrt(b)*sqrt(a)*1*sqrt(b)+1;
+*/
+
+naivesqrt(ex):=block([al],
+  if atom(ex) then return(ex),
+  al:args(ex),
+  if safe_op(ex)="*" then block([alp,alq],
+    alp:sort(sublist(args(ex), lambda([ex2],equal(safe_op(ex2),"sqrt")))),
+    alq:sublist(args(ex), lambda([ex2],not(equal(safe_op(ex2),"sqrt")))),
+    al:append(naivesqrthelper(alp),alq)
+    ),
+  if safe_op(ex)="*" and length(al)=1 then return(naivesqrt(first(al))),
+  apply(op(ex), map(naivesqrt, al))
+);
+
+naivesqrthelper(ex):=block(
+  if length(ex)<2 then return(ex),
+  if equal(first(ex), second(ex)) then return(append([first(args(first(ex)))], naivesqrthelper(rest(rest(ex))))),
+  append([first(ex)], naivesqrthelper(rest(ex)))
+);
+
+
