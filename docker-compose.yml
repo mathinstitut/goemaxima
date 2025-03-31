@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   maxima:
-    image: mathinstitut/goemaxima:${STACKMAXIMA_VERSION:-20250030600}-latest
+    image: mathinstitut/goemaxima:${STACKMAXIMA_VERSION:-2025033100}-latest
     ports:
       - 0.0.0.0:8080:8080
     tmpfs:
