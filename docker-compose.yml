@@ -1,6 +1,6 @@
 services:
   maxima:
-    image: mathinstitut/goemaxima:${STACKMAXIMA_VERSION:-2025040100}-latest
+    image: mathinstitut/goemaxima:${STACKMAXIMA_VERSION:-2025073100}-latest
     ports:
       - 0.0.0.0:8080:8080
     tmpfs:

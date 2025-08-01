@@ -18,7 +18,7 @@ The needed stackmaxima version can be seen in the ["What Stackmaxima version do 
 
 They can be simply run with docker compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
 ```
-echo STACKMAXIMA_VERSION=2025040100 > stackmaxima-version
+echo STACKMAXIMA_VERSION=2025073100 > stackmaxima-version
 docker compose --env-file=stackmaxima-version up -d
 ```
 The container should then be available on port 8080 (from outside the host too, keep this behind a firewall so it is not reachable from the general internet).
@@ -33,7 +33,7 @@ If you do not wish to use the docker-compose configuration, you can also run the
 ```
 $ docker run --restart=always --tmpfs /tmp -p $address:$port:8080 $imagename
 ```
-where `$address:$port` is the ip and port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2020120600-latest`).
+where `$address:$port` is the ip and port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2025073100-latest`).
 Use `0.0.0.0` as address to listen to all addresses.
 
 Note that this program prefers to quit on errors it can not recover from, so setting `restart=always` is strongly recommended.
@@ -48,7 +48,6 @@ What Stackmaxima version do I need?
 
 | Ilias Stack Version | Moodle Stack Version | Stackmaxima version | Included Maxima version |
 | ------------------- | -------------------- | ------------------- | ----------------------- |
-| `6`, `7`            | `4.2.2a`             | 2019090200          | 5.41.0                  |
 | -                   | `4.3.1`              | 2020042000          | 5.41.0                  |
 | -                   | `4.3.2`              | 2020052700          | 5.41.0                  |
 | -                   | `4.3.3`              | 2020061000          | 5.41.0                  |
@@ -75,6 +74,7 @@ What Stackmaxima version do I need?
 | -                   | `4.8.5`              | 2025030600          | 5.44.0                  |
 | -                   | `4.9.0`              | 2025033100          | 5.44.0                  |
 | -                   | `4.9.1`              | 2025040100          | 5.44.0                  |
+| -                   | `4.10.0`             | 2025073100          | 5.44.0                  |
 
 
 Building a Docker Image
@@ -89,10 +89,10 @@ The docker container for a particular stackmaxima version can be built by invoki
 
 Example:
 ```
-$ ./buildimage.sh 2020061000
+$ ./buildimage.sh 2025073100
 ```
 
-The image should then be available as `goemaxima:2020061000-dev`.
+The image should then be available as `goemaxima:2025073100-dev`.
 
 The supported stackmaxima versions can be seen by looking at the versions file of the root of this repository.
 
