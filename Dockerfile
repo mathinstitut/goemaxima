@@ -1,10 +1,10 @@
-FROM golang:1-bookworm AS web
+FROM golang:1-trixie AS web
 COPY ./buildweb.sh /
 COPY ./src/web /src/web
 WORKDIR /
 RUN ./buildweb.sh
 
-FROM debian:12
+FROM debian:trixie
 
 # e.g. 5.41.0
 ARG MAXIMA_VERSION
