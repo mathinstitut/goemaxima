@@ -30,7 +30,7 @@ ENV SRC=/opt/src \
 COPY ./src/maxima_fork.c ./buildscript.sh ./versions /
 
 # Copy optimization scripts and template generation script.
-COPY assets/maxima-fork.lisp assets/optimize.mac.template ./assets/generate_maximalocal_template.php ${ASSETS}/
+COPY ./assets/generate_maximalocal_template.php ${ASSETS}/
 
 # If QTYPE_STACK_REMOTE and QTYPE_STACK_COMMIT were both specified, we clone the repo and check
 # it out at the specified commit.
@@ -78,11 +78,11 @@ fi
 # Copy Libraries. If LIB_PATH was not specified, nothing is copied (because LIB_PATH will
 # expand to DOESNOTEXIST, and DOESNOTEXIST* matches nothing in the build context) so the
 # libraries cloned from Git that are already in place will be used.
-COPY ${LIB_PATH:-DOESNOTEXIST}* ${LIB}
+COPY goemaxima_version ${LIB_PATH:-DOESNOTEXIST}* ${LIB}
 
 # If LIB_PATH was not set, the maximalocal.mac.template file will not be copied and the one generated from
 # the libraries cloned from Git will be in place to use.
-COPY ${LIB_PATH}/../maximalocal.mac.template* ${ASSETS}/
+COPY ${LIB_PATH}/../maximalocal.mac.template* assets/maxima-fork.lisp assets/optimize.mac.template ${ASSETS}/
 
 RUN grep stackmaximaversion ${LIB}/stackmaxima.mac | grep -oP "\d+" >> /opt/maxima/stackmaximaversion \
     && sh -c 'envsubst < ${ASSETS}/maximalocal.mac.template > ${ASSETS}/maximalocal.mac \
