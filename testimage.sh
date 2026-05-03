@@ -6,7 +6,7 @@
 # $1: optional path where moodle is installed
 
 MOODLE_PATH="$1"
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
 	MOODLE_PATH="./moodle"
 fi
 
@@ -17,6 +17,7 @@ git clone --branch "$QSTACK_VERSION" https://github.com/maths/moodle-qtype_stack
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfexplicitvaildate
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_dfcbmexplicitvaildate
 moodle-plugin-ci add-plugin maths/moodle-qbehaviour_adaptivemultipart
+moodle-plugin-ci add-plugin maths/moodle-qbank_importasversion
 
 moodle-plugin-ci install --moodle="$MOODLE_PATH" --no-init --plugin moodle-qtype_stack --db-host=postgres
 
@@ -33,7 +34,11 @@ moodle-plugin-ci add-config 'define("QTYPE_STACK_TEST_CONFIG_MAXIMACOMMANDOPT", 
 moodle-plugin-ci add-config 'define("QTYPE_STACK_TEST_CONFIG_CASPREPARSE", "true");'
 
 cd "$MOODLE_PATH"
-php admin/tool/phpunit/cli/init.php
+if [ -f public/admin/tool/phpunit/cli/init.php ]; then
+	php public/admin/tool/phpunit/cli/init.php
+else
+	php admin/tool/phpunit/cli/init.php
+fi
 cd -
 
 moodle-plugin-ci phpunit

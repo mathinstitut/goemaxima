@@ -2,7 +2,7 @@
 # This script builds the Docker container for a particular version of STACK.
 #
 # It should be run with one, two or three arguments:
-# arg1: the vesrion of the stackmaxima code. This is looked up in the 'versions' file
+# arg1: the version of the stackmaxima code. This is looked up in the 'versions' file
 #       to find the corresponding SBCL and Maxima versions to use.
 # arg2: (optional) REGISTRY or dockerhub id to use. If given, teh built container is pushed there with tag -dev.
 # arg3: (optional) if given, the built image is also pushed with this tag, and also -latest.
