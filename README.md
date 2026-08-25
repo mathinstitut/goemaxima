@@ -18,7 +18,7 @@ The needed stackmaxima version can be seen in the ["What Stackmaxima version do 
 
 They can be simply run with docker compose in the top-directory of the repository (setting the `STACKMAXIMA_VERSION` to the desired value):
 ```
-echo STACKMAXIMA_VERSION=2026062900 > stackmaxima-version
+echo STACKMAXIMA_VERSION=2026080600 > stackmaxima-version
 docker compose --env-file=stackmaxima-version up -d
 ```
 The container should then be available on port 8080 (from outside the host too, keep this behind a firewall so it is not reachable from the general internet).
@@ -33,7 +33,7 @@ If you do not wish to use the docker-compose configuration, you can also run the
 ```
 $ docker run --restart=always --tmpfs /tmp -p $address:$port:8080 $imagename
 ```
-where `$address:$port` is the ip and port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2026062900-latest`).
+where `$address:$port` is the ip and port you want to make the service available on and `$imagename` is the name of the docker image you chose (e.g. `mathinstitut/goemaxima:2026080600-latest`).
 Use `0.0.0.0` as address to listen to all addresses.
 
 Note that this program prefers to quit on errors it can not recover from, so setting `restart=always` is strongly recommended.
@@ -72,6 +72,7 @@ What Stackmaxima version do I need?
 | -                   | `4.11.1`             | 2026010500          | 5.44.0                  |
 | -                   | `4.12.0`             | 2026042200          | 5.44.0                  |
 | `11.0.0`            | `4.13.0`             | 2026062900          | 5.44.0                  |
+| -	              | `4.13.1`             | 2026080600          | 5.44.0                  |
 
 
 Building a Docker Image
@@ -86,10 +87,10 @@ The docker container for a particular stackmaxima version can be built by invoki
 
 Example:
 ```
-$ ./buildimage.sh 2026062900
+$ ./buildimage.sh 2026080600
 ```
 
-The image should then be available as `goemaxima:2026062900-dev`.
+The image should then be available as `goemaxima:2026080600-dev`.
 
 The supported stackmaxima versions can be seen by looking at the versions file of the root of this repository.
 
