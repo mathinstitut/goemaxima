@@ -65,6 +65,9 @@ RUN if [ -n "$QTYPE_STACK_REMOTE" ] && [ -n "$QTYPE_STACK_COMMIT" ]; then \
     && export SBCL_VERSION=${SBCL_VERSION:-$(echo "$verstring" | cut -f3)}; \
 fi && ./buildscript.sh
 
+# Remove packages and sources that are only needed during the build.
+RUN apt-get purge -y --auto-remove wget git php && rm -rf qtype_stack
+
 # e.g. stack/20200701/maxima
 ARG LIB_PATH
 
