@@ -1,3 +1,16 @@
+1.2.1
+-----
+* Remove PHP from the docker image. It was only used during the docker build and should not
+    have any security implications
+* Update dependencies
+* Add stackmaxima version 2026111800
+* Backport security hardening changes preventing maxima from executing some dangerous
+    commands like `system` from 2026111800 to all current older stackmaxima versions.
+    Note that this is purely hardening: goemaxima should still not be exposed to untrusted
+    parties and Stack should already prevent dangerous commands to not be sent in the first
+    place (https://github.com/mathinstitut/goemaxima/pull/35).
+* Remove very old stackmaxima versions from repo
+
 1.2.0
 -----
 * Add `GOEMAXIMA_PROCESS_ISOLATION` variable which allows running in unprivileged environments
